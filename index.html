@@ -17,6 +17,7 @@
             color: #333;
         }
 
+        /* Header Styles */
         .header {
             background: #fff;
             padding: 1rem;
@@ -51,6 +52,7 @@
             font-weight: 500;
         }
 
+        /* Hero Section */
         .hero {
             background: linear-gradient(rgba(44, 95, 45, 0.8), rgba(44, 95, 45, 0.8)),
                         url('hero-bg.jpg') center/cover;
@@ -68,6 +70,7 @@
             margin-bottom: 1rem;
         }
 
+        /* Treatments Section */
         .treatments {
             padding: 5rem 2rem;
             background: #f5f5f5;
@@ -79,35 +82,15 @@
             margin-bottom: 3rem;
         }
 
-        .treatment-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .treatment-card {
-            background: #fff;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .treatment-card:hover {
-            transform: translateY(-5px);
-        }
-
+        /* Contact Section */
         .contact {
             padding: 5rem 2rem;
             background: #fff;
         }
 
-        .contact-container {
-            max-width: 800px;
-            margin: 0 auto;
+        .contact-info {
             text-align: center;
+            margin-bottom: 2rem;
         }
 
         .btn {
@@ -117,9 +100,9 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin: 10px;
         }
 
+        /* Footer */
         .footer {
             background: #2c5f2d;
             color: #fff;
@@ -131,7 +114,6 @@
             .nav-links {
                 display: none;
             }
-
             .hero-content h1 {
                 font-size: 2.5rem;
             }
@@ -141,11 +123,12 @@
 <body>
     <header class="header">
         <nav class="nav-container">
-            <img src="your-logo.png" alt="Pratyaksha Ayurveda" class="logo">
+            <img src="logo.png" alt="Pratyaksha Ayurveda" class="logo">
             <div class="nav-links">
                 <a href="#home">Home</a>
                 <a href="#treatments">Treatments</a>
                 <a href="#about">About</a>
+                <a href="reviews.html">Reviews</a>
                 <a href="#contact">Contact</a>
             </div>
         </nav>
@@ -162,34 +145,21 @@
     <section class="treatments" id="treatments">
         <h2 class="section-title">Our Treatments</h2>
         <div class="treatment-cards">
-            <div class="treatment-card">
-                <h3>Panchakarma Therapy</h3>
-                <p>Detoxification and rejuvenation treatment for complete wellness.</p>
-            </div>
+            <!-- Add treatment cards here -->
         </div>
     </section>
 
     <section class="contact" id="contact">
         <h2 class="section-title">Contact Us</h2>
-        <div class="contact-container">
-            <div class="contact-info">
-                <h3>Pratyaksha Ayurveda</h3>
-                <p>
-                    <a href="https://goo.gl/maps/REPLACE-WITH-YOUR-GOOGLE-MAPS-LINK" 
-                       target="_blank" 
-                       style="text-decoration: none; color: #2c5f2d;">
-                        Doon Institute of Medical Sciences<br>
-                        Dehradun, Uttarakhand
-                    </a>
-                </p>
-                <p style="margin: 20px 0;">
-                    Phone: <a href="tel:+918708880341" style="color: #2c5f2d;">+91 8708880341</a>
-                </p>
-                <button class="btn" 
-                        onclick="window.open('https://wa.me/918708880341')">
-                    📱 Chat on WhatsApp
-                </button>
-            </div>
+        <div class="contact-info">
+            <h3>Pratyaksha Ayurveda</h3>
+            <p>
+                <a href="https://goo.gl/maps/..." target="_blank">
+                    Doon Institute of Medical Sciences<br>
+                    Dehradun, Uttarakhand
+                </a>
+            </p>
+            <p>Phone: <a href="tel:+918708880341">+91 8708880341</a></p>
         </div>
     </section>
 
