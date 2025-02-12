@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pratyaksha Ayurveda - Traditional Healing & Wellness</title>
     <style>
-        /* Reset and Base Styles */
         * {
             margin: 0;
             padding: 0;
@@ -18,7 +17,6 @@
             color: #333;
         }
 
-        /* Header Styles */
         .header {
             background: #fff;
             padding: 1rem;
@@ -53,7 +51,6 @@
             font-weight: 500;
         }
 
-        /* Hero Section */
         .hero {
             background: linear-gradient(rgba(44, 95, 45, 0.8), rgba(44, 95, 45, 0.8)),
                         url('hero-bg.jpg') center/cover;
@@ -71,7 +68,6 @@
             margin-bottom: 1rem;
         }
 
-        /* Treatments Section */
         .treatments {
             padding: 5rem 2rem;
             background: #f5f5f5;
@@ -103,7 +99,6 @@
             transform: translateY(-5px);
         }
 
-        /* Contact Section */
         .contact {
             padding: 5rem 2rem;
             background: #fff;
@@ -112,18 +107,7 @@
         .contact-container {
             max-width: 800px;
             margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-        }
-
-        .contact-form input,
-        .contact-form textarea {
-            width: 100%;
-            padding: 0.8rem;
-            margin-bottom: 1rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            text-align: center;
         }
 
         .btn {
@@ -133,9 +117,9 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            margin: 10px;
         }
 
-        /* Footer Styles */
         .footer {
             background: #2c5f2d;
             color: #fff;
@@ -150,10 +134,6 @@
 
             .hero-content h1 {
                 font-size: 2.5rem;
-            }
-
-            .contact-container {
-                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -175,7 +155,7 @@
         <div class="hero-content">
             <h1>Experience Authentic Ayurveda</h1>
             <p>Traditional Healing for Modern Life</p>
-            <button class="btn">Book Consultation</button>
+            <button class="btn" onclick="window.open('https://wa.me/918708880341')">Book Consultation</button>
         </div>
     </section>
 
@@ -186,7 +166,6 @@
                 <h3>Panchakarma Therapy</h3>
                 <p>Detoxification and rejuvenation treatment for complete wellness.</p>
             </div>
-            <!-- Add more treatment cards -->
         </div>
     </section>
 
@@ -195,14 +174,22 @@
         <div class="contact-container">
             <div class="contact-info">
                 <h3>Pratyaksha Ayurveda</h3>
-                <p>Address Line 1<br>City, State<br>Phone: +91 12345 67890</p>
+                <p>
+                    <a href="https://goo.gl/maps/REPLACE-WITH-YOUR-GOOGLE-MAPS-LINK" 
+                       target="_blank" 
+                       style="text-decoration: none; color: #2c5f2d;">
+                        Doon Institute of Medical Sciences<br>
+                        Dehradun, Uttarakhand
+                    </a>
+                </p>
+                <p style="margin: 20px 0;">
+                    Phone: <a href="tel:+918708880341" style="color: #2c5f2d;">+91 8708880341</a>
+                </p>
+                <button class="btn" 
+                        onclick="window.open('https://wa.me/918708880341')">
+                    📱 Chat on WhatsApp
+                </button>
             </div>
-            <form class="contact-form">
-                <input type="text" placeholder="Name">
-                <input type="email" placeholder="Email">
-                <textarea placeholder="Message" rows="5"></textarea>
-                <button class="btn">Send Message</button>
-            </form>
         </div>
     </section>
 
