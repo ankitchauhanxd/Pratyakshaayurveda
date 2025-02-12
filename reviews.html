@@ -25,6 +25,7 @@
             to { opacity: 1; }
         }
 
+        /* Header Styles */
         .header {
             background: #fff;
             padding: 1rem;
@@ -44,7 +45,7 @@
         }
 
         .logo {
-            width: 180px;
+            width: 200px;
             height: auto;
         }
 
@@ -59,6 +60,7 @@
             font-weight: 500;
         }
 
+        /* Reviews Section */
         .reviews-container {
             padding: 100px 2rem 3rem;
             max-width: 800px;
@@ -71,26 +73,6 @@
             margin: 1.5rem 0;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            animation: slideUp 0.5s ease;
-        }
-
-        .review-author {
-            color: #2c5f2d;
-            margin-bottom: 0.5rem;
-            font-weight: bold;
-        }
-
-        .review-text {
-            font-style: italic;
-            color: #555;
-            line-height: 1.6;
-        }
-
-        .review-date {
-            display: block;
-            margin-top: 1rem;
-            color: #888;
-            font-size: 0.9rem;
         }
 
         .loader {
@@ -108,11 +90,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        @keyframes slideUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
         .btn {
             background: #2c5f2d;
             color: #fff;
@@ -120,11 +97,6 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .btn:hover {
-            background: #1f401f;
         }
     </style>
 </head>
@@ -143,67 +115,49 @@
     </header>
 
     <main class="reviews-container">
-        <h1 class="section-title" style="text-align:center; margin-bottom:2rem; color: #2c5f2d;">
-            Patient Experiences
-        </h1>
+        <h2 class="section-title">Patient Experiences</h2>
         
-        <!-- Submission Button -->
         <div style="text-align:center; margin:3rem 0;">
             <a href="https://docs.google.com/forms/d/e/1FAIpQLSeWhEj4ieeA2HCLPpSu1OuIDHRVufrBlyGzcky-z-5Tklp1mA/viewform?pli=1" 
                target="_blank"
-               class="btn"
-               style="text-decoration:none;">
+               class="btn">
                 ✍️ Share Your Experience
             </a>
-            <p style="margin-top:1rem; color:#666; font-size:0.9rem;">
-                (Email optional - only for verification)
-            </p>
         </div>
 
-        <!-- Reviews List -->
         <div id="reviews-list">
             <div class="loader"></div>
         </div>
     </main>
 
     <script>
-        // SheetDB Configuration
         const SHEETDB_API = 'https://sheetdb.io/api/v1/4y2dmxr6xu56k';
 
         async function loadReviews() {
             try {
                 const response = await fetch(SHEETDB_API);
-                if (!response.ok) throw new Error('Failed to load reviews');
-                
                 const data = await response.json();
-                let html = '';
                 
-                data.forEach((review, index) => {
+                let html = '';
+                data.forEach(review => {
                     if(review.Status === 'Approved') {
                         html += `
-                            <div class="review-card" style="animation-delay: ${index * 0.1}s">
-                                <span class="review-author">${review.Name}</span>
-                                <p class="review-text">${review.Review}</p>
-                                ${review.Date ? `<span class="review-date">${review.Date}</span>` : ''}
+                            <div class="review-card">
+                                <h3>${review.Name}</h3>
+                                <p>"${review.Review}"</p>
+                                ${review.Date ? `<small>${review.Date}</small>` : ''}
                             </div>
                         `;
                     }
                 });
-
-                document.getElementById('reviews-list').innerHTML = html || 
-                    `<p style="text-align:center; color:#666;">No reviews yet. Be the first to share!</p>`;
                 
+                document.getElementById('reviews-list').innerHTML = html || '<p>No reviews yet. Be the first to share!</p>';
             } catch (error) {
-                console.error('Error:', error);
-                document.getElementById('reviews-list').innerHTML = `
-                    <p style="color:red; text-align:center;">
-                        Error loading reviews. Please try again later.
-                    </p>
-                `;
+                document.getElementById('reviews-list').innerHTML = '<p>Error loading reviews. Please try again later.</p>';
             }
         }
 
-        window.addEventListener('load', loadReviews);
+        window.onload = loadReviews;
     </script>
 </body>
 </html>
