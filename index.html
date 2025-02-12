@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pratyaksha Ayurveda - Traditional Healing & Wellness</title>
+    <title>Pratyaksha Ayurveda - Patient Reviews</title>
     <style>
+        /* Original Styles */
         * {
             margin: 0;
             padding: 0;
@@ -51,65 +52,6 @@
             font-weight: 500;
         }
 
-        .hero {
-            background: linear-gradient(rgba(44, 95, 45, 0.8), rgba(44, 95, 45, 0.8)),
-                        url('hero-bg.jpg') center/cover;
-            height: 80vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            color: #fff;
-            margin-top: 70px;
-        }
-
-        .hero-content h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .treatments {
-            padding: 5rem 2rem;
-            background: #f5f5f5;
-        }
-
-        .section-title {
-            text-align: center;
-            color: #2c5f2d;
-            margin-bottom: 3rem;
-        }
-
-        .treatment-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .treatment-card {
-            background: #fff;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-
-        .treatment-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .contact {
-            padding: 5rem 2rem;
-            background: #fff;
-        }
-
-        .contact-container {
-            max-width: 800px;
-            margin: 0 auto;
-            text-align: center;
-        }
-
         .btn {
             background: #2c5f2d;
             color: #fff;
@@ -117,84 +59,110 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin: 10px;
         }
 
-        .footer {
-            background: #2c5f2d;
-            color: #fff;
-            padding: 3rem 2rem;
-            text-align: center;
+        /* Review Page Specific Styles */
+        .reviews-container {
+            padding: 100px 2rem 5rem;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
+        .review-card {
+            background: white;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
 
-            .hero-content h1 {
-                font-size: 2.5rem;
-            }
+        .review-author {
+            color: #2c5f2d;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .review-text {
+            font-style: italic;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .review-date {
+            display: block;
+            margin-top: 1rem;
+            color: #888;
+            font-size: 0.9rem;
         }
     </style>
 </head>
 <body>
     <header class="header">
         <nav class="nav-container">
-            <img src="logo.png" alt="Pratyaksha Ayurveda" class="logo" style="width: 180px ;">
+            <img src="logo.png" alt="Pratyaksha Ayurveda" class="logo" style="width:180px;">
             <div class="nav-links">
-                <a href="#home">Home</a>
+                <a href="index.html">Home</a>
                 <a href="#treatments">Treatments</a>
                 <a href="#about">About</a>
+                <a href="reviews.html">Reviews</a>
                 <a href="#contact">Contact</a>
             </div>
         </nav>
     </header>
 
-    <section class="hero" id="home">
-        <div class="hero-content">
-            <h1>Experience Authentic Ayurveda</h1>
-            <p>Traditional Healing for Modern Life</p>
-            <button class="btn" onclick="window.open('https://wa.me/918708880341')">Book Consultation</button>
+    <main class="reviews-container">
+        <h1 class="section-title" style="text-align:center; margin-bottom:2rem;">Patient Experiences</h1>
+        
+        <!-- Review Submission Button -->
+        <div style="text-align:center; margin:3rem 0;">
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSeWhEj4ieeA2HCLPpSu1OuIDHRVufrBlyGzcky-z-5Tklp1mA/viewform?usp=header" 
+               target="_blank"
+               class="btn"
+               style="text-decoration:none;">
+                ✍️ Share Your Experience
+            </a>
+            <p style="margin-top:1rem; color:#666; font-size:0.9rem;">
+                (Contact details optional - only for verification)
+            </p>
         </div>
-    </section>
 
-    <section class="treatments" id="treatments">
-        <h2 class="section-title">Our Treatments</h2>
-        <div class="treatment-cards">
-            <div class="treatment-card">
-                <h3>Panchakarma Therapy</h3>
-                <p>Detoxification and rejuvenation treatment for complete wellness.</p>
-            </div>
-        </div>
-    </section>
+        <!-- Reviews Display Area -->
+        <div id="reviews-list"></div>
+    </main>
 
-    <section class="contact" id="contact">
-        <h2 class="section-title">Contact Us</h2>
-        <div class="contact-container">
-            <div class="contact-info">
-                <h3>Pratyaksha Ayurveda</h3>
-                <p>
-                    <a href="https://goo.gl/maps/REPLACE-WITH-YOUR-GOOGLE-MAPS-LINK" 
-                       target="_blank" 
-                       style="text-decoration: none; color: #2c5f2d;">
-                        Doon Institute of Medical Sciences<br>
-                        Dehradun, Uttarakhand
-                    </a>
-                </p>
-                <p style="margin: 20px 0;">
-                    Phone: <a href="tel:+918708880341" style="color: #2c5f2d;">+91 8708880341</a>
-                </p>
-                <button class="btn" 
-                        onclick="window.open('https://wa.me/918708880341')">
-                    📱 Chat on WhatsApp
-                </button>
-            </div>
-        </div>
-    </section>
+    <script>
+        // SheetDB Configuration
+        const SHEETDB_API = 'YOUR_SHEETDB_API_ENDPOINT'; // Replace with your API URL
 
-    <footer class="footer">
-        <p>&copy; 2023 Pratyaksha Ayurveda. All rights reserved.</p>
-    </footer>
+        // Fetch and display reviews
+        async function loadReviews() {
+            try {
+                const response = await fetch(SHEETDB_API);
+                const data = await response.json();
+                
+                let html = '';
+                data.forEach(review => {
+                    if(review.Status === 'Approved') {
+                        html += `
+                            <div class="review-card">
+                                <span class="review-author">${review.Name}</span>
+                                <p class="review-text">${review.Review}</p>
+                                ${review.Date ? `<span class="review-date">${review.Date}</span>` : ''}
+                            </div>
+                        `;
+                    }
+                });
+                
+                document.getElementById('reviews-list').innerHTML = html || '<p>No reviews yet. Be the first to share!</p>';
+            } catch (error) {
+                console.error('Error loading reviews:', error);
+                document.getElementById('reviews-list').innerHTML = '<p>Reviews loading failed. Please try again later.</p>';
+            }
+        }
+
+        // Load reviews when page loads
+        window.onload = loadReviews;
+    </script>
+
 </body>
 </html>
