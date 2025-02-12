@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pratyaksha Ayurveda - Patient Reviews</title>
+    <title>Patient Reviews - Pratyaksha Ayurveda</title>
     <style>
-        /* Original Styles */
         * {
             margin: 0;
             padding: 0;
@@ -16,6 +15,14 @@
         body {
             line-height: 1.6;
             color: #333;
+            animation: fadeIn 0.5s;
+            opacity: 0;
+            animation-fill-mode: forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .header {
@@ -37,7 +44,7 @@
         }
 
         .logo {
-            width: 200px;
+            width: 180px;
             height: auto;
         }
 
@@ -52,18 +59,8 @@
             font-weight: 500;
         }
 
-        .btn {
-            background: #2c5f2d;
-            color: #fff;
-            padding: 1rem 2rem;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        /* Review Page Specific Styles */
         .reviews-container {
-            padding: 100px 2rem 5rem;
+            padding: 100px 2rem 3rem;
             max-width: 800px;
             margin: 0 auto;
         }
@@ -74,6 +71,7 @@
             margin: 1.5rem 0;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            animation: slideUp 0.5s ease;
         }
 
         .review-author {
@@ -94,12 +92,46 @@
             color: #888;
             font-size: 0.9rem;
         }
+
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #2c5f2d;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .btn {
+            background: #2c5f2d;
+            color: #fff;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #1f401f;
+        }
     </style>
 </head>
 <body>
     <header class="header">
         <nav class="nav-container">
-            <img src="logo.png" alt="Pratyaksha Ayurveda" class="logo" style="width:180px;">
+            <img src="logo.png" alt="Pratyaksha Ayurveda" class="logo">
             <div class="nav-links">
                 <a href="index.html">Home</a>
                 <a href="#treatments">Treatments</a>
@@ -111,40 +143,45 @@
     </header>
 
     <main class="reviews-container">
-        <h1 class="section-title" style="text-align:center; margin-bottom:2rem;">Patient Experiences</h1>
+        <h1 class="section-title" style="text-align:center; margin-bottom:2rem; color: #2c5f2d;">
+            Patient Experiences
+        </h1>
         
-        <!-- Review Submission Button -->
+        <!-- Submission Button -->
         <div style="text-align:center; margin:3rem 0;">
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLSeWhEj4ieeA2HCLPpSu1OuIDHRVufrBlyGzcky-z-5Tklp1mA/viewform?usp=header" 
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSeWhEj4ieeA2HCLPpSu1OuIDHRVufrBlyGzcky-z-5Tklp1mA/viewform?pli=1" 
                target="_blank"
                class="btn"
                style="text-decoration:none;">
                 ✍️ Share Your Experience
             </a>
             <p style="margin-top:1rem; color:#666; font-size:0.9rem;">
-                (Contact details optional - only for verification)
+                (Email optional - only for verification)
             </p>
         </div>
 
-        <!-- Reviews Display Area -->
-        <div id="reviews-list"></div>
+        <!-- Reviews List -->
+        <div id="reviews-list">
+            <div class="loader"></div>
+        </div>
     </main>
 
     <script>
         // SheetDB Configuration
         const SHEETDB_API = 'https://sheetdb.io/api/v1/4y2dmxr6xu56k';
 
-        // Fetch and display reviews
         async function loadReviews() {
             try {
                 const response = await fetch(SHEETDB_API);
-                const data = await response.json();
+                if (!response.ok) throw new Error('Failed to load reviews');
                 
+                const data = await response.json();
                 let html = '';
-                data.forEach(review => {
+                
+                data.forEach((review, index) => {
                     if(review.Status === 'Approved') {
                         html += `
-                            <div class="review-card">
+                            <div class="review-card" style="animation-delay: ${index * 0.1}s">
                                 <span class="review-author">${review.Name}</span>
                                 <p class="review-text">${review.Review}</p>
                                 ${review.Date ? `<span class="review-date">${review.Date}</span>` : ''}
@@ -152,17 +189,21 @@
                         `;
                     }
                 });
+
+                document.getElementById('reviews-list').innerHTML = html || 
+                    `<p style="text-align:center; color:#666;">No reviews yet. Be the first to share!</p>`;
                 
-                document.getElementById('reviews-list').innerHTML = html || '<p>No reviews yet. Be the first to share!</p>';
             } catch (error) {
-                console.error('Error loading reviews:', error);
-                document.getElementById('reviews-list').innerHTML = '<p>Reviews loading failed. Please try again later.</p>';
+                console.error('Error:', error);
+                document.getElementById('reviews-list').innerHTML = `
+                    <p style="color:red; text-align:center;">
+                        Error loading reviews. Please try again later.
+                    </p>
+                `;
             }
         }
 
-        // Load reviews when page loads
-        window.onload = loadReviews;
+        window.addEventListener('load', loadReviews);
     </script>
-
 </body>
 </html>
