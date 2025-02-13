@@ -9,18 +9,17 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Georgia', serif;
+            font-family: 'Arial', sans-serif;
         }
 
         body {
             line-height: 1.6;
-            color: #4a3f35;
-            background-color: #f5f2e7;
+            color: #333;
         }
 
         /* Header Styles */
         .header {
-            background: #d4a373;
+            background: #fff;
             padding: 1rem;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             position: fixed;
@@ -38,25 +37,24 @@
         }
 
         .logo {
-            width: 180px;
+            width: 200px;
             height: auto;
         }
 
         .nav-links {
             display: flex;
-            gap: 1.5rem;
+            gap: 2rem;
         }
 
         .nav-links a {
             text-decoration: none;
-            color: #fff;
-            font-weight: bold;
-            font-size: 1.1rem;
+            color: #2c5f2d;
+            font-weight: 500;
         }
 
         /* Hero Section */
         .hero {
-            background: linear-gradient(rgba(218, 165, 32, 0.8), rgba(34, 139, 34, 0.8)),
+            background: linear-gradient(rgba(44, 95, 45, 0.8), rgba(44, 95, 45, 0.8)),
                         url('hero-bg.jpg') center/cover;
             height: 80vh;
             display: flex;
@@ -65,7 +63,6 @@
             text-align: center;
             color: #fff;
             margin-top: 70px;
-            padding: 2rem;
         }
 
         .hero-content h1 {
@@ -74,80 +71,71 @@
         }
 
         .btn {
-            background: #8f5e26;
+            background: #2c5f2d;
             color: #fff;
             padding: 1rem 2rem;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 1.2rem;
-            transition: background 0.3s ease;
-        }
-
-        .btn:hover {
-            background: #704922;
         }
 
         /* About Section */
-        .about {
-            padding: 4rem 2rem;
-            background: #f5f2e7;
+        .about-home {
+            padding: 5rem 2rem;
+            background: #f5f5f5;
             text-align: center;
         }
 
-        .about h2 {
-            color: #8f5e26;
-            font-size: 2.5rem;
+        .about-home h2 {
+            color: #2c5f2d;
             margin-bottom: 1rem;
         }
 
-        .about-content {
-            max-width: 900px;
-            margin: 0 auto;
-            text-align: justify;
-            font-size: 1.2rem;
+        .about-home p {
+            max-width: 800px;
+            margin: auto;
+            line-height: 1.8;
         }
 
-        /* Reviews Section */
-        .reviews {
-            padding: 4rem 2rem;
-            background: #e8c07d;
+        /* Patient Reviews Section */
+        .reviews-home {
+            padding: 5rem 2rem;
+            background: #fff;
             text-align: center;
         }
 
-        .reviews h2 {
-            color: #4a3f35;
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
+        .review-container {
+            max-width: 800px;
+            margin: auto;
         }
 
-        .review-box {
-            background: #fff;
+        .review {
+            background: #f5f5f5;
             padding: 1.5rem;
-            border-radius: 10px;
-            margin: 1rem auto;
-            max-width: 800px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            margin-bottom: 1.5rem;
+        }
+
+        .review h3 {
+            color: #2c5f2d;
         }
 
         /* Contact Section */
         .contact {
-            padding: 4rem 2rem;
-            background: #4a3f35;
-            color: #fff;
-            text-align: center;
+            padding: 5rem 2rem;
+            background: #fff;
         }
 
-        .contact-info a {
-            color: #f8d568;
-            font-weight: bold;
+        .contact-info {
+            text-align: center;
+            margin-bottom: 2rem;
         }
 
         /* Footer */
         .footer {
-            background: #8f5e26;
+            background: #2c5f2d;
             color: #fff;
-            padding: 2rem;
+            padding: 3rem 2rem;
             text-align: center;
         }
 
@@ -162,15 +150,14 @@
     </style>
 </head>
 <body>
-
     <header class="header">
         <nav class="nav-container">
             <img src="logo.png" alt="Pratyaksha Ayurveda" class="logo">
             <div class="nav-links">
                 <a href="#home">Home</a>
-                <a href="#about">About</a>
                 <a href="#treatments">Treatments</a>
-                <a href="#reviews">Patient Reviews</a>
+                <a href="about.html">About</a>
+                <a href="reviews.html">Reviews</a>
                 <a href="#contact">Contact</a>
             </div>
         </nav>
@@ -184,36 +171,73 @@
         </div>
     </section>
 
-    <section class="about" id="about">
-        <h2>About Us</h2>
-        <div class="about-content">
-            <p>Promoting Authentic Ayurveda Rooted in Tradition, Backed by Science.</p>
-            <p>Restoring Balance, Not Just Symptoms.</p>
-            <p>Dr. Ankit Chauhan, BAMS, is a dedicated Ayurveda Specialist with years of experience in holistic healing. At Pratyaksha Ayurveda, we believe in a patient-first approach, combining ancient wisdom with modern practices.</p>
-        </div>
+    <!-- About Section on Home Page -->
+    <section class="about-home">
+        <h2>About Pratyaksha Ayurveda</h2>
+        <p>Promoting Authentic Ayurveda Rooted in Tradition, Backed by Science. Restoring Balance, Not Just Symptoms.</p>
+        <p>Founded by <strong>Dr. Ankit Chauhan (BAMS)</strong>, an Ayurveda Specialist, Pratyaksha Ayurveda is dedicated to bringing holistic healing with time-tested Ayurvedic practices.</p>
     </section>
 
-    <section class="reviews" id="reviews">
+    <!-- Patient Reviews Section on Home Page -->
+    <section class="reviews-home">
         <h2>Patient Reviews</h2>
-        <div class="review-box">
-            <p><strong>Ramesh from India:</strong> "Excellent treatment and guidance from Dr. Ankit!"</p>
-        </div>
-        <div class="review-box">
-            <p><strong>Emily from USA:</strong> "Life-changing Ayurvedic care. Highly recommend!"</p>
+        <div class="review-container" id="home-reviews">
+            <!-- Reviews will be dynamically loaded here -->
         </div>
     </section>
 
     <section class="contact" id="contact">
-        <h2>Contact Us</h2>
-        <p>Email: <a href="mailto:pratyakshaayurveda@gmail.com">pratyakshaayurveda@gmail.com</a></p>
-        <p>Phone: <a href="tel:+918708880341">+91 8708880341</a></p>
-        <p>WhatsApp: <a href="https://wa.me/918708880341">Chat Now</a></p>
-        <p>Instagram: <a href="https://instagram.com/ankitchauhan.xd" target="_blank">@ankitchauhan.xd</a></p>
+        <h2 class="section-title">Contact Us</h2>
+        <div class="contact-info">
+            <h3>Pratyaksha Ayurveda</h3>
+            <p>
+                <a href="https://goo.gl/maps/..." target="_blank">
+                    Doon Institute of Medical Sciences<br>
+                    Dehradun, Uttarakhand
+                </a>
+            </p>
+            <p>Phone: <a href="tel:+918708880341">+91 8708880341</a></p>
+        </div>
     </section>
 
     <footer class="footer">
-        <p>&copy; 2025 Pratyaksha Ayurveda. All rights reserved.</p>
+        <p>&copy; 2023 Pratyaksha Ayurveda. All rights reserved.</p>
     </footer>
 
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD9erR6d4qSSPo1UyfEuS-_G_FtvdxncBQ",
+            authDomain: "pratyaksha-ayurveda.firebaseapp.com",
+            projectId: "pratyaksha-ayurveda",
+            storageBucket: "pratyaksha-ayurveda.firebaseapp.com",
+            messagingSenderId: "757013845941",
+            appId: "1:757013845941:web:4edf0455611214d2c46bfc",
+            measurementId: "G-HBH8C5KGGB"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function loadHomeReviews() {
+            const reviewsContainer = document.getElementById("home-reviews");
+            const querySnapshot = await getDocs(collection(db, "reviews"));
+            
+            reviewsContainer.innerHTML = "";
+            querySnapshot.forEach((doc) => {
+                const review = doc.data();
+                reviewsContainer.innerHTML += `
+                    <div class="review">
+                        <h3>${review.name} (${review.country})</h3>
+                        <p>${review.review}</p>
+                    </div>
+                `;
+            });
+        }
+
+        loadHomeReviews();
+    </script>
 </body>
 </html>
