@@ -169,5 +169,28 @@
     <footer class="footer">
         <p>&copy; 2023 Pratyaksha Ayurveda. All rights reserved.</p>
     </footer>
+    <script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyD9erR6d4qSSPo1UyfEuS-_G_FtvdxncBQ",
+    authDomain: "pratyaksha-ayurveda.firebaseapp.com",
+    projectId: "pratyaksha-ayurveda",
+    storageBucket: "pratyaksha-ayurveda.firebasestorage.app",
+    messagingSenderId: "757013845941",
+    appId: "1:757013845941:web:4edf0455611214d2c46bfc",
+    measurementId: "G-HBH8C5KGGB"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
+</script>
 </body>
 </html>
