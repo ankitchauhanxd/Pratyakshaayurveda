@@ -135,24 +135,35 @@
         </div>
     </section>
 
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <h2>Contact Us</h2>
+        <p>Email: <a href="mailto:pratyakshaayurveda@gmail.com">pratyakshaayurveda@gmail.com</a></p>
+        <p>WhatsApp: <a href="https://wa.me/918708880341">+91 8708880341</a></p>
+        <p>Instagram: <a href="https://instagram.com/ankitchauhan.xd">@ankitchauhan.xd</a></p>
+    </section>
+
     <footer class="footer">
         <p>&copy; 2025 Pratyaksha Ayurveda. All rights reserved.</p>
     </footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-analytics.js";
         import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
+            apiKey: "AIzaSyD9erR6d4qSSPo1UyfEuS-_G_FtvdxncBQ",
+            authDomain: "pratyaksha-ayurveda.firebaseapp.com",
+            projectId: "pratyaksha-ayurveda",
+            storageBucket: "pratyaksha-ayurveda.firebasestorage.app",
+            messagingSenderId: "757013845941",
+            appId: "1:757013845941:web:4edf0455611214d2c46bfc",
+            measurementId: "G-HBH8C5KGGB"
         };
 
         const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
         const db = getFirestore(app);
 
         async function loadHomeReviews() {
@@ -160,18 +171,11 @@
 
             try {
                 const querySnapshot = await getDocs(collection(db, "reviews"));
-                
-                if (querySnapshot.empty) {
-                    reviewsContainer.innerHTML = "<p>No reviews available.</p>";
-                    return;
-                }
-
-                reviewsContainer.innerHTML = "";
+                reviewsContainer.innerHTML = querySnapshot.empty ? "<p>No reviews available.</p>" : "";
                 querySnapshot.forEach(doc => {
                     const review = doc.data();
                     reviewsContainer.innerHTML += `<div class="review"><h3>${review.name} (${review.country})</h3><p>${review.review}</p></div>`;
                 });
-
             } catch (error) {
                 console.error("Error loading reviews:", error);
                 reviewsContainer.innerHTML = "<p>Failed to load reviews. Please try again later.</p>";
