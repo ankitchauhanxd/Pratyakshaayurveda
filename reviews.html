@@ -19,7 +19,8 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 90%;
+            width: 100%;
             margin: 50px auto;
             padding: 20px;
             background: #fff;
@@ -53,6 +54,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 1rem;
         }
 
         .reviews {
@@ -72,6 +74,32 @@
             color: #2c5f2d;
         }
 
+        /* Responsive Fix for Mobile & Tablet */
+        @media (max-width: 768px) {
+            .container {
+                max-width: 95%;
+                margin: 20px auto;
+                padding: 15px;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+
+            input, textarea {
+                font-size: 1rem;
+            }
+
+            .btn {
+                padding: 12px;
+                font-size: 1rem;
+            }
+
+            .review-card {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+        }
     </style>
 </head>
 <body>
