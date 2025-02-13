@@ -15,7 +15,6 @@
         body {
             line-height: 1.6;
             color: #333;
-            background: #f5f5f5;
         }
 
         /* Header Styles */
@@ -71,29 +70,6 @@
             margin-bottom: 1rem;
         }
 
-        /* Treatments Section */
-        .treatments {
-            padding: 5rem 2rem;
-            background: #f5f5f5;
-            text-align: center;
-        }
-
-        .section-title {
-            color: #2c5f2d;
-            margin-bottom: 3rem;
-        }
-
-        /* Contact Section */
-        .contact {
-            padding: 5rem 2rem;
-            background: #fff;
-            text-align: center;
-        }
-
-        .contact-info {
-            margin-bottom: 2rem;
-        }
-
         .btn {
             background: #2c5f2d;
             color: #fff;
@@ -101,6 +77,51 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+        }
+
+        /* Treatments Section */
+        .treatments {
+            padding: 5rem 2rem;
+            background: #f5f5f5;
+        }
+
+        .section-title {
+            text-align: center;
+            color: #2c5f2d;
+            margin-bottom: 3rem;
+        }
+
+        /* Patient Reviews Section */
+        .reviews-home {
+            padding: 5rem 2rem;
+            background: #fff;
+        }
+
+        .review-container {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .review {
+            background: #f5f5f5;
+            padding: 1.5rem;
+            border-radius: 5px;
+            margin-bottom: 1.5rem;
+        }
+
+        .review h3 {
+            color: #2c5f2d;
+        }
+
+        /* Contact Section */
+        .contact {
+            padding: 5rem 2rem;
+            background: #fff;
+        }
+
+        .contact-info {
+            text-align: center;
+            margin-bottom: 2rem;
         }
 
         /* Footer */
@@ -111,7 +132,6 @@
             text-align: center;
         }
 
-        /* Responsive Design */
         @media (max-width: 768px) {
             .nav-links {
                 display: none;
@@ -127,9 +147,9 @@
         <nav class="nav-container">
             <img src="logo.png" alt="Pratyaksha Ayurveda" class="logo">
             <div class="nav-links">
-                <a href="index.html">Home</a>
+                <a href="#home">Home</a>
                 <a href="#treatments">Treatments</a>
-                <a href="about.html">About</a>
+                <a href="#about">About</a>
                 <a href="reviews.html">Reviews</a>
                 <a href="#contact">Contact</a>
             </div>
@@ -140,14 +160,22 @@
         <div class="hero-content">
             <h1>Experience Authentic Ayurveda</h1>
             <p>Traditional Healing for Modern Life</p>
-            <button class="btn" onclick="window.open('https://wa.me/918708880341')">Book Consultation</button>
+            <button class="btn" onclick="window.open('https://wa.me/918708880341')">Book your Online Consultation</button>
         </div>
     </section>
 
     <section class="treatments" id="treatments">
         <h2 class="section-title">Our Treatments</h2>
         <div class="treatment-cards">
-            <!-- Treatment details will go here -->
+            <!-- Add treatment cards here -->
+        </div>
+    </section>
+
+    <!-- Patient Reviews Section on Home Page -->
+    <section class="reviews-home">
+        <h2 class="section-title">Patient Reviews</h2>
+        <div class="review-container" id="home-reviews">
+            <!-- Reviews will be dynamically loaded here -->
         </div>
     </section>
 
@@ -157,21 +185,52 @@
             <h3>Pratyaksha Ayurveda</h3>
             <p>
                 <a href="https://goo.gl/maps/..." target="_blank">
-                    Doon Institute of Medical Sciences, <br>
+                    Doon Institute of Medical Sciences<br>
                     Dehradun, Uttarakhand
                 </a>
             </p>
             <p>Phone: <a href="tel:+918708880341">+91 8708880341</a></p>
-            <p>Email: <a href="mailto:pratyakshaayurveda@gmail.com">pratyakshaayurveda@gmail.com</a></p>
-            <p>
-                <a href="https://wa.me/918708880341" target="_blank">WhatsApp</a> |
-                <a href="https://www.instagram.com/ankitchauhan.xd" target="_blank">Instagram</a>
-            </p>
         </div>
     </section>
 
     <footer class="footer">
-        <p>&copy; 2025 Pratyaksha Ayurveda. All rights reserved.</p>
+        <p>&copy; 2023 Pratyaksha Ayurveda. All rights reserved.</p>
     </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD9erR6d4qSSPo1UyfEuS-_G_FtvdxncBQ",
+            authDomain: "pratyaksha-ayurveda.firebaseapp.com",
+            projectId: "pratyaksha-ayurveda",
+            storageBucket: "pratyaksha-ayurveda.firebaseapp.com",
+            messagingSenderId: "757013845941",
+            appId: "1:757013845941:web:4edf0455611214d2c46bfc",
+            measurementId: "G-HBH8C5KGGB"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function loadHomeReviews() {
+            const reviewsContainer = document.getElementById("home-reviews");
+            const querySnapshot = await getDocs(collection(db, "reviews"));
+            
+            reviewsContainer.innerHTML = "";
+            querySnapshot.forEach((doc) => {
+                const review = doc.data();
+                reviewsContainer.innerHTML += `
+                    <div class="review">
+                        <h3>${review.name} (${review.country})</h3>
+                        <p>${review.review}</p>
+                    </div>
+                `;
+            });
+        }
+
+        loadHomeReviews();
+    </script>
 </body>
 </html>
