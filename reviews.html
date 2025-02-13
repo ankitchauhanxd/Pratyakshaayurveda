@@ -9,124 +9,120 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
         }
 
         body {
-            line-height: 1.6;
-            color: #333;
             background: #f5f5f5;
-        }
-
-        .container {
-            max-width: 90%;
-            width: 100%;
-            margin: 50px auto;
-            padding: 20px;
-            background: #fff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            border-radius: 5px;
+            color: #333;
+            text-align: center;
+            padding: 2rem;
         }
 
         h2 {
-            text-align: center;
             color: #2c5f2d;
+            margin-bottom: 1rem;
         }
 
         .review-form {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 20px;
+            background: #fff;
+            padding: 2rem;
+            margin: 1rem auto;
+            max-width: 500px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
-        input, textarea {
+        .review-form input, .review-form textarea, .review-form select {
             width: 100%;
-            padding: 10px;
+            padding: 0.8rem;
+            margin: 0.5rem 0;
             border: 1px solid #ccc;
             border-radius: 5px;
+        }
+
+        #manualCountry {
+            display: none;
         }
 
         .btn {
             background: #2c5f2d;
             color: #fff;
-            padding: 10px;
+            padding: 1rem;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 1rem;
         }
 
-        .reviews {
-            margin-top: 30px;
+        .reviews-list {
+            margin-top: 2rem;
+            text-align: left;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        .review-card {
+        .review-item {
             background: #fff;
-            padding: 15px;
-            margin-bottom: 10px;
-            border-left: 5px solid #2c5f2d;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        .review-card h3 {
-            margin-bottom: 5px;
-            color: #2c5f2d;
-        }
-
-        /* Responsive Fix for Mobile & Tablet */
-        @media (max-width: 768px) {
-            .container {
-                max-width: 95%;
-                margin: 20px auto;
-                padding: 15px;
-            }
-
-            h2 {
-                font-size: 1.5rem;
-            }
-
-            input, textarea {
-                font-size: 1rem;
-            }
-
-            .btn {
-                padding: 12px;
-                font-size: 1rem;
-            }
-
-            .review-card {
-                padding: 10px;
-                font-size: 0.9rem;
-            }
+        .review-item p {
+            margin: 0.5rem 0;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Submit Your Review</h2>
-        <form class="review-form">
-            <input type="text" id="name" placeholder="Your Name" required>
-            <textarea id="review" placeholder="Write your review here..." required></textarea>
-            <button type="submit" class="btn">Submit Review</button>
-        </form>
 
-        <h2>Customer Reviews</h2>
-        <div class="reviews"></div>
-    </div>
+    <h2>Submit Your Review</h2>
+    <form class="review-form" id="reviewForm">
+        <input type="text" id="name" placeholder="Your Name" required>
+        
+        <select id="country" required onchange="toggleManualCountry()">
+            <option value="">Select Your Country</option>
+            <option value="India">India</option>
+            <option value="USA">USA</option>
+            <option value="UK">UK</option>
+            <option value="Canada">Canada</option>
+            <option value="Australia">Australia</option>
+            <option value="Germany">Germany</option>
+            <option value="France">France</option>
+            <option value="Italy">Italy</option>
+            <option value="Spain">Spain</option>
+            <option value="Brazil">Brazil</option>
+            <option value="Japan">Japan</option>
+            <option value="China">China</option>
+            <option value="Russia">Russia</option>
+            <option value="South Africa">South Africa</option>
+            <option value="Mexico">Mexico</option>
+            <option value="UAE">UAE</option>
+            <option value="Saudi Arabia">Saudi Arabia</option>
+            <option value="New Zealand">New Zealand</option>
+            <option value="Other">Other (Type Below)</option>
+        </select>
 
-    <!-- Firebase Script -->
+        <input type="text" id="manualCountry" placeholder="Enter Your Country">
+
+        <textarea id="review" rows="4" placeholder="Your Review" required></textarea>
+        <button type="submit" class="btn">Submit</button>
+    </form>
+
+    <h2>Patient Reviews</h2>
+    <div class="reviews-list" id="reviewsList"></div>
+
     <script type="module">
-        // Import Firebase
+        // Firebase Setup
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 
-        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyD9erR6d4qSSPo1UyfEuS-_G_FtvdxncBQ",
             authDomain: "pratyaksha-ayurveda.firebaseapp.com",
             projectId: "pratyaksha-ayurveda",
-            storageBucket: "pratyaksha-ayurveda.appspot.com",
+            storageBucket: "pratyaksha-ayurveda.firebasestorage.app",
             messagingSenderId: "757013845941",
             appId: "1:757013845941:web:4edf0455611214d2c46bfc",
             measurementId: "G-HBH8C5KGGB"
@@ -136,38 +132,70 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Submit Review
-        document.querySelector(".review-form").addEventListener("submit", async (e) => {
+        // Show/Hide Manual Country Input
+        function toggleManualCountry() {
+            const countryDropdown = document.getElementById("country");
+            const manualCountryInput = document.getElementById("manualCountry");
+
+            if (countryDropdown.value === "Other") {
+                manualCountryInput.style.display = "block";
+                manualCountryInput.required = true;
+            } else {
+                manualCountryInput.style.display = "none";
+                manualCountryInput.required = false;
+            }
+        }
+
+        // Review Form Submission
+        document.getElementById('reviewForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            const name = document.getElementById('name').value;
+            let country = document.getElementById('country').value;
+            const manualCountry = document.getElementById('manualCountry').value;
+            const review = document.getElementById('review').value;
 
-            let name = document.getElementById("name").value;
-            let review = document.getElementById("review").value;
+            if (country === "Other") {
+                country = manualCountry; // Use manually entered country
+            }
 
-            if (name && review) {
-                await addDoc(collection(db, "reviews"), { name, review });
+            if (!name || !country || !review) {
+                alert("Please fill all fields");
+                return;
+            }
+
+            try {
+                await addDoc(collection(db, "reviews"), {
+                    name,
+                    country,
+                    review
+                });
                 alert("Review submitted successfully!");
-                document.getElementById("name").value = "";
-                document.getElementById("review").value = "";
-                loadReviews(); // Reload reviews after submitting
+                document.getElementById('reviewForm').reset();
+                toggleManualCountry(); // Hide manual input on reset
+                loadReviews(); // Reload reviews after submission
+            } catch (error) {
+                console.error("Error adding review: ", error);
             }
         });
 
         // Load Reviews
         async function loadReviews() {
-            let reviewsContainer = document.querySelector(".reviews");
-            reviewsContainer.innerHTML = ""; // Clear previous content
-
-            let querySnapshot = await getDocs(collection(db, "reviews"));
-
+            const reviewsList = document.getElementById('reviewsList');
+            reviewsList.innerHTML = "";
+            const querySnapshot = await getDocs(collection(db, "reviews"));
             querySnapshot.forEach((doc) => {
-                let data = doc.data();
-                let reviewCard = `<div class="review-card"><h3>${data.name}</h3><p>"${data.review}"</p></div>`;
-                reviewsContainer.innerHTML += reviewCard;
+                const reviewData = doc.data();
+                const reviewItem = document.createElement('div');
+                reviewItem.classList.add('review-item');
+                reviewItem.innerHTML = `<p><strong>${reviewData.name} (${reviewData.country}):</strong></p>
+                                        <p>${reviewData.review}</p>`;
+                reviewsList.appendChild(reviewItem);
             });
         }
 
         // Load reviews on page load
-        window.onload = loadReviews;
+        loadReviews();
     </script>
+
 </body>
 </html>
