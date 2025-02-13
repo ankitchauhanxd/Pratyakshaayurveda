@@ -14,13 +14,13 @@
 
         body {
             line-height: 1.6;
-            color: #4A321E;
-            background: #FAF3E0;
+            color: #5A3E2B;
+            background: #F4E7D1;
         }
 
         /* Header Styles */
         .header {
-            background: #8B5E3B;
+            background: #2E4F2E;
             padding: 1rem;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             position: fixed;
@@ -49,20 +49,20 @@
 
         .nav-links a {
             text-decoration: none;
-            color: #FAF3E0;
+            color: #F4E7D1;
             font-weight: 500;
         }
 
         /* Hero Section */
         .hero {
-            background: linear-gradient(rgba(139, 94, 59, 0.8), rgba(139, 94, 59, 0.8)), 
+            background: linear-gradient(rgba(46, 79, 46, 0.8), rgba(46, 79, 46, 0.8)),
                         url('hero-bg.jpg') center/cover;
             height: 80vh;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            color: #fff;
+            color: #F4E7D1;
             margin-top: 70px;
         }
 
@@ -72,24 +72,23 @@
         }
 
         .btn {
-            background: #C19A6B;
-            color: #fff;
+            background: #D97E50;
+            color: #FFF;
             padding: 1rem 2rem;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-weight: bold;
         }
 
         /* About Section */
         .about-home {
             padding: 5rem 2rem;
-            background: #FFF2D8;
+            background: #FFF;
             text-align: center;
         }
 
         .about-home h2 {
-            color: #8B5E3B;
+            color: #2E4F2E;
             margin-bottom: 1rem;
         }
 
@@ -97,41 +96,13 @@
             max-width: 800px;
             margin: auto;
             line-height: 1.8;
-            font-size: 1.1rem;
-        }
-
-        /* Treatments Section */
-        .treatments {
-            padding: 5rem 2rem;
-            background: #FAE5D3;
-            text-align: center;
-        }
-
-        .treatments h2 {
-            color: #8B5E3B;
-            margin-bottom: 2rem;
-        }
-
-        .treatment-list {
-            max-width: 800px;
-            margin: auto;
-            text-align: left;
-            font-size: 1.1rem;
-        }
-
-        .treatment-list li {
-            margin-bottom: 1rem;
-            list-style: none;
-            padding: 0.5rem;
-            background: #E6B17E;
-            color: #4A321E;
-            border-radius: 5px;
+            color: #5A3E2B;
         }
 
         /* Patient Reviews Section */
         .reviews-home {
             padding: 5rem 2rem;
-            background: #FFF;
+            background: #F4E7D1;
             text-align: center;
         }
 
@@ -141,37 +112,32 @@
         }
 
         .review {
-            background: #FFF2D8;
+            background: #FFF;
             padding: 1.5rem;
             border-radius: 5px;
             margin-bottom: 1.5rem;
-            border-left: 5px solid #C19A6B;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         .review h3 {
-            color: #8B5E3B;
+            color: #2E4F2E;
         }
 
         /* Contact Section */
         .contact {
             padding: 5rem 2rem;
-            background: #FAF3E0;
+            background: #FFF;
+        }
+
+        .contact-info {
             text-align: center;
-        }
-
-        .contact h2 {
-            color: #8B5E3B;
-        }
-
-        .contact-info a {
-            color: #4A321E;
-            font-weight: bold;
+            margin-bottom: 2rem;
         }
 
         /* Footer */
         .footer {
-            background: #8B5E3B;
-            color: #fff;
+            background: #2E4F2E;
+            color: #F4E7D1;
             padding: 3rem 2rem;
             text-align: center;
         }
@@ -208,37 +174,73 @@
         </div>
     </section>
 
+    <!-- About Section on Home Page -->
     <section class="about-home">
         <h2>About Pratyaksha Ayurveda</h2>
         <p>Promoting Authentic Ayurveda Rooted in Tradition, Backed by Science. Restoring Balance, Not Just Symptoms.</p>
         <p>Founded by <strong>Dr. Ankit Chauhan (BAMS)</strong>, an Ayurveda Specialist, Pratyaksha Ayurveda is dedicated to bringing holistic healing with time-tested Ayurvedic practices.</p>
     </section>
 
-    <section class="treatments" id="treatments">
-        <h2>Our Ayurvedic Treatments</h2>
-        <ul class="treatment-list">
-            <li>✅ Digestive Disorders</li>
-            <li>✅ Fever Management</li>
-            <li>✅ Joint Disorders</li>
-            <li>✅ Sinusitis & Rhinitis</li>
-            <li>✅ Migraine Treatment</li>
-        </ul>
-    </section>
-
+    <!-- Patient Reviews Section on Home Page -->
     <section class="reviews-home">
         <h2>Patient Reviews</h2>
-        <div class="review-container" id="home-reviews"></div>
+        <div class="review-container" id="home-reviews">
+            <!-- Reviews will be dynamically loaded here -->
+        </div>
     </section>
 
     <section class="contact" id="contact">
-        <h2>Contact Us</h2>
-        <p><a href="mailto:pratyakshaayurveda@gmail.com">pratyakshaayurveda@gmail.com</a></p>
-        <p><a href="https://instagram.com/ankitchauhan.xd" target="_blank">@ankitchauhan.xd</a></p>
-        <p><a href="https://wa.me/918708880341">WhatsApp: +91 8708880341</a></p>
+        <h2 class="section-title">Contact Us</h2>
+        <div class="contact-info">
+            <h3>Pratyaksha Ayurveda</h3>
+            <p>
+                <a href="https://goo.gl/maps/..." target="_blank">
+                    Doon Institute of Medical Sciences<br>
+                    Dehradun, Uttarakhand
+                </a>
+            </p>
+            <p>Phone: <a href="tel:+918708880341">+91 8708880341</a></p>
+        </div>
     </section>
 
     <footer class="footer">
         <p>&copy; 2025 Pratyaksha Ayurveda. All rights reserved.</p>
     </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
+        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD9erR6d4qSSPo1UyfEuS-_G_FtvdxncBQ",
+            authDomain: "pratyaksha-ayurveda.firebaseapp.com",
+            projectId: "pratyaksha-ayurveda",
+            storageBucket: "pratyaksha-ayurveda.appspot.com",
+            messagingSenderId: "757013845941",
+            appId: "1:757013845941:web:4edf0455611214d2c46bfc",
+            measurementId: "G-HBH8C5KGGB"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function loadHomeReviews() {
+            const reviewsContainer = document.getElementById("home-reviews");
+            const querySnapshot = await getDocs(collection(db, "reviews"));
+            
+            reviewsContainer.innerHTML = "";
+            querySnapshot.forEach((doc) => {
+                const review = doc.data();
+                reviewsContainer.innerHTML += `
+                    <div class="review">
+                        <h3>${review.name} (${review.country})</h3>
+                        <p>${review.review}</p>
+                    </div>
+                `;
+            });
+        }
+
+        loadHomeReviews();
+    </script>
 </body>
 </html>
