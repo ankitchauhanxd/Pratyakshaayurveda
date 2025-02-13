@@ -1,154 +1,173 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Patient Reviews - Pratyaksha Ayurveda</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Arial', sans-serif;
-    }
-    body {
-      line-height: 1.6;
-      color: #333;
-      animation: fadeIn 0.5s;
-      opacity: 0;
-      animation-fill-mode: forwards;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    /* Header Styles */
-    .header {
-      background: #fff;
-      padding: 1rem;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      position: fixed;
-      width: 100%;
-      top: 0;
-      z-index: 1000;
-    }
-    .nav-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .logo {
-      width: 200px;
-      height: auto;
-    }
-    .nav-links {
-      display: flex;
-      gap: 2rem;
-    }
-    .nav-links a {
-      text-decoration: none;
-      color: #2c5f2d;
-      font-weight: 500;
-    }
-    /* Reviews Section */
-    .reviews-container {
-      padding: 100px 2rem 3rem;
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    /* Increase top padding on smaller screens to avoid header overlap */
-    @media (max-width: 600px) {
-      .reviews-container {
-        padding-top: 150px;
-      }
-    }
-    .review-card {
-      background: white;
-      padding: 1.5rem;
-      margin: 1.5rem 0;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    .loader {
-      border: 4px solid #f3f3f3;
-      border-top: 4px solid #2c5f2d;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
-      margin: 2rem auto;
-    }
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-    .btn {
-      background: #2c5f2d;
-      color: #fff;
-      padding: 1rem 2rem;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reviews - Pratyaksha Ayurveda</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* Header Styles */
+        .header {
+            background: #fff;
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            width: 200px;
+            height: auto;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #2c5f2d;
+            font-weight: 500;
+        }
+
+        /* Reviews Section */
+        .reviews {
+            padding: 5rem 2rem;
+            background: #f5f5f5;
+            text-align: center;
+        }
+
+        .section-title {
+            color: #2c5f2d;
+            margin-bottom: 3rem;
+        }
+
+        .review-card {
+            background: #fff;
+            padding: 2rem;
+            margin: 1rem auto;
+            max-width: 600px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+
+        .review-card h3 {
+            color: #2c5f2d;
+        }
+
+        .review-card p {
+            font-style: italic;
+        }
+
+        /* Review Form */
+        .review-form {
+            margin-top: 3rem;
+            background: #fff;
+            padding: 2rem;
+            max-width: 600px;
+            margin: auto;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+
+        .review-form input, .review-form textarea {
+            width: 100%;
+            padding: 0.8rem;
+            margin: 0.5rem 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .btn {
+            background: #2c5f2d;
+            color: #fff;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: #2c5f2d;
+            color: #fff;
+            padding: 3rem 2rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
 </head>
 <body>
-  <header class="header">
-    <nav class="nav-container">
-      <img src="logo.png" alt="Pratyaksha Ayurveda" class="logo">
-      <div class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="#treatments">Treatments</a>
-        <a href="#about">About</a>
-        <a href="reviews.html">Reviews</a>
-        <a href="#contact">Contact</a>
-      </div>
-    </nav>
-  </header>
-  <main class="reviews-container">
-    <h2 class="section-title">Patient Experiences</h2>
-    <div style="text-align:center; margin:3rem 0;">
-      <a href="https://docs.google.com/forms/d/e/1FAIpQLSeWhEj4ieeA2HCLPpSu1OuIDHRVufrBlyGzcky-z-5Tklp1mA/viewform?pli=1" 
-         target="_blank"
-         class="btn">
-         ✍️ Share Your Experience
-      </a>
-    </div>
-    <div id="reviews-list">
-      <div class="loader"></div>
-    </div>
-  </main>
-  <script>
-    const SHEETDB_API = 'https://sheetdb.io/api/v1/4y2dmxr6xu56k';
-    async function loadReviews() {
-      try {
-        const response = await fetch(SHEETDB_API);
-        const data = await response.json();
-        console.log(data); // Log the API response
-        if (data.length === 0) {
-          console.warn('No reviews found in the API response.');
-        }
-        let html = '';
-        data.forEach(review => {
-          if (review && review.Status === 'Approved') {
-            html += `
-              <div class="review-card">
-                <h3>${review.Name || 'Anonymous'}</h3>
-                <p>"${review.Review || 'No review text provided.'}"</p>
-                ${review.Date ? `<small>${review.Date}</small>` : ''}
-              </div>
-            `;
-          }
-        });
-        document.getElementById('reviews-list').innerHTML = html || '<p>No reviews yet. Be the first to share!</p>';
-      } catch (error) {
-        console.error('Error fetching reviews:', error); // Log the error
-        document.getElementById('reviews-list').innerHTML = '<p>Error loading reviews. Please try again later.</p>';
-      }
-    }
-    window.onload = loadReviews;
-  </script>
+    <header class="header">
+        <nav class="nav-container">
+            <img src="logo.png" alt="Pratyaksha Ayurveda" class="logo">
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="index.html#treatments">Treatments</a>
+                <a href="index.html#about">About</a>
+                <a href="reviews.html">Reviews</a>
+                <a href="index.html#contact">Contact</a>
+            </div>
+        </nav>
+    </header>
+
+    <section class="reviews">
+        <h2 class="section-title">What Our Clients Say</h2>
+        
+        <div class="review-card">
+            <h3>Ravi Sharma</h3>
+            <p>"The treatment at Pratyaksha Ayurveda was truly life-changing. My chronic pain has improved significantly!"</p>
+        </div>
+
+        <div class="review-card">
+            <h3>Neha Verma</h3>
+            <p>"A wonderful experience! The Ayurvedic approach here is authentic and very effective."</p>
+        </div>
+
+        <div class="review-card">
+            <h3>Arjun Mehta</h3>
+            <p>"Highly recommend for anyone looking for natural healing solutions!"</p>
+        </div>
+
+        <h2 class="section-title">Leave a Review</h2>
+        <form class="review-form">
+            <input type="text" placeholder="Your Name" required>
+            <textarea rows="4" placeholder="Your Review" required></textarea>
+            <button type="submit" class="btn">Submit Review</button>
+        </form>
+    </section>
+
+    <footer class="footer">
+        <p>&copy; 2023 Pratyaksha Ayurveda. All rights reserved.</p>
+    </footer>
 </body>
 </html>
