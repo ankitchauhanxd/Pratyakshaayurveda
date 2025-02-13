@@ -9,93 +9,39 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
+            font-family: Arial, sans-serif;
         }
 
         body {
             line-height: 1.6;
             color: #333;
-        }
-
-        /* Header Styles */
-        .header {
-            background: #fff;
-            padding: 1rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .nav-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            width: 200px;
-            height: auto;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 2rem;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: #2c5f2d;
-            font-weight: 500;
-        }
-
-        /* Reviews Section */
-        .reviews {
-            padding: 5rem 2rem;
             background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-radius: 5px;
+        }
+
+        h2 {
             text-align: center;
-        }
-
-        .section-title {
-            color: #2c5f2d;
-            margin-bottom: 3rem;
-        }
-
-        .review-card {
-            background: #fff;
-            padding: 2rem;
-            margin: 1rem auto;
-            max-width: 600px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
-        }
-
-        .review-card h3 {
             color: #2c5f2d;
         }
 
-        .review-card p {
-            font-style: italic;
-        }
-
-        /* Review Form */
         .review-form {
-            margin-top: 3rem;
-            background: #fff;
-            padding: 2rem;
-            max-width: 600px;
-            margin: auto;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
         }
 
-        .review-form input, .review-form textarea {
+        input, textarea {
             width: 100%;
-            padding: 0.8rem;
-            margin: 0.5rem 0;
+            padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
@@ -103,94 +49,97 @@
         .btn {
             background: #2c5f2d;
             color: #fff;
-            padding: 1rem 2rem;
+            padding: 10px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin-top: 1rem;
         }
 
-        /* Footer */
-        .footer {
-            background: #2c5f2d;
-            color: #fff;
-            padding: 3rem 2rem;
-            text-align: center;
-            margin-top: 3rem;
+        .reviews {
+            margin-top: 30px;
         }
 
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
+        .review-card {
+            background: #fff;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 5px solid #2c5f2d;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
+
+        .review-card h3 {
+            margin-bottom: 5px;
+            color: #2c5f2d;
+        }
+
     </style>
 </head>
 <body>
-    <header class="header">
-        <nav class="nav-container">
-            <img src="logo.png" alt="Pratyaksha Ayurveda" class="logo">
-            <div class="nav-links">
-                <a href="index.html">Home</a>
-                <a href="index.html#treatments">Treatments</a>
-                <a href="index.html#about">About</a>
-                <a href="reviews.html">Reviews</a>
-                <a href="index.html#contact">Contact</a>
-            </div>
-        </nav>
-    </header>
-
-    <section class="reviews">
-        <h2 class="section-title">What Our Clients Say</h2>
-        
-        <div class="review-card">
-            <h3>Ravi Sharma</h3>
-            <p>"The treatment at Pratyaksha Ayurveda was truly life-changing. My chronic pain has improved significantly!"</p>
-        </div>
-
-        <div class="review-card">
-            <h3>Neha Verma</h3>
-            <p>"A wonderful experience! The Ayurvedic approach here is authentic and very effective."</p>
-        </div>
-
-        <div class="review-card">
-            <h3>Arjun Mehta</h3>
-            <p>"Highly recommend for anyone looking for natural healing solutions!"</p>
-        </div>
-
-        <h2 class="section-title">Leave a Review</h2>
+    <div class="container">
+        <h2>Submit Your Review</h2>
         <form class="review-form">
-            <input type="text" placeholder="Your Name" required>
-            <textarea rows="4" placeholder="Your Review" required></textarea>
+            <input type="text" id="name" placeholder="Your Name" required>
+            <textarea id="review" placeholder="Write your review here..." required></textarea>
             <button type="submit" class="btn">Submit Review</button>
         </form>
-    </section>
 
-    <footer class="footer">
-        <p>&copy; 2023 Pratyaksha Ayurveda. All rights reserved.</p>
-    </footer>
+        <h2>Customer Reviews</h2>
+        <div class="reviews"></div>
+    </div>
+
+    <!-- Firebase Script -->
     <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
-  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-analytics.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+        // Import Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 
-  // Your web app's Firebase configuration
-  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyD9erR6d4qSSPo1UyfEuS-_G_FtvdxncBQ",
-    authDomain: "pratyaksha-ayurveda.firebaseapp.com",
-    projectId: "pratyaksha-ayurveda",
-    storageBucket: "pratyaksha-ayurveda.firebasestorage.app",
-    messagingSenderId: "757013845941",
-    appId: "1:757013845941:web:4edf0455611214d2c46bfc",
-    measurementId: "G-HBH8C5KGGB"
-  };
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD9erR6d4qSSPo1UyfEuS-_G_FtvdxncBQ",
+            authDomain: "pratyaksha-ayurveda.firebaseapp.com",
+            projectId: "pratyaksha-ayurveda",
+            storageBucket: "pratyaksha-ayurveda.appspot.com",
+            messagingSenderId: "757013845941",
+            appId: "1:757013845941:web:4edf0455611214d2c46bfc",
+            measurementId: "G-HBH8C5KGGB"
+        };
 
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-  const analytics = getAnalytics(app);
-</script>
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Submit Review
+        document.querySelector(".review-form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            let name = document.getElementById("name").value;
+            let review = document.getElementById("review").value;
+
+            if (name && review) {
+                await addDoc(collection(db, "reviews"), { name, review });
+                alert("Review submitted successfully!");
+                document.getElementById("name").value = "";
+                document.getElementById("review").value = "";
+                loadReviews(); // Reload reviews after submitting
+            }
+        });
+
+        // Load Reviews
+        async function loadReviews() {
+            let reviewsContainer = document.querySelector(".reviews");
+            reviewsContainer.innerHTML = ""; // Clear previous content
+
+            let querySnapshot = await getDocs(collection(db, "reviews"));
+
+            querySnapshot.forEach((doc) => {
+                let data = doc.data();
+                let reviewCard = `<div class="review-card"><h3>${data.name}</h3><p>"${data.review}"</p></div>`;
+                reviewsContainer.innerHTML += reviewCard;
+            });
+        }
+
+        // Load reviews on page load
+        window.onload = loadReviews;
+    </script>
 </body>
 </html>
