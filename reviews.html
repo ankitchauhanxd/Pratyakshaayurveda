@@ -13,110 +13,91 @@
         }
 
         body {
-            background: #f5f5f5;
+            line-height: 1.6;
             color: #333;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
             text-align: center;
-            padding: 2rem;
         }
 
         h2 {
             color: #2c5f2d;
-            margin-bottom: 1rem;
+            margin-bottom: 20px;
         }
 
         .review-form {
-            background: #fff;
-            padding: 2rem;
-            margin: 1rem auto;
-            max-width: 500px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
         }
 
-        .review-form input, .review-form textarea, .review-form select {
+        .review-form input,
+        .review-form select,
+        .review-form textarea,
+        .review-form button {
             width: 100%;
-            padding: 0.8rem;
-            margin: 0.5rem 0;
+            margin: 10px 0;
+            padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
 
-        #manualCountry {
-            display: none;
+        .review-list {
+            text-align: left;
+        }
+
+        .review-item {
+            background: #fff;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
         }
 
         .btn {
             background: #2c5f2d;
             color: #fff;
-            padding: 1rem;
             border: none;
-            border-radius: 5px;
             cursor: pointer;
-        }
-
-        .reviews-list {
-            margin-top: 2rem;
-            text-align: left;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .review-item {
-            background: #fff;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .review-item p {
-            margin: 0.5rem 0;
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <h2>Patient Reviews</h2>
 
-    <h2>Submit Your Review</h2>
-    <form class="review-form" id="reviewForm">
-        <input type="text" id="name" placeholder="Your Name" required>
-        
-        <select id="country" required onchange="toggleManualCountry()">
-            <option value="">Select Your Country</option>
-            <option value="India">India</option>
-            <option value="USA">USA</option>
-            <option value="UK">UK</option>
-            <option value="Canada">Canada</option>
-            <option value="Australia">Australia</option>
-            <option value="Germany">Germany</option>
-            <option value="France">France</option>
-            <option value="Italy">Italy</option>
-            <option value="Spain">Spain</option>
-            <option value="Brazil">Brazil</option>
-            <option value="Japan">Japan</option>
-            <option value="China">China</option>
-            <option value="Russia">Russia</option>
-            <option value="South Africa">South Africa</option>
-            <option value="Mexico">Mexico</option>
-            <option value="UAE">UAE</option>
-            <option value="Saudi Arabia">Saudi Arabia</option>
-            <option value="New Zealand">New Zealand</option>
-            <option value="Other">Other (Type Below)</option>
-        </select>
+        <div class="review-form">
+            <h3>Leave a Review</h3>
+            <input type="text" id="name" placeholder="Your Name">
+            <select id="country">
+                <option value="">Select Country</option>
+                <option value="India">India</option>
+                <option value="USA">USA</option>
+                <option value="UK">UK</option>
+                <option value="Canada">Canada</option>
+                <option value="Australia">Australia</option>
+                <option value="Germany">Germany</option>
+                <option value="France">France</option>
+                <option value="Other">Other (Type Below)</option>
+            </select>
+            <input type="text" id="customCountry" placeholder="Type Country if not listed">
+            <textarea id="review" placeholder="Your Review"></textarea>
+            <button class="btn" onclick="submitReview()">Submit Review</button>
+        </div>
 
-        <input type="text" id="manualCountry" placeholder="Enter Your Country">
+        <div class="review-list" id="reviews"></div>
+    </div>
 
-        <textarea id="review" rows="4" placeholder="Your Review" required></textarea>
-        <button type="submit" class="btn">Submit</button>
-    </form>
-
-    <h2>Patient Reviews</h2>
-    <div class="reviews-list" id="reviewsList"></div>
-
+    <!-- Firebase SDK -->
     <script type="module">
-        // Firebase Setup
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyD9erR6d4qSSPo1UyfEuS-_G_FtvdxncBQ",
@@ -128,74 +109,68 @@
             measurementId: "G-HBH8C5KGGB"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Show/Hide Manual Country Input
-        function toggleManualCountry() {
-            const countryDropdown = document.getElementById("country");
-            const manualCountryInput = document.getElementById("manualCountry");
+        async function submitReview() {
+            const name = document.getElementById("name").value;
+            const selectedCountry = document.getElementById("country").value;
+            const customCountry = document.getElementById("customCountry").value;
+            const country = selectedCountry === "Other" ? customCountry : selectedCountry;
+            const review = document.getElementById("review").value;
 
-            if (countryDropdown.value === "Other") {
-                manualCountryInput.style.display = "block";
-                manualCountryInput.required = true;
-            } else {
-                manualCountryInput.style.display = "none";
-                manualCountryInput.required = false;
-            }
-        }
-
-        // Review Form Submission
-        document.getElementById('reviewForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const name = document.getElementById('name').value;
-            let country = document.getElementById('country').value;
-            const manualCountry = document.getElementById('manualCountry').value;
-            const review = document.getElementById('review').value;
-
-            if (country === "Other") {
-                country = manualCountry; // Use manually entered country
-            }
-
-            if (!name || !country || !review) {
-                alert("Please fill all fields");
+            if (name === "" || review === "") {
+                alert("Please fill out Name and Review.");
                 return;
             }
 
             try {
                 await addDoc(collection(db, "reviews"), {
-                    name,
-                    country,
-                    review
+                    name: name,
+                    country: country || "Not Specified",
+                    review: review,
+                    timestamp: new Date()
                 });
                 alert("Review submitted successfully!");
-                document.getElementById('reviewForm').reset();
-                toggleManualCountry(); // Hide manual input on reset
-                loadReviews(); // Reload reviews after submission
+                location.reload();
             } catch (error) {
-                console.error("Error adding review: ", error);
+                console.error("Error submitting review:", error);
             }
-        });
+        }
 
-        // Load Reviews
-        async function loadReviews() {
-            const reviewsList = document.getElementById('reviewsList');
-            reviewsList.innerHTML = "";
-            const querySnapshot = await getDocs(collection(db, "reviews"));
-            querySnapshot.forEach((doc) => {
-                const reviewData = doc.data();
-                const reviewItem = document.createElement('div');
-                reviewItem.classList.add('review-item');
-                reviewItem.innerHTML = `<p><strong>${reviewData.name} (${reviewData.country}):</strong></p>
-                                        <p>${reviewData.review}</p>`;
-                reviewsList.appendChild(reviewItem);
+        async function displayReviews() {
+            const reviewList = document.getElementById("reviews");
+            reviewList.innerHTML = "";
+            const snapshot = await getDocs(collection(db, "reviews"));
+
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                const reviewItem = document.createElement("div");
+                reviewItem.classList.add("review-item");
+                reviewItem.innerHTML = `<strong>${data.name}</strong> (${data.country || "Not Specified"})<br> ${data.review}`;
+                reviewList.appendChild(reviewItem);
             });
         }
 
-        // Load reviews on page load
-        loadReviews();
-    </script>
+        displayReviews();
 
+        async function updateOldReviews() {
+            const reviewsRef = collection(db, "reviews");
+            const snapshot = await getDocs(reviewsRef);
+
+            snapshot.forEach(async (reviewDoc) => {
+                const reviewData = reviewDoc.data();
+                if (!reviewData.country) {
+                    const reviewRef = doc(db, "reviews", reviewDoc.id);
+                    await updateDoc(reviewRef, { country: "India" });
+                    console.log(`Updated review ID: ${reviewDoc.id}`);
+                }
+            });
+
+            console.log("All missing country fields updated.");
+        }
+
+        updateOldReviews();
+    </script>
 </body>
 </html>
