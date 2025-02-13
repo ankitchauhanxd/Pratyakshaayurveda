@@ -11,24 +11,19 @@
             box-sizing: border-box;
             font-family: 'Arial', sans-serif;
         }
-
         body {
             line-height: 1.6;
             color: #5A3E2B;
             background: #F4E7D1;
         }
-
-        /* Header Styles */
         .header {
             background: #2E4F2E;
             padding: 1rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
         }
-
         .nav-container {
             max-width: 1200px;
             margin: 0 auto;
@@ -36,27 +31,20 @@
             justify-content: space-between;
             align-items: center;
         }
-
         .logo {
             width: 200px;
-            height: auto;
         }
-
         .nav-links {
             display: flex;
             gap: 2rem;
         }
-
         .nav-links a {
             text-decoration: none;
             color: #F4E7D1;
             font-weight: 500;
         }
-
-        /* Hero Section */
         .hero {
-            background: linear-gradient(rgba(46, 79, 46, 0.8), rgba(46, 79, 46, 0.8)),
-                        url('hero-bg.jpg') center/cover;
+            background: linear-gradient(rgba(46, 79, 46, 0.8), rgba(46, 79, 46, 0.8)), url('hero-bg.jpg') center/cover;
             height: 80vh;
             display: flex;
             align-items: center;
@@ -65,12 +53,6 @@
             color: #F4E7D1;
             margin-top: 70px;
         }
-
-        .hero-content h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
-        }
-
         .btn {
             background: #D97E50;
             color: #FFF;
@@ -79,76 +61,26 @@
             border-radius: 5px;
             cursor: pointer;
         }
-
-        /* About Section */
-        .about-home {
+        .about-home, .specialisations-home, .reviews-home, .contact {
             padding: 5rem 2rem;
-            background: #FFF;
             text-align: center;
         }
-
-        .about-home h2 {
-            color: #2E4F2E;
-            margin-bottom: 1rem;
-        }
-
-        .about-home p {
-            max-width: 800px;
-            margin: auto;
-            line-height: 1.8;
-            color: #5A3E2B;
-        }
-
-        /* Patient Reviews Section */
-        .reviews-home {
-            padding: 5rem 2rem;
-            background: #F4E7D1;
-            text-align: center;
-        }
-
-        .review-container {
+        .specialisation-container, .review-container {
             max-width: 800px;
             margin: auto;
         }
-
-        .review {
+        .specialisation, .review {
             background: #FFF;
             padding: 1.5rem;
             border-radius: 5px;
             margin-bottom: 1.5rem;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-
-        .review h3 {
-            color: #2E4F2E;
-        }
-
-        /* Contact Section */
-        .contact {
-            padding: 5rem 2rem;
-            background: #FFF;
-        }
-
-        .contact-info {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-
-        /* Footer */
         .footer {
             background: #2E4F2E;
             color: #F4E7D1;
             padding: 3rem 2rem;
             text-align: center;
-        }
-
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none;
-            }
-            .hero-content h1 {
-                font-size: 2.5rem;
-            }
         }
     </style>
 </head>
@@ -158,7 +90,7 @@
             <img src="logo.png" alt="Pratyaksha Ayurveda" class="logo">
             <div class="nav-links">
                 <a href="#home">Home</a>
-                <a href="#treatments">Treatments</a>
+                <a href="#specialisations">Our Specialisations</a>
                 <a href="about.html">About</a>
                 <a href="reviews.html">Reviews</a>
                 <a href="#contact">Contact</a>
@@ -174,32 +106,32 @@
         </div>
     </section>
 
-    <!-- About Section on Home Page -->
+    <!-- About Section -->
     <section class="about-home">
         <h2>About Pratyaksha Ayurveda</h2>
         <p>Promoting Authentic Ayurveda Rooted in Tradition, Backed by Science. Restoring Balance, Not Just Symptoms.</p>
         <p>Founded by <strong>Dr. Ankit Chauhan (BAMS)</strong>, an Ayurveda Specialist, Pratyaksha Ayurveda is dedicated to bringing holistic healing with time-tested Ayurvedic practices.</p>
     </section>
 
-    <!-- Patient Reviews Section on Home Page -->
+    <!-- Our Specialisations Section -->
+    <section class="specialisations-home" id="specialisations">
+        <h2>Our Specialisations</h2>
+        <div class="specialisation-container">
+            <div class="specialisation"><h3>Joint Disorders</h3><p>Ayurvedic solutions for arthritis, osteoporosis, and joint pain.</p></div>
+            <div class="specialisation"><h3>Digestive Disorders</h3><p>Treatments for acidity, IBS, and gut health.</p></div>
+            <div class="specialisation"><h3>Sinusitis & Rhinitis</h3><p>Ayurvedic nasal therapies and immune-boosting techniques.</p></div>
+            <div class="specialisation"><h3>Headache & Migraine</h3><p>Shirodhara, herbal remedies, and dosha balancing.</p></div>
+            <div class="specialisation"><h3>Fever Management</h3><p>Natural detox and immunity-restoring remedies.</p></div>
+            <div class="specialisation"><h3>Thyroid Disorders</h3><p>Herbal treatments and lifestyle modifications.</p></div>
+        </div>
+        <a href="specialised.html" class="btn">Learn More</a>
+    </section>
+
+    <!-- Patient Reviews Section -->
     <section class="reviews-home">
         <h2>Patient Reviews</h2>
         <div class="review-container" id="home-reviews">
-            <!-- Reviews will be dynamically loaded here -->
-        </div>
-    </section>
-
-    <section class="contact" id="contact">
-        <h2 class="section-title">Contact Us</h2>
-        <div class="contact-info">
-            <h3>Pratyaksha Ayurveda</h3>
-            <p>
-                <a href="https://goo.gl/maps/..." target="_blank">
-                    Doon Institute of Medical Sciences<br>
-                    Dehradun, Uttarakhand
-                </a>
-            </p>
-            <p>Phone: <a href="tel:+918708880341">+91 8708880341</a></p>
+            <p>Loading reviews...</p>
         </div>
     </section>
 
@@ -212,13 +144,12 @@
         import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
 
         const firebaseConfig = {
-            apiKey: "AIzaSyD9erR6d4qSSPo1UyfEuS-_G_FtvdxncBQ",
-            authDomain: "pratyaksha-ayurveda.firebaseapp.com",
-            projectId: "pratyaksha-ayurveda",
-            storageBucket: "pratyaksha-ayurveda.appspot.com",
-            messagingSenderId: "757013845941",
-            appId: "1:757013845941:web:4edf0455611214d2c46bfc",
-            measurementId: "G-HBH8C5KGGB"
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -226,18 +157,25 @@
 
         async function loadHomeReviews() {
             const reviewsContainer = document.getElementById("home-reviews");
-            const querySnapshot = await getDocs(collection(db, "reviews"));
-            
-            reviewsContainer.innerHTML = "";
-            querySnapshot.forEach((doc) => {
-                const review = doc.data();
-                reviewsContainer.innerHTML += `
-                    <div class="review">
-                        <h3>${review.name} (${review.country})</h3>
-                        <p>${review.review}</p>
-                    </div>
-                `;
-            });
+
+            try {
+                const querySnapshot = await getDocs(collection(db, "reviews"));
+                
+                if (querySnapshot.empty) {
+                    reviewsContainer.innerHTML = "<p>No reviews available.</p>";
+                    return;
+                }
+
+                reviewsContainer.innerHTML = "";
+                querySnapshot.forEach(doc => {
+                    const review = doc.data();
+                    reviewsContainer.innerHTML += `<div class="review"><h3>${review.name} (${review.country})</h3><p>${review.review}</p></div>`;
+                });
+
+            } catch (error) {
+                console.error("Error loading reviews:", error);
+                reviewsContainer.innerHTML = "<p>Failed to load reviews. Please try again later.</p>";
+            }
         }
 
         loadHomeReviews();
