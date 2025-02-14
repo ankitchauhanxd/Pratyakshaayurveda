@@ -114,18 +114,74 @@
     </section>
 
     <!-- Our Specialisations Section -->
-    <section class="specialisations-home" id="specialisations">
-        <h2>Our Specialisations</h2>
-        <div class="specialisation-container">
-            <div class="specialisation"><h3>Joint Disorders</h3><p>Ayurvedic solutions for arthritis, osteoporosis, and joint pain.</p></div>
-            <div class="specialisation"><h3>Digestive Disorders</h3><p>Treatments for acidity, IBS, and gut health.</p></div>
-            <div class="specialisation"><h3>Sinusitis & Rhinitis</h3><p>Ayurvedic nasal therapies and immune-boosting techniques.</p></div>
-            <div class="specialisation"><h3>Headache & Migraine</h3><p>Shirodhara, herbal remedies, and dosha balancing.</p></div>
-            <div class="specialisation"><h3>Fever Management</h3><p>Natural detox and immunity-restoring remedies.</p></div>
-            <div class="specialisation"><h3>Thyroid Disorders</h3><p>Herbal treatments and lifestyle modifications.</p></div>
+<section class="specialisations-home" id="specialisations">
+    <h2>Our Specialisations</h2>
+    <div class="specialisation-container">
+        <div class="specialisation-card">
+            <img src="images/joint-disorders.jpg" alt="Joint Disorders">
+            <h3>Joint Disorders</h3>
+            <p>Ayurvedic solutions for arthritis, osteoporosis, and joint pain.</p>
         </div>
-        <a href="specialised.html" class="btn">Learn More</a>
-    </section>
+        <div class="specialisation-card">
+            <img src="images/digestive-disorders.jpg" alt="Digestive Disorders">
+            <h3>Digestive Disorders</h3>
+            <p>Treatments for acidity, IBS, and gut health.</p>
+        </div>
+        <div class="specialisation-card">
+            <img src="images/sinusitis.jpg" alt="Sinusitis & Rhinitis">
+            <h3>Sinusitis & Rhinitis</h3>
+            <p>Ayurvedic nasal therapies and immune-boosting techniques.</p>
+        </div>
+        <div class="specialisation-card">
+            <img src="images/migraine.jpg" alt="Headache & Migraine">
+            <h3>Headache & Migraine</h3>
+            <p>Shirodhara, herbal remedies, and dosha balancing.</p>
+        </div>
+        <div class="specialisation-card">
+            <img src="images/fever-management.jpg" alt="Fever Management">
+            <h3>Fever Management</h3>
+            <p>Natural detox and immunity-restoring remedies.</p>
+        </div>
+        <div class="specialisation-card">
+            <img src="images/thyroid.jpg" alt="Thyroid Disorders">
+            <h3>Thyroid Disorders</h3>
+            <p>Herbal treatments and lifestyle modifications.</p>
+        </div>
+    </div>
+    <a href="specialised.html" class="btn">Learn More</a>
+</section>
+
+<style>
+    .specialisation-container {
+        display: flex;
+        gap: 1rem;
+        overflow-x: auto;
+        padding: 1rem 0;
+        scrollbar-width: thin;
+        scrollbar-color: #D97E50 #F4E7D1;
+    }
+
+    .specialisation-card {
+        background: #FFF;
+        padding: 1rem;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        min-width: 250px;
+        max-width: 280px;
+        text-align: center;
+    }
+
+    .specialisation-card img {
+        width: 100%;
+        border-radius: 10px;
+        height: 150px;
+        object-fit: cover;
+    }
+
+    .specialisation-card h3 {
+        margin-top: 0.5rem;
+    }
+</style>
 
     <!-- Patient Reviews Section -->
     <section class="reviews-home">
