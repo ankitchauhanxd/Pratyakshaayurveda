@@ -312,57 +312,122 @@
                 });
         }
 
-        // Function to Load Pending Reviews (For Admin)
-        async function loadPendingReviews() {
-            const pendingReviewsContainer = document.getElementById("pending-reviews");
+     // Function to Submit Review
+document.getElementById("submit-review-btn").addEventListener("click", async () => {
+    const reviewText = document.getElementById("review-text").value.trim();
+    const reviewCountry = document.getElementById("review-country").value.trim();
+    const user = auth.currentUser;
 
-            try {
-                const q = query(collection(db, "reviews"), where("status", "==", "pending"));
-                const querySnapshot = await getDocs(q);
+    if (!user) {
+        alert("You need to log in to submit a review.");
+        return;
+    }
 
-                pendingReviewsContainer.innerHTML = querySnapshot.empty ? "<p>No pending reviews.</p>" : "";
-                querySnapshot.forEach(doc => {
-                    const review = doc.data();
-                    const reviewId = doc.id;
+    if (!reviewText || !reviewCountry) {
+        alert("Please fill in all fields.");
+        return;
+    }
 
-                    pendingReviewsContainer.innerHTML += `
-                        <div class="review">
-                            <h3>${review.name} (${review.country}) ${review.verified ? "✔ Verified" : ""}</h3>
-                            <p>${review.review}</p>
-                            <button onclick="approveReview('${reviewId}')">Approve</button>
-                            <button onclick="rejectReview('${reviewId}')">Reject</button>
-                        </div>`;
-                });
-            } catch (error) {
-                console.error("Error loading pending reviews:", error);
-                pendingReviewsContainer.innerHTML = "<p>Failed to load pending reviews.</p>";
-            }
-        }
+    try {
+        await addDoc(collection(db, "reviews"), {
+            email: user.email,
+            name: user.displayName || "Anonymous",
+            country: reviewCountry,
+            review: reviewText,
+            status: "pending", // Default status
+            verified: false, // Initially not verified
+            timestamp: serverTimestamp()
+        });
 
-        // Function to Load Approved Reviews on Home Page
-        async function loadHomeReviews() {
-            const reviewsContainer = document.getElementById("home-reviews");
+        alert("Your review has been submitted for approval.");
+        document.getElementById("review-text").value = "";
+        document.getElementById("review-country").value = "";
 
-            try {
-                const q = query(collection(db, "reviews"), where("status", "==", "approved"));
-                const querySnapshot = await getDocs(q);
-                
-                reviewsContainer.innerHTML = querySnapshot.empty ? "<p>No reviews available.</p>" : "";
-                querySnapshot.forEach(doc => {
-                    const review = doc.data();
-                    reviewsContainer.innerHTML += `<div class="review">
-                        <h3>${review.name} (${review.country}) ${review.verified ? "✔ Verified" : ""}</h3>
-                        <p>${review.review}</p>
-                    </div>`;
-                });
-            } catch (error) {
-                console.error("Error loading reviews:", error);
-                reviewsContainer.innerHTML = "<p>Failed to load reviews. Please try again later.</p>";
-            }
-        }
+    } catch (error) {
+        console.error("Error submitting review:", error);
+        alert("Error submitting review. Please try again.");
+    }
+});
 
-        loadHomeReviews(); // Load reviews on page load
-    });
+// Function to Load Pending Reviews (For Admin)
+async function loadPendingReviews() {
+    const pendingReviewsContainer = document.getElementById("pending-reviews");
+
+    try {
+        const q = query(collection(db, "reviews"), where("status", "==", "pending"));
+        const querySnapshot = await getDocs(q);
+
+        pendingReviewsContainer.innerHTML = querySnapshot.empty ? "<p>No pending reviews.</p>" : "";
+        querySnapshot.forEach(doc => {
+            const review = doc.data();
+            const reviewId = doc.id;
+
+            pendingReviewsContainer.innerHTML += `
+                <div class="review">
+                    <h3>${review.name} (${review.country}) ${review.verified ? "✔ Verified" : ""}</h3>
+                    <p>${review.review}</p>
+                    <button onclick="approveReview('${reviewId}')">Approve</button>
+                    <button onclick="rejectReview('${reviewId}')">Reject</button>
+                </div>`;
+        });
+    } catch (error) {
+        console.error("Error loading pending reviews:", error);
+        pendingReviewsContainer.innerHTML = "<p>Failed to load pending reviews.</p>";
+    }
+}
+
+// Function to Load Approved Reviews on Home Page
+async function loadHomeReviews() {
+    const reviewsContainer = document.getElementById("home-reviews");
+
+    try {
+        const q = query(collection(db, "reviews"), where("status", "==", "approved"));
+        const querySnapshot = await getDocs(q);
+        
+        reviewsContainer.innerHTML = querySnapshot.empty ? "<p>No reviews available.</p>" : "";
+        querySnapshot.forEach(doc => {
+            const review = doc.data();
+            reviewsContainer.innerHTML += `<div class="review">
+                <h3>${review.name} (${review.country}) ${review.verified ? "✔ Verified" : ""}</h3>
+                <p>${review.review}</p>
+            </div>`;
+        });
+    } catch (error) {
+        console.error("Error loading reviews:", error);
+        reviewsContainer.innerHTML = "<p>Failed to load reviews. Please try again later.</p>";
+    }
+}
+
+// Function to Approve a Review
+async function approveReview(reviewId) {
+    try {
+        await updateDoc(doc(db, "reviews", reviewId), {
+            status: "approved",
+            verified: true // Mark as verified
+        });
+        alert("Review approved successfully!");
+        loadPendingReviews(); // Refresh pending reviews
+        loadHomeReviews(); // Refresh homepage reviews
+    } catch (error) {
+        console.error("Error approving review:", error);
+        alert("Error approving review. Please try again.");
+    }
+}
+
+// Function to Reject a Review
+async function rejectReview(reviewId) {
+    try {
+        await deleteDoc(doc(db, "reviews", reviewId));
+        alert("Review rejected and deleted successfully!");
+        loadPendingReviews(); // Refresh pending reviews
+    } catch (error) {
+        console.error("Error rejecting review:", error);
+        alert("Error rejecting review. Please try again.");
+    }
+}
+
+loadHomeReviews(); // Load approved reviews on page load
+});
 </script>
 </body>
 </html>
