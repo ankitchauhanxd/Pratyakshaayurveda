@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Pratyaksha Ayurveda</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+        body {
+            background-color: #F4E7D1; /* Muted Beige */
+            color: #5A3E2B; /* Deep Brown */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: #FFF;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 350px;
+        }
+        h2 {
+            color: #2E4F2E; /* Dark Green */
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        label {
+            font-weight: bold;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #D97E50; /* Earthy Orange */
+            border-radius: 5px;
+            background: #F4E7D1;
+            color: #5A3E2B;
+        }
+        .btn {
+            background: #2E4F2E; /* Dark Green */
+            color: #FFF;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+        .btn:hover {
+            background: #D97E50; /* Earthy Orange */
+        }
+        #error-message {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" required>
+            </div>
+            <button type="submit" class="btn">Login</button>
+            <button type="button" class="btn" id="signupBtn">Sign Up</button>
+            <p id="error-message"></p>
+        </form>
+    </div>
+
+    <!-- Firebase Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyD9erR6d4qSSPo1UyfEuS-_G_FtvdxncBQ",
+            authDomain: "pratyaksha-ayurveda.firebaseapp.com",
+            projectId: "pratyaksha-ayurveda",
+            storageBucket: "pratyaksha-ayurveda.appspot.com",
+            messagingSenderId: "757013845941",
+            appId: "1:757013845941:web:4edf0455611214d2c46bfc",
+            measurementId: "G-HBH8C5KGGB"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Handle Login
+        document.getElementById("loginForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const errorMessage = document.getElementById("error-message");
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                window.location.href = "reviews.html"; // Redirect to reviews page
+            } catch (error) {
+                errorMessage.innerText = "Invalid email or password!";
+            }
+        });
+
+        // Handle Sign Up
+        document.getElementById("signupBtn").addEventListener("click", async () => {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const errorMessage = document.getElementById("error-message");
+
+            if (email && password.length >= 6) {
+                try {
+                    await createUserWithEmailAndPassword(auth, email, password);
+                    alert("Account created! Please log in.");
+                } catch (error) {
+                    errorMessage.innerText = "Failed to create account.";
+                }
+            } else {
+                errorMessage.innerText = "Password must be at least 6 characters!";
+            }
+        });
+    </script>
+
+</body>
+</html>
