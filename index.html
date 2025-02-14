@@ -185,11 +185,30 @@
 
     <!-- Patient Reviews Section -->
     <section class="reviews-home">
-        <h2>Patient Reviews</h2>
-        <div class="review-container" id="home-reviews">
-            <p>Loading reviews...</p>
-        </div>
-    </section>
+    	<!-- Admin Panel (Hidden by Default) -->
+<section id="admin-panel" style="display: none; padding: 5rem 2rem; text-align: center;">
+    <h2>Admin Panel - Review Management</h2>
+    <div id="pending-reviews">
+        <p>Loading pending reviews...</p>
+    </div>
+</section>
+    <h2>Patient Reviews</h2>
+    <div class="review-container" id="home-reviews">
+        <p>Loading reviews...</p>
+    </div>
+
+    <!-- Google Login Button -->
+    <button id="google-login-btn" class="btn">Sign in with Google to Leave a Review</button>
+    <p id="user-info"></p>
+
+    <!-- Review Submission Form -->
+    <div id="review-form" style="display: none;">
+        <h3>Leave a Review</h3>
+        <input type="text" id="review-country" placeholder="Your Country">
+        <textarea id="review-text" placeholder="Write your review here..."></textarea>
+        <button id="submit-review-btn" class="btn">Submit Review</button>
+    </div>
+</section>
 
     <!-- Contact Section -->
     <section class="contact" id="contact">
@@ -204,33 +223,159 @@
     </footer>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-analytics.js";
-        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-analytics.js";
+    import { getFirestore, collection, addDoc, getDocs, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyD9erR6d4qSSPo1UyfEuS-_G_FtvdxncBQ",
-            authDomain: "pratyaksha-ayurveda.firebaseapp.com",
-            projectId: "pratyaksha-ayurveda",
-            storageBucket: "pratyaksha-ayurveda.firebasestorage.app",
-            messagingSenderId: "757013845941",
-            appId: "1:757013845941:web:4edf0455611214d2c46bfc",
-            measurementId: "G-HBH8C5KGGB"
-        };
+    // Firebase Configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyD9erR6d4qSSPo1UyfEuS-_G_FtvdxncBQ",
+        authDomain: "pratyaksha-ayurveda.firebaseapp.com",
+        projectId: "pratyaksha-ayurveda",
+        storageBucket: "pratyaksha-ayurveda.firebasestorage.app",
+        messagingSenderId: "757013845941",
+        appId: "1:757013845941:web:4edf0455611214d2c46bfc",
+        measurementId: "G-HBH8C5KGGB"
+    };
 
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-        const db = getFirestore(app);
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getFirestore(app);
+    const auth = getAuth();
 
+    // Check User Login State and Hide/Show Elements Accordingly
+     onAuthStateChanged(auth, (user) => {
+    if (user) {
+        document.getElementById("google-login-btn").style.display = "none"; 
+        document.getElementById("user-info").innerHTML = `Logged in as: <strong>${user.displayName}</strong>`;
+        document.getElementById("review-form").style.display = "block"; 
+        
+        // Show Admin Panel if Logged-in User is the Admin
+        if (user.email === "pratyakshaayurveda@gmail.com") {
+            document.getElementById("admin-panel").style.display = "block"; // Show admin panel
+            loadPendingReviews(); // Load pending reviews
+        }
+    } else {
+        document.getElementById("google-login-btn").style.display = "block";
+        document.getElementById("review-form").style.display = "none";
+        document.getElementById("admin-panel").style.display = "none"; // Hide admin panel for non-admins
+        document.getElementById("user-info").innerHTML = "";
+    }
+});  // Function to Load Pending Reviews (For Admin)
+async function loadPendingReviews() {
+    const pendingReviewsContainer = document.getElementById("pending-reviews");
+
+    try {
+        const q = query(collection(db, "reviews"), where("status", "==", "pending"));
+        const querySnapshot = await getDocs(q);
+
+        pendingReviewsContainer.innerHTML = querySnapshot.empty ? "<p>No pending reviews.</p>" : "";
+        querySnapshot.forEach(doc => {
+            const review = doc.data();
+            const reviewId = doc.id;
+
+            pendingReviewsContainer.innerHTML += `
+                <div class="review">
+                    <h3>${review.name} (${review.country}) ${review.verified ? "✔ Verified" : ""}</h3>
+                    <p>${review.review}</p>
+                    <button onclick="approveReview('${reviewId}')">Approve</button>
+                    <button onclick="rejectReview('${reviewId}')">Reject</button>
+                </div>`;
+        });
+    } catch (error) {
+        console.error("Error loading pending reviews:", error);
+        pendingReviewsContainer.innerHTML = "<p>Failed to load pending reviews.</p>";
+    }
+}
+
+// Approve a Review
+async function approveReview(reviewId) {
+    try {
+        await updateDoc(doc(db, "reviews", reviewId), { status: "approved" });
+        alert("Review approved!");
+        loadPendingReviews(); // Refresh pending reviews
+    } catch (error) {
+        alert("Error approving review: " + error.message);
+    }
+}
+
+// Reject a Review
+async function rejectReview(reviewId) {
+    try {
+        await deleteDoc(doc(db, "reviews", reviewId));
+        alert("Review rejected!");
+        loadPendingReviews(); // Refresh pending reviews
+    } catch (error) {
+        alert("Error rejecting review: " + error.message);
+    }
+}
+
+    // Google Login Function
+    document.addEventListener("DOMContentLoaded", () => {
+        document.getElementById("google-login-btn").addEventListener("click", async () => {
+            const provider = new GoogleAuthProvider();
+            try {
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
+                document.getElementById("user-info").innerHTML = `Logged in as: <strong>${user.displayName}</strong>`;
+                document.getElementById("review-form").style.display = "block"; // Show the review form
+            } catch (error) {
+                alert("Login failed: " + error.message);
+            }
+        });
+
+        // Review Submission Function
+        document.getElementById("submit-review-btn").addEventListener("click", async () => {
+            const user = auth.currentUser;
+            if (!user) {
+                alert("Please log in first!");
+                return;
+            }
+
+            const reviewText = document.getElementById("review-text").value.trim();
+            const reviewCountry = document.getElementById("review-country").value.trim();
+
+            if (!reviewText) {
+                alert("Review cannot be empty!");
+                return;
+            }
+
+            try {
+                await addDoc(collection(db, "reviews"), {
+                    name: user.displayName || "Anonymous",
+                    email: user.email,
+                    country: reviewCountry || "Unknown",
+                    review: reviewText,
+                    timestamp: serverTimestamp(),
+                    status: "pending",  // New reviews need admin approval
+                    verified: true  // Google users are marked as verified
+                });
+
+                alert("Review submitted for approval!");
+                document.getElementById("review-text").value = ""; // Clear input
+                document.getElementById("review-country").value = ""; // Clear country field
+            } catch (error) {
+                alert("Error submitting review: " + error.message);
+            }
+        });
+
+        // Function to Load Only Approved Reviews
         async function loadHomeReviews() {
             const reviewsContainer = document.getElementById("home-reviews");
 
             try {
-                const querySnapshot = await getDocs(collection(db, "reviews"));
+                const q = query(collection(db, "reviews"), where("status", "==", "approved"));
+                const querySnapshot = await getDocs(q);
+                
                 reviewsContainer.innerHTML = querySnapshot.empty ? "<p>No reviews available.</p>" : "";
                 querySnapshot.forEach(doc => {
                     const review = doc.data();
-                    reviewsContainer.innerHTML += `<div class="review"><h3>${review.name} (${review.country})</h3><p>${review.review}</p></div>`;
+                    reviewsContainer.innerHTML += `<div class="review">
+                        <h3>${review.name} (${review.country}) ${review.verified ? "✔ Verified" : ""}</h3>
+                        <p>${review.review}</p>
+                    </div>`;
                 });
             } catch (error) {
                 console.error("Error loading reviews:", error);
@@ -238,7 +383,8 @@
             }
         }
 
-        loadHomeReviews();
-    </script>
+        loadHomeReviews(); // Load reviews on page load
+    });
+</script>
 </body>
 </html>
