@@ -1,393 +1,641 @@
 <!DOCTYPE html>
 
+
+
 <html lang="en">
+
+
 
 <head>
 
+
+
     <meta charset="UTF-8">
+
+
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+
+
     <title>Reviews - Pratyaksha Ayurveda</title>
+
+
 
     <style>
 
+
+
         * {
+
+
 
             margin: 0;
 
+
+
             padding: 0;
+
+
 
             box-sizing: border-box;
 
+
+
             font-family: 'Arial', sans-serif;
 
+
+
         }
+
+
+
+
 
 
 
         body {
 
+
+
             background-color: #F4E7D1; /* Muted Beige */
+
+
 
             color: #5A3E2B; /* Deep Brown */
 
+
+
             line-height: 1.6;
+
+
 
             padding: 20px;
 
+
+
         }
+
+
+
+
 
 
 
         .container {
 
+
+
             max-width: 800px;
+
+
 
             margin: auto;
 
+
+
             padding: 20px;
+
+
 
             background: #FFF;
 
+
+
             border-radius: 8px;
+
+
 
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 
+
+
         }
+
+
+
+
 
 
 
         h2 {
 
+
+
             text-align: center;
+
+
 
             color: #2E4F2E; /* Dark Green */
 
+
+
         }
+
+
+
+
 
 
 
         .form-group {
 
+
+
             margin-bottom: 15px;
 
+
+
         }
+
+
+
+
 
 
 
         label {
 
+
+
             font-weight: bold;
+
+
 
             color: #5A3E2B;
 
+
+
         }
+
+
+
+
 
 
 
         input, select, textarea {
 
+
+
             width: 100%;
+
+
 
             padding: 10px;
 
+
+
             margin-top: 5px;
+
+
 
             border: 1px solid #D97E50; /* Earthy Orange */
 
+
+
             border-radius: 5px;
+
+
 
             background: #F4E7D1;
 
+
+
             color: #5A3E2B;
 
+
+
         }
+
+
+
+
 
 
 
         .btn {
 
+
+
             background: #2E4F2E; /* Dark Green */
+
+
 
             color: #FFF;
 
+
+
             padding: 10px 15px;
+
+
 
             border: none;
 
+
+
             border-radius: 5px;
+
+
 
             cursor: pointer;
 
+
+
             display: block;
+
+
 
             width: 100%;
 
+
+
         }
+
+
+
+
 
 
 
         .btn:hover {
 
+
+
             background: #D97E50; /* Earthy Orange */
 
+
+
         }
+
+
+
+
 
 
 
         .reviews {
 
+
+
             margin-top: 30px;
 
+
+
         }
+
+
+
+
 
 
 
         .review-item {
 
+
+
             background: #FFF;
+
+
 
             padding: 15px;
 
+
+
             margin-bottom: 10px;
+
+
 
             border-left: 5px solid #2E4F2E; /* Dark Green */
 
+
+
             border-radius: 5px;
+
+
 
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
+
+
         }
+
+
+
+
 
 
 
         @media (max-width: 768px) {
 
+
+
             body {
+
+
 
                 padding: 10px;
 
+
+
             }
+
+
 
         }
 
+
+
     </style>
+
+
 
 </head>
 
+
+
 <body>
+
+
 
     <div class="container">
 
+
+
         <h2>Submit Your Review</h2>
+
+
 
         <form id="reviewForm">
 
+
+
             <div class="form-group">
+
+
 
                 <label for="name">Name:</label>
 
+
+
                 <input type="text" id="name" required>
+
+
 
             </div>
 
+
+
             <div class="form-group">
+
+
 
                 <label for="country">Country:</label>
 
+
+
                 <select id="country">
+
+
 
                     <option value="">Select or Type...</option>
 
+
+
                     <option value="India">India</option>
+
+
 
                     <option value="USA">USA</option>
 
+
+
                     <option value="UK">UK</option>
+
+
 
                     <option value="Canada">Canada</option>
 
+
+
                     <option value="Australia">Australia</option>
+
+
 
                     <option value="Germany">Germany</option>
 
+
+
                     <option value="France">France</option>
+
+
 
                     <option value="Other">Other (Type Below)</option>
 
+
+
                 </select>
+
+
 
                 <input type="text" id="customCountry" placeholder="Type your country here" style="display:none;">
 
+
+
             </div>
+
+
 
             <div class="form-group">
 
+
+
                 <label for="review">Review:</label>
+
+
 
                 <textarea id="review" required></textarea>
 
+
+
             </div>
 
+
+
             <button type="submit" class="btn">Submit Review</button>
+
+
 
         </form>
 
 
 
+
+
+
+
         <h2>Patient Reviews</h2>
 
+
+
         <div class="reviews" id="reviewsList"></div>
+
+
 
     </div>
 
 
 
+
+
+
+
     <!-- Firebase -->
 
-    <script type="module">
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, updateDoc, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
 
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
+    const firebaseConfig = {
+        apiKey: "AIzaSyD9erR6d4qSSPo1UyfEuS-_G_FtvdxncBQ",
+        authDomain: "pratyaksha-ayurveda.firebaseapp.com",
+        projectId: "pratyaksha-ayurveda",
+        storageBucket: "pratyaksha-ayurveda.appspot.com",
+        messagingSenderId: "757013845941",
+        appId: "1:757013845941:web:4edf0455611214d2c46bfc",
+        measurementId: "G-HBH8C5KGGB"
+    };
 
-        import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
 
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
-
-
-
-        const firebaseConfig = {
-
-            apiKey: "AIzaSyD9erR6d4qSSPo1UyfEuS-_G_FtvdxncBQ",
-
-            authDomain: "pratyaksha-ayurveda.firebaseapp.com",
-
-            projectId: "pratyaksha-ayurveda",
-
-            storageBucket: "pratyaksha-ayurveda.appspot.com",
-
-            messagingSenderId: "757013845941",
-
-            appId: "1:757013845941:web:4edf0455611214d2c46bfc",
-
-            measurementId: "G-HBH8C5KGGB"
-
-        };
-
-
-
-        // Initialize Firebase
-
-        const app = initializeApp(firebaseConfig);
-
-        const db = getFirestore(app);
-
-        const auth = getAuth(app); // Initialize Firebase Authentication
-
-
-
-  // Redirect users if they are not logged in
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
-
-const auth = getAuth();
-onAuthStateChanged(auth, (user) => {
-    if (!user) {
-        window.location.href = "login.html"; // Redirect before loading the page
-    }
-});
-
-
-        // Handle custom country input
-
-        document.getElementById("country").addEventListener("change", function() {
-
-            const customCountryInput = document.getElementById("customCountry");
-
-            if (this.value === "Other") {
-
-                customCountryInput.style.display = "block";
-
-            } else {
-
-                customCountryInput.style.display = "none";
-
+    // Redirect users if they are not logged in
+    onAuthStateChanged(auth, (user) => {
+        if (!user) {
+            window.location.href = "login.html"; // Redirect if not logged in
+        } else {
+            console.log("User logged in:", user.email);
+            // Only admins can approve or reject reviews
+            if (user.email !== "pratyakshaayurveda@gmail.com") {
+                alert("Access Denied: You are not authorized to manage reviews.");
+                window.location.href = "index.html"; // Redirect non-admin users
             }
-
-        });
-
-
-
-        // Submit Review
-
-        document.getElementById("reviewForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const user = auth.currentUser;
-
-    if (!user) {
-        alert("Please log in to submit a review.");
-        return;
-    }
-
-    // Check if the user has verified their email
-    if (!user.emailVerified) {
-        alert("Please verify your email before submitting a review.");
-        return;
-    }
-
-    const name = document.getElementById("name").value;
-    let country = document.getElementById("country").value;
-    const customCountry = document.getElementById("customCountry").value;
-    const review = document.getElementById("review").value;
-
-    if (country === "Other") {
-        country = customCountry || "Unknown";
-    }
-
-    if (name && review) {
-        await addDoc(collection(db, "reviews"), { 
-            name, 
-            country, 
-            review, 
-            email: user.email, 
-            verified: false // Mark as 'pending' until admin approves
-        });
-        alert("Review submitted successfully and is pending approval!");
-        document.getElementById("reviewForm").reset();
-        document.getElementById("customCountry").style.display = "none";
-        loadReviews();
-    }
-});
-
-
-
-
-        // Load Reviews
-
-        async function loadReviews() {
-    const reviewsList = document.getElementById("reviewsList");
-    reviewsList.innerHTML = "";
-    const querySnapshot = await getDocs(collection(db, "reviews"));
-
-    querySnapshot.forEach((doc) => {
-        const { name, country, review, email, verified } = doc.data();
-
-        // Only show reviews that have been approved by the admin
-        if (verified) {
-            const reviewElement = document.createElement("div");
-            reviewElement.classList.add("review-item");
-            reviewElement.innerHTML = `<strong>${name} (${country})</strong><br><small>${email}</small><p>${review}</p>`;
-            reviewsList.appendChild(reviewElement);
         }
     });
-}
 
+    // Handle custom country input
+    document.getElementById("country").addEventListener("change", function() {
+        const customCountryInput = document.getElementById("customCountry");
+        if (this.value === "Other") {
+            customCountryInput.style.display = "block";
+        } else {
+            customCountryInput.style.display = "none";
+        }
+    });
 
-        // Load reviews on page load
+    // Submit Review
+    document.getElementById("reviewForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const user = auth.currentUser;
 
-        loadReviews();
+        if (!user) {
+            alert("Please log in to submit a review.");
+            return;
+        }
 
-    </script>
+        // Check if the user has verified their email
+        if (!user.emailVerified) {
+            alert("Please verify your email before submitting a review.");
+            return;
+        }
+
+        const name = document.getElementById("name").value;
+        let country = document.getElementById("country").value;
+        const customCountry = document.getElementById("customCountry").value;
+        const review = document.getElementById("review").value;
+
+        if (country === "Other") {
+            country = customCountry || "Unknown";
+        }
+
+        if (name && review) {
+            await addDoc(collection(db, "reviews"), { 
+                name, 
+                country, 
+                review, 
+                email: user.email, 
+                verified: false // Mark as 'pending' until admin approves
+            });
+            alert("Review submitted successfully and is pending approval!");
+            document.getElementById("reviewForm").reset();
+            document.getElementById("customCountry").style.display = "none";
+            loadReviews(); // Reload reviews after submission
+        }
+    });
+
+    // Load Reviews
+    async function loadReviews() {
+        const reviewsList = document.getElementById("reviewsList");
+        reviewsList.innerHTML = ""; // Clear existing reviews
+
+        const querySnapshot = await getDocs(collection(db, "reviews"));
+
+        querySnapshot.forEach((doc) => {
+            const { name, country, review, email, verified } = doc.data();
+
+            const reviewElement = document.createElement("div");
+            reviewElement.classList.add("review-item");
+
+            reviewElement.innerHTML = `
+                <strong>${name} (${country})</strong><br>
+                <small>${email}</small><p>${review}</p>
+            `;
+
+            if (!verified) { // Display unapproved reviews with approval/rejection buttons
+                reviewElement.innerHTML += `
+                    <button onclick="approveReview('${doc.id}')">Approve</button>
+                    <button onclick="rejectReview('${doc.id}')">Reject</button>
+                `;
+            }
+
+            reviewsList.appendChild(reviewElement);
+        });
+    }
+
+    // Approve Review
+    async function approveReview(reviewId) {
+        try {
+            await updateDoc(doc(db, "reviews", reviewId), { verified: true });
+            alert("Review approved successfully!");
+            loadReviews();
+        } catch (error) {
+            console.error("Error approving review:", error);
+            alert("Error approving review.");
+        }
+    }
+
+    // Reject Review
+    async function rejectReview(reviewId) {
+        try {
+            await deleteDoc(doc(db, "reviews", reviewId));
+            alert("Review rejected and deleted.");
+            loadReviews();
+        } catch (error) {
+            console.error("Error rejecting review:", error);
+            alert("Error rejecting review.");
+        }
+    }
+
+    // Load reviews on page load
+    loadReviews();
+</script>
+
 
 </body>
+
+
 
 </html>
