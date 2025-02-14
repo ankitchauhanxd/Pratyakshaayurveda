@@ -449,7 +449,33 @@ async function rejectReview(reviewId) {
         alert("Error rejecting review. Please try again.");
     }
 }
+// Make functions globally accessible
+window.approveReview = async function (reviewId) {
+    try {
+        await updateDoc(doc(db, "reviews", reviewId), {
+            status: "approved",
+            verified: true // Mark as verified
+        });
+        alert("Review approved successfully!");
+        loadPendingReviews(); // Refresh pending reviews
+        loadHomeReviews(); // Refresh homepage reviews
+    } catch (error) {
+        console.error("Error approving review:", error);
+        alert("Error approving review. Please try again.");
+    }
+};
 
+window.rejectReview = async function (reviewId) {
+    try {
+        await deleteDoc(doc(db, "reviews", reviewId));
+        alert("Review rejected and deleted successfully!");
+        loadPendingReviews(); // Refresh pending reviews
+    } catch (error) {
+        console.error("Error rejecting review:", error);
+        alert("Error rejecting review. Please try again.");
+    }
+};
+        
 loadHomeReviews(); // Load approved reviews on page load
 });
 </script>
