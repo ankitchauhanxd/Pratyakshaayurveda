@@ -197,8 +197,11 @@
         <p>Loading reviews...</p>
     </div>
 
-    <!-- Google Login Button -->
-    <button id="google-login-btn" class="btn">Sign in with Google to Leave a Review</button>
+    <!-- Login  -->
+    <div id="email-login">
+    <input type="email" id="email-input" placeholder="Enter your email" required>
+    <button id="send-login-link-btn" class="btn">Send Login Link</button>
+</div>
     <p id="user-info"></p>
 
     <!-- Review Submission Form -->
@@ -226,7 +229,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-analytics.js";
     import { getFirestore, collection, addDoc, getDocs, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
+    import { getAuth, signInWithEmailLink, sendSignInLinkToEmail, isSignInWithEmailLink } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
 
     // Firebase Configuration
     const firebaseConfig = {
@@ -248,19 +251,18 @@
     // Check User Login State and Hide/Show Elements Accordingly
      onAuthStateChanged(auth, (user) => {
     if (user) {
-        document.getElementById("google-login-btn").style.display = "none"; 
-        document.getElementById("user-info").innerHTML = `Logged in as: <strong>${user.displayName}</strong>`;
+        document.getElementById("email-login").style.display = "none"; 
+        document.getElementById("user-info").innerHTML = `Logged in as: <strong>${user.email}</strong>`;
         document.getElementById("review-form").style.display = "block"; 
-        
-        // Show Admin Panel if Logged-in User is the Admin
+
         if (user.email === "pratyakshaayurveda@gmail.com") {
-            document.getElementById("admin-panel").style.display = "block"; // Show admin panel
-            loadPendingReviews(); // Load pending reviews
+            document.getElementById("admin-panel").style.display = "block";
+            loadPendingReviews();
         }
     } else {
-        document.getElementById("google-login-btn").style.display = "block";
+        document.getElementById("email-login").style.display = "block";
         document.getElementById("review-form").style.display = "none";
-        document.getElementById("admin-panel").style.display = "none"; // Hide admin panel for non-admins
+        document.getElementById("admin-panel").style.display = "none";
         document.getElementById("user-info").innerHTML = "";
     }
 });  // Function to Load Pending Reviews (For Admin)
@@ -314,17 +316,46 @@ async function rejectReview(reviewId) {
 
     // Google Login Function
     document.addEventListener("DOMContentLoaded", () => {
-        document.getElementById("google-login-btn").addEventListener("click", async () => {
-            const provider = new GoogleAuthProvider();
-            try {
-                const result = await signInWithPopup(auth, provider);
-                const user = result.user;
-                document.getElementById("user-info").innerHTML = `Logged in as: <strong>${user.displayName}</strong>`;
-                document.getElementById("review-form").style.display = "block"; // Show the review form
-            } catch (error) {
-                alert("Login failed: " + error.message);
-            }
+        const auth = getAuth();
+
+document.getElementById("send-login-link-btn").addEventListener("click", async () => {
+    const email = document.getElementById("email-input").value.trim();
+    if (!email) {
+        alert("Please enter your email.");
+        return;
+    }
+
+    const actionCodeSettings = {
+        url: window.location.href,
+        handleCodeInApp: true
+    };
+
+    try {
+        await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+        alert("A login link has been sent to your email.");
+        localStorage.setItem("emailForSignIn", email);
+    } catch (error) {
+        alert("Error sending login link: " + error.message);
+    }
+});
+
+// Handle Email Link Login
+if (isSignInWithEmailLink(auth, window.location.href)) {
+    let email = localStorage.getItem("emailForSignIn");
+    if (!email) {
+        email = prompt("Please enter your email to complete sign-in:");
+    }
+
+    signInWithEmailLink(auth, email, window.location.href)
+        .then((result) => {
+            localStorage.removeItem("emailForSignIn");
+            document.getElementById("user-info").innerHTML = `Logged in as: <strong>${result.user.email}</strong>`;
+            document.getElementById("review-form").style.display = "block"; 
+        })
+        .catch((error) => {
+            alert("Error signing in: " + error.message);
         });
+}
 
         // Review Submission Function
         document.getElementById("submit-review-btn").addEventListener("click", async () => {
