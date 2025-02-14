@@ -250,23 +250,40 @@
 
     document.addEventListener("DOMContentLoaded", () => {
         // Handle Login State and Show/Hide Elements
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                document.getElementById("email-login").style.display = "none";
-                document.getElementById("user-info").innerHTML = `Logged in as: <strong>${user.email}</strong>`;
-                document.getElementById("review-form").style.display = "block";
+       onAuthStateChanged(auth, async (user) => {
+    if (user) {
+        document.getElementById("email-login").style.display = "none";
+        document.getElementById("review-form").style.display = "block";
 
-                if (user.email === "pratyakshaayurveda@gmail.com") {
-                    document.getElementById("admin-panel").style.display = "block";
-                    loadPendingReviews();
+        // Check if user has a display name
+        if (!user.displayName) {
+            const userName = prompt("Please enter your name:");
+            if (userName) {
+                try {
+                    await updateProfile(user, { displayName: userName }); // Set display name in Firebase Auth
+                    await user.reload(); // Reload user to reflect updated display name
+                    user = auth.currentUser; // Get updated user info
+                } catch (error) {
+                    console.error("Error updating profile:", error);
                 }
-            } else {
-                document.getElementById("email-login").style.display = "block";
-                document.getElementById("review-form").style.display = "none";
-                document.getElementById("admin-panel").style.display = "none";
-                document.getElementById("user-info").innerHTML = "";
             }
-        });
+        }
+
+        // Display updated name and email
+        document.getElementById("user-info").innerHTML = `Logged in as: <strong>${user.displayName || "User"} (${user.email})</strong>`;
+
+        // Show admin panel for admin users
+        if (user.email === "pratyakshaayurveda@gmail.com") {
+            document.getElementById("admin-panel").style.display = "block";
+            loadPendingReviews();
+        }
+    } else {
+        document.getElementById("email-login").style.display = "block";
+        document.getElementById("review-form").style.display = "none";
+        document.getElementById("admin-panel").style.display = "none";
+        document.getElementById("user-info").innerHTML = "";
+    }
+}); 
 
         // Send Login Link
         document.getElementById("send-login-link-btn").addEventListener("click", async () => {
@@ -328,10 +345,17 @@ document.getElementById("submit-review-btn").addEventListener("click", async () 
         return;
     }
 
+    // Use stored displayName or ask again if missing
+    let userName = user.displayName || prompt("Please enter your name:");
+    if (!userName) {
+        alert("Name is required to submit a review.");
+        return;
+    }
+
     try {
         await addDoc(collection(db, "reviews"), {
             email: user.email,
-            name: user.displayName || "Anonymous",
+            name: userName,
             country: reviewCountry,
             review: reviewText,
             status: "pending", // Default status
