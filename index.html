@@ -225,11 +225,11 @@
         <p>&copy; 2025 Pratyaksha Ayurveda. All rights reserved.</p>
     </footer>
 
-    <script type="module">
+<script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-analytics.js";
-    import { getFirestore, collection, addDoc, getDocs, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
-    import { getAuth, signInWithEmailLink, sendSignInLinkToEmail, isSignInWithEmailLink } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
+    import { getFirestore, collection, addDoc, getDocs, query, where, serverTimestamp, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged, signInWithEmailLink, sendSignInLinkToEmail, isSignInWithEmailLink } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
 
     // Firebase Configuration
     const firebaseConfig = {
@@ -246,153 +246,100 @@
     const app = initializeApp(firebaseConfig);
     const analytics = getAnalytics(app);
     const db = getFirestore(app);
-    const auth = getAuth();
+    const auth = getAuth(app);  // Fixed: Ensure authentication is initialized correctly
 
-    // Check User Login State and Hide/Show Elements Accordingly
-     onAuthStateChanged(auth, (user) => {
-    if (user) {
-        document.getElementById("email-login").style.display = "none"; 
-        document.getElementById("user-info").innerHTML = `Logged in as: <strong>${user.email}</strong>`;
-        document.getElementById("review-form").style.display = "block"; 
-
-        if (user.email === "pratyakshaayurveda@gmail.com") {
-            document.getElementById("admin-panel").style.display = "block";
-            loadPendingReviews();
-        }
-    } else {
-        document.getElementById("email-login").style.display = "block";
-        document.getElementById("review-form").style.display = "none";
-        document.getElementById("admin-panel").style.display = "none";
-        document.getElementById("user-info").innerHTML = "";
-    }
-});  // Function to Load Pending Reviews (For Admin)
-async function loadPendingReviews() {
-    const pendingReviewsContainer = document.getElementById("pending-reviews");
-
-    try {
-        const q = query(collection(db, "reviews"), where("status", "==", "pending"));
-        const querySnapshot = await getDocs(q);
-
-        pendingReviewsContainer.innerHTML = querySnapshot.empty ? "<p>No pending reviews.</p>" : "";
-        querySnapshot.forEach(doc => {
-            const review = doc.data();
-            const reviewId = doc.id;
-
-            pendingReviewsContainer.innerHTML += `
-                <div class="review">
-                    <h3>${review.name} (${review.country}) ${review.verified ? "✔ Verified" : ""}</h3>
-                    <p>${review.review}</p>
-                    <button onclick="approveReview('${reviewId}')">Approve</button>
-                    <button onclick="rejectReview('${reviewId}')">Reject</button>
-                </div>`;
-        });
-    } catch (error) {
-        console.error("Error loading pending reviews:", error);
-        pendingReviewsContainer.innerHTML = "<p>Failed to load pending reviews.</p>";
-    }
-}
-
-// Approve a Review
-async function approveReview(reviewId) {
-    try {
-        await updateDoc(doc(db, "reviews", reviewId), { status: "approved" });
-        alert("Review approved!");
-        loadPendingReviews(); // Refresh pending reviews
-    } catch (error) {
-        alert("Error approving review: " + error.message);
-    }
-}
-
-// Reject a Review
-async function rejectReview(reviewId) {
-    try {
-        await deleteDoc(doc(db, "reviews", reviewId));
-        alert("Review rejected!");
-        loadPendingReviews(); // Refresh pending reviews
-    } catch (error) {
-        alert("Error rejecting review: " + error.message);
-    }
-}
-
-    // Google Login Function
     document.addEventListener("DOMContentLoaded", () => {
-        const auth = getAuth();
+        // Handle Login State and Show/Hide Elements
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById("email-login").style.display = "none";
+                document.getElementById("user-info").innerHTML = `Logged in as: <strong>${user.email}</strong>`;
+                document.getElementById("review-form").style.display = "block";
 
-document.getElementById("send-login-link-btn").addEventListener("click", async () => {
-    const email = document.getElementById("email-input").value.trim();
-    if (!email) {
-        alert("Please enter your email.");
-        return;
-    }
-
-    const actionCodeSettings = {
-        url: window.location.href,
-        handleCodeInApp: true
-    };
-
-    try {
-        await sendSignInLinkToEmail(auth, email, actionCodeSettings);
-        alert("A login link has been sent to your email.");
-        localStorage.setItem("emailForSignIn", email);
-    } catch (error) {
-        alert("Error sending login link: " + error.message);
-    }
-});
-
-// Handle Email Link Login
-if (isSignInWithEmailLink(auth, window.location.href)) {
-    let email = localStorage.getItem("emailForSignIn");
-    if (!email) {
-        email = prompt("Please enter your email to complete sign-in:");
-    }
-
-    signInWithEmailLink(auth, email, window.location.href)
-        .then((result) => {
-            localStorage.removeItem("emailForSignIn");
-            document.getElementById("user-info").innerHTML = `Logged in as: <strong>${result.user.email}</strong>`;
-            document.getElementById("review-form").style.display = "block"; 
-        })
-        .catch((error) => {
-            alert("Error signing in: " + error.message);
+                if (user.email === "pratyakshaayurveda@gmail.com") {
+                    document.getElementById("admin-panel").style.display = "block";
+                    loadPendingReviews();
+                }
+            } else {
+                document.getElementById("email-login").style.display = "block";
+                document.getElementById("review-form").style.display = "none";
+                document.getElementById("admin-panel").style.display = "none";
+                document.getElementById("user-info").innerHTML = "";
+            }
         });
-}
 
-        // Review Submission Function
-        document.getElementById("submit-review-btn").addEventListener("click", async () => {
-            const user = auth.currentUser;
-            if (!user) {
-                alert("Please log in first!");
+        // Send Login Link
+        document.getElementById("send-login-link-btn").addEventListener("click", async () => {
+            const email = document.getElementById("email-input").value.trim();
+            if (!email) {
+                alert("Please enter your email.");
                 return;
             }
 
-            const reviewText = document.getElementById("review-text").value.trim();
-            const reviewCountry = document.getElementById("review-country").value.trim();
-
-            if (!reviewText) {
-                alert("Review cannot be empty!");
-                return;
-            }
+            const actionCodeSettings = {
+                url: window.location.href,  // Keep this if logging in on the same page
+                handleCodeInApp: true,
+            };
 
             try {
-                await addDoc(collection(db, "reviews"), {
-                    name: user.displayName || "Anonymous",
-                    email: user.email,
-                    country: reviewCountry || "Unknown",
-                    review: reviewText,
-                    timestamp: serverTimestamp(),
-                    status: "pending",  // New reviews need admin approval
-                    verified: true  // Google users are marked as verified
-                });
-
-                alert("Review submitted for approval!");
-                document.getElementById("review-text").value = ""; // Clear input
-                document.getElementById("review-country").value = ""; // Clear country field
+                await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+                alert("A login link has been sent to your email.");
+                localStorage.setItem("emailForSignIn", email);
             } catch (error) {
-                alert("Error submitting review: " + error.message);
+                alert("Error sending login link: " + error.message);
             }
         });
 
-        // Function to Load Only Approved Reviews
+        // Handle Email Link Login
+        if (isSignInWithEmailLink(auth, window.location.href)) {
+            let email = localStorage.getItem("emailForSignIn");
+            if (!email) {
+                email = prompt("Please enter your email to complete sign-in:");
+                if (!email) {
+                    alert("Email is required for login.");
+                    return;
+                }
+            }
+
+            signInWithEmailLink(auth, email, window.location.href)
+                .then((result) => {
+                    localStorage.removeItem("emailForSignIn");
+                    document.getElementById("user-info").innerHTML = `Logged in as: <strong>${result.user.email}</strong>`;
+                    document.getElementById("review-form").style.display = "block";
+                })
+                .catch((error) => {
+                    alert("Error signing in: " + error.message);
+                });
+        }
+
+        // Function to Load Pending Reviews (For Admin)
+        async function loadPendingReviews() {
+            const pendingReviewsContainer = document.getElementById("pending-reviews");
+
+            try {
+                const q = query(collection(db, "reviews"), where("status", "==", "pending"));
+                const querySnapshot = await getDocs(q);
+
+                pendingReviewsContainer.innerHTML = querySnapshot.empty ? "<p>No pending reviews.</p>" : "";
+                querySnapshot.forEach(doc => {
+                    const review = doc.data();
+                    const reviewId = doc.id;
+
+                    pendingReviewsContainer.innerHTML += `
+                        <div class="review">
+                            <h3>${review.name} (${review.country}) ${review.verified ? "✔ Verified" : ""}</h3>
+                            <p>${review.review}</p>
+                            <button onclick="approveReview('${reviewId}')">Approve</button>
+                            <button onclick="rejectReview('${reviewId}')">Reject</button>
+                        </div>`;
+                });
+            } catch (error) {
+                console.error("Error loading pending reviews:", error);
+                pendingReviewsContainer.innerHTML = "<p>Failed to load pending reviews.</p>";
+            }
+        }
+
+        // Function to Load Approved Reviews on Home Page
         async function loadHomeReviews() {
             const reviewsContainer = document.getElementById("home-reviews");
 
