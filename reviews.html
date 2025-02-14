@@ -125,6 +125,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
         import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyD9erR6d4qSSPo1UyfEuS-_G_FtvdxncBQ",
@@ -139,6 +140,15 @@
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const auth = getAuth(app); // Initialize Firebase Authentication
+
+        // Check if user is logged in
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                alert("You must be logged in to submit a review!");
+                window.location.href = "login.html"; // Redirect to login page
+            }
+        });
 
         // Handle custom country input
         document.getElementById("country").addEventListener("change", function() {
@@ -153,6 +163,13 @@
         // Submit Review
         document.getElementById("reviewForm").addEventListener("submit", async (e) => {
             e.preventDefault();
+            const user = auth.currentUser; // Get logged-in user
+
+            if (!user) {
+                alert("Please log in to submit a review.");
+                return;
+            }
+
             const name = document.getElementById("name").value;
             let country = document.getElementById("country").value;
             const customCountry = document.getElementById("customCountry").value;
@@ -163,7 +180,12 @@
             }
 
             if (name && review) {
-                await addDoc(collection(db, "reviews"), { name, country, review });
+                await addDoc(collection(db, "reviews"), { 
+                    name, 
+                    country, 
+                    review, 
+                    email: user.email // Attach user's email
+                });
                 alert("Review submitted successfully!");
                 document.getElementById("reviewForm").reset();
                 document.getElementById("customCountry").style.display = "none";
@@ -177,10 +199,10 @@
             reviewsList.innerHTML = "";
             const querySnapshot = await getDocs(collection(db, "reviews"));
             querySnapshot.forEach((doc) => {
-                const { name, country, review } = doc.data();
+                const { name, country, review, email } = doc.data();
                 const reviewElement = document.createElement("div");
                 reviewElement.classList.add("review-item");
-                reviewElement.innerHTML = `<strong>${name} (${country})</strong><p>${review}</p>`;
+                reviewElement.innerHTML = `<strong>${name} (${country})</strong><br><small>${email}</small><p>${review}</p>`;
                 reviewsList.appendChild(reviewElement);
             });
         }
