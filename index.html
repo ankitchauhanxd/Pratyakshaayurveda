@@ -71,7 +71,7 @@
             cursor: pointer;
         }
 
-        .about-home, .specialisations-home, .contact {
+        .about-home, .specialisations-home, .contact, .reviews-home {
             padding: 5rem 2rem;
             text-align: center;
         }
@@ -114,7 +114,91 @@
             padding: 3rem 2rem;
             text-align: center;
         }
+        /* Review Section */
+        .review-form {
+        	background: #FFF;
+        padding: 2rem;
+        border-radius: 10px;
+        max-width: 500px;
+        margin: auto;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .review-container {
+        	margin-top: 2rem;
+        max-width: 800px;
+        margin: auto;
+        }
+        
+        .review-card {
+        	background: #FFF;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
     </style>
+    
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Firebase Imports
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
+
+        // Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyD9erR6d4qSSPo1UyfEuS-_G_FtvdxncBQ",
+            authDomain: "pratyaksha-ayurveda.firebaseapp.com",
+            projectId: "pratyaksha-ayurveda",
+            storageBucket: "pratyaksha-ayurveda.firebasestorage.app",
+            messagingSenderId: "757013845941",
+            appId: "1:757013845941:web:4edf0455611214d2c46bfc",
+            measurementId: "G-HBH8C5KGGB"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Function to submit review
+        async function submitReview(event) {
+            event.preventDefault();
+            const name = document.getElementById("name").value;
+            const review = document.getElementById("review").value;
+
+            try {
+                await addDoc(collection(db, "reviews"), {
+                    name: name,
+                    review: review,
+                    approved: false // Admin must approve
+                });
+                alert("Review submitted for approval.");
+            } catch (error) {
+                console.error("Error adding review:", error);
+            }
+        }
+
+        // Function to load approved reviews
+        async function loadReviews() {
+            const reviewContainer = document.getElementById("reviews-container");
+            reviewContainer.innerHTML = "";
+
+            const q = query(collection(db, "reviews"), where("approved", "==", true));
+            const querySnapshot = await getDocs(q);
+
+            querySnapshot.forEach((doc) => {
+                const data = doc.data();
+                const reviewCard = `<div class="review-card">
+                    <h4>${data.name}</h4>
+                    <p>${data.review}</p>
+                </div>`;
+                reviewContainer.innerHTML += reviewCard;
+            });
+        }
+
+        // Load reviews on page load
+        document.addEventListener("DOMContentLoaded", loadReviews);
+    </script>
 </head>
 
 <body>
@@ -181,6 +265,17 @@
             </div>
         </div>
         <a href="specialised.html" class="btn">Learn More</a>
+    </section>
+    
+    <section class="reviews-home">
+        <h2>Reviews</h2>
+        <form class="review-form" onsubmit="submitReview(event)">
+            <input type="text" id="name" placeholder="Your Name" required><br><br>
+            <textarea id="review" placeholder="Your Review" required></textarea><br><br>
+            <button class="btn" type="submit">Submit Review</button>
+        </form>
+
+        <div class="review-container" id="reviews-container"></div>
     </section>
 
     <!-- Contact Section -->
