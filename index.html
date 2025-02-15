@@ -187,16 +187,13 @@ body {
     
     <!-- Firebase SDK -->
    <script type="module">
-    import { 
-        initializeApp 
-    } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";
-    
+    import { initializeApp  } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-app.js";   
     import { 
         getFirestore, collection, addDoc, getDocs, query, where 
     } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
 
     import { 
-        getAuth, GoogleAuthProvider, signInWithRedirect, signOut, onAuthStateChanged 
+        getAuth, sendSignInLinkToEmail, isSignInWithEmailLink, signInWithEmailLink, onAuthStateChanged, signOut
     } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
 
     // Firebase Config
@@ -214,12 +211,11 @@ body {
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
 
     // Detect User's Country
     async function detectCountry() {
         try {
-            const response = await fetch("https://ip-api.com/json/");
+            const response = await fetch("https://ipinfo.io/json/");
             const data = await response.json();
             document.getElementById("country").value = data.country || "Unknown";
         } catch (error) {
@@ -228,139 +224,137 @@ body {
         }
     }
 
-  // Sign In with Google using Redirect (Recommended for GitHub Pages)
-async function signInWithGoogle() {
-    try {
-        if (!auth || !provider) throw new Error("Firebase not initialized properly.");
+    // Send Login Link to Email
+    async function sendLoginEmail() {
+        const email = document.getElementById("email").value;
+        if (!email) {
+            alert("Please enter a valid email.");
+            return;
+        }
 
-        // Redirect user to Google Sign-In
-        await signInWithRedirect(auth, provider);
+        const actionCodeSettings = {
+            url: window.location.href, // Redirects to the same page after login
+            handleCodeInApp: true
+        };
 
-        // The result will be handled in `onAuthStateChanged`
-    } catch (error) {
-        console.error("Google Sign-In Error:", error);
-
-        if (error.code === "auth/popup-closed-by-user") {
-            alert("Sign-in popup closed. Please try again.");
-        } else if (error.code === "auth/unauthorized-domain") {
-            alert("Unauthorized domain. Add your site to Firebase Console > Authentication > Sign-in Methods.");
-        } else {
-            alert("Google Sign-In failed: " + error.message);
+        try {
+            await sendSignInLinkToEmail(auth, email, actionCodeSettings);
+            sessionStorage.setItem("emailForSignIn", email);
+            alert("Login link sent to your email.");
+        } catch (error) {
+            console.error("Error sending login link:", error);
+            alert("Failed to send login link. Please try again.");
         }
     }
-}
 
-// Handle sign-in state after redirect
-onAuthStateChanged(auth, (user) => {
-    if (user) {
-        document.getElementById("user-info").innerHTML = `
-            <img src="${user.photoURL}" class="profile-pic">
-            <p>Welcome, ${user.displayName}</p>
-            <button onclick="logout()" class="btn">Logout</button>
-        `;
-        document.getElementById("review-form").style.display = "block";
-        
-        // Auto-fill country after login
-        detectCountry();
-    } else {
-        // User is signed out, show login button
-        document.getElementById("user-info").innerHTML = `
-            <button onclick="signInWithGoogle()" class="btn">Sign in with Google</button>
-        `;
-        document.getElementById("review-form").style.display = "none";
-    }
-});
+    // Handle Sign-In when User Clicks Email Link
+    window.onload = async () => {
+        if (isSignInWithEmailLink(auth, window.location.href)) {
+            let email = sessionStorage.getItem("emailForSignIn");
+            if (!email) {
+                email = prompt("Please enter your email to confirm sign-in:");
+            }
 
-// Sign Out (Make it Global)
-window.logout = function() {
-    signOut(auth).then(() => {
-        document.getElementById("user-info").innerHTML = `
-            <button onclick="signInWithGoogle()" class="btn">Sign in with Google</button>
-        `;
-        document.getElementById("review-form").style.display = "none";
-    }).catch((error) => {
-        console.error("Error during logout:", error);
-    });
-};
+            try {
+                const result = await signInWithEmailLink(auth, email, window.location.href);
+                sessionStorage.removeItem("emailForSignIn");
+                document.getElementById("user-info").innerHTML = `<p>Welcome, ${result.user.email}</p>`;
+                document.getElementById("review-form").style.display = "block";
+                detectCountry(); // Auto-fill country after login
+            } catch (error) {
+                console.error("Error signing in:", error);
+                alert("Login failed. Please try again.");
+            }
+        }
+    };
 
-    // Check Auth Status
+    // Check Authentication Status
     onAuthStateChanged(auth, (user) => {
         if (user) {
             document.getElementById("user-info").innerHTML = `
-                <img src="${user.photoURL}" class="profile-pic">
-                <p>Welcome, ${user.displayName}</p>
+                <p>Welcome, ${user.email}</p>
                 <button onclick="logout()" class="btn">Logout</button>
             `;
             document.getElementById("review-form").style.display = "block";
             detectCountry(); // Auto-fill country when user logs in
         } else {
             document.getElementById("user-info").innerHTML = `
-                <button onclick="signInWithGoogle()" class="btn">Sign in with Google</button>
+                <input type="email" id="email" placeholder="Enter your email">
+                <button onclick="sendLoginEmail()" class="btn">Send Login Link</button>
             `;
             document.getElementById("review-form").style.display = "none";
         }
     });
 
-    // Submit Review
-    async function submitReview(event) {
-        event.preventDefault();
-        const user = auth.currentUser;
-        if (!user) {
-            alert("Please sign in to submit a review.");
-            return;
-        }
-
-        const reviewText = document.getElementById("review").value;
-        const country = document.getElementById("country").value || "Unknown"; // Auto-filled country
-        const profilePic = user.photoURL || "default-avatar.png";
-
-        try {
-            await addDoc(collection(db, "reviews"), {
-                name: user.displayName,
-                profilePic: profilePic,
-                review: reviewText,
-                country: country,
-                verified: true,  // Assuming all logged-in users are verified
-                approved: false  // Admin must approve manually
-            });
-
-            alert("Review submitted for approval.");
-        } catch (error) {
-            console.error("Error adding review:", error);
-        }
-    }
-
-    // Load Approved Reviews
-    async function loadReviews() {
-        const reviewContainer = document.getElementById("reviews-container");
-        reviewContainer.innerHTML = "";
-
-        const q = query(collection(db, "reviews"), where("approved", "==", true));
-        const querySnapshot = await getDocs(q);
-
-        querySnapshot.forEach((doc) => {
-            const data = doc.data();
-            const profilePic = data.profilePic || "default-avatar.png";
-            const verifiedBadge = data.verified 
-                ? '<img src="verified-badge.png" class="verified-badge" alt="Verified">' 
-                : '';
-
-            const reviewCard = `
-                <div class="review-card">
-                    <div class="review-profile">
-                        <img src="${profilePic}" class="profile-pic" alt="Profile Picture">
-                        <h4>${data.name} ${verifiedBadge}</h4>
-                    </div>
-                    <p><strong>Country:</strong> ${data.country || "Unknown"}</p>
-                    <p>${data.review}</p>
-                </div>`;
-            
-            reviewContainer.innerHTML += reviewCard;
+    // Logout Function
+    window.logout = function() {
+        signOut(auth).then(() => {
+            document.getElementById("user-info").innerHTML = `
+                <input type="email" id="email" placeholder="Enter your email">
+                <button onclick="sendLoginEmail()" class="btn">Send Login Link</button>
+            `;
+            document.getElementById("review-form").style.display = "none";
+        }).catch((error) => {
+            console.error("Error during logout:", error);
         });
+    };
+// Submit Review
+async function submitReview(event) {
+    event.preventDefault();
+    const user = auth.currentUser;
+
+    if (!user) {
+        alert("Please sign in to submit a review.");
+        return;
     }
 
-    // Load reviews on page load
-    document.addEventListener("DOMContentLoaded", loadReviews);
+    const reviewText = document.getElementById("review").value;
+    const country = document.getElementById("country").value || "Unknown"; // Auto-filled country
+
+    try {
+        await addDoc(collection(db, "reviews"), {
+            name: user.email,  // Use email as identifier
+            profilePic: "default-avatar.png",  // No profile picture from email auth
+            review: reviewText,
+            country: country,
+            approved: false  // Admin must approve manually
+        });
+
+        alert("Review submitted for approval.");
+    } catch (error) {
+        console.error("Error adding review:", error);
+    }
+}
+
+// Load Approved Reviews (Show Verified Badge for Approved Reviews)
+async function loadReviews() {
+    const reviewContainer = document.getElementById("reviews-container");
+    reviewContainer.innerHTML = "";
+
+    const q = query(collection(db, "reviews"), where("approved", "==", true));
+    const querySnapshot = await getDocs(q);
+
+    querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        const profilePic = "default-avatar.png"; // No Google profile pictures anymore
+        const verifiedBadge = '<img src="verified-badge.png" class="verified-badge" alt="Verified">'; // Blue tick
+
+        const reviewCard = `
+            <div class="review-card">
+                <div class="review-profile">
+                    <img src="${profilePic}" class="profile-pic" alt="Profile Picture">
+                    <h4>${data.name} ${verifiedBadge}</h4>
+                </div>
+                <p><strong>Country:</strong> ${data.country || "Unknown"}</p>
+                <p>${data.review}</p>
+            </div>`;
+        
+        reviewContainer.innerHTML += reviewCard;
+    });
+}
+
+// Load reviews on page load
+document.addEventListener("DOMContentLoaded", loadReviews);
 </script>
 </head>
 
