@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Pratyaksha Ayurveda - Traditional Healing & Wellness</title>
-
+    
     <style>
         * {
             margin: 0;
@@ -14,1515 +13,186 @@
             font-family: 'Arial', sans-serif;
         }
 
-     body {
-
+        body {
             line-height: 1.6;
-
             color: #5A3E2B;
-            
             background: #F4E7D1;
         }
 
         .header {
-
             background: #2E4F2E;
-
             padding: 1rem;
-
             position: fixed;
-
             width: 100%;
-
             top: 0;
-            
             z-index: 1000;
-
         }
 
         .nav-container {
-
-          max-width: 1200px;
-
+            max-width: 1200px;
             margin: 0 auto;
-
             display: flex;
-            
             justify-content: space-between;
-
             align-items: center;
-
         }
 
         .logo {
-
             width: 200px;
-
         }
 
         .nav-links {
-
             display: flex;
-
             gap: 2rem;
-
         }
 
         .nav-links a {
-
             text-decoration: none;
             color: #F4E7D1;
-
             font-weight: 500;
-
         }
 
         .hero {
-
             background: linear-gradient(rgba(46, 79, 46, 0.8), rgba(46, 79, 46, 0.8)), url('hero-bg.jpg') center/cover;
-
             height: 80vh;
-
             display: flex;
-
             align-items: center;
-
             justify-content: center;
-
             text-align: center;
-
             color: #F4E7D1;
-
             margin-top: 70px;
-
         }
 
         .btn {
-
             background: #D97E50;
-
             color: #FFF;
-
             padding: 1rem 2rem;
-            
             border: none;
-
             border-radius: 5px;
-
             cursor: pointer;
-
         }
 
-        .about-home, .specialisations-home, .reviews-home, .contact {
-
+        .about-home, .specialisations-home, .contact {
             padding: 5rem 2rem;
-
             text-align: center;
-
         }
 
-        .specialisation-container, .review-container {
-
+        .specialisation-container {
             max-width: 800px;
-
             margin: auto;
-
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding: 1rem 0;
+            scrollbar-width: thin;
+            scrollbar-color: #D97E50 #F4E7D1;
         }
 
-        .specialisation, .review {
-
+        .specialisation-card {
             background: #FFF;
-
-            padding: 1.5rem;
-
-            border-radius: 5px;
-
-            margin-bottom: 1.5rem;
-
+            padding: 1rem;
+            border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            min-width: 250px;
+            max-width: 280px;
+            text-align: center;
+        }
 
+        .specialisation-card img {
+            width: 100%;
+            border-radius: 10px;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .specialisation-card h3 {
+            margin-top: 0.5rem;
         }
 
         .footer {
-
             background: #2E4F2E;
-
             color: #F4E7D1;
-
             padding: 3rem 2rem;
-
             text-align: center;
-
         }
-
     </style>
-
 </head>
 
 <body>
     <header class="header">
-
         <nav class="nav-container">
-
             <img src="logo.png" alt="Pratyaksha Ayurveda" class="logo">
-
             <div class="nav-links">
-
                 <a href="#home">Home</a>
-
-
-
                 <a href="#specialisations">Our Specialisations</a>
-
-
-
                 <a href="about.html">About</a>
-
-                
                 <a href="#contact">Contact</a>
-
-                
-                <!-- Add a Login Link -->
-                	<li><a href="login.html">Login</a>/li>
-                </ul>
-                </nav>
-
-
             </div>
-
-
-
         </nav>
-
-
-
     </header>
 
-
-
-
-
-
-
     <section class="hero" id="home">
-
-
-
         <div class="hero-content">
-
-
-
             <h1>Experience Authentic Ayurveda</h1>
-
-
-
             <p>Traditional Healing for Modern Life</p>
-
-
-
             <button class="btn" onclick="window.open('https://wa.me/918708880341')">Book your Online Consultation</button>
-
-
-
         </div>
-
-
-
     </section>
-
-
-
-
-
-
 
     <!-- About Section -->
-
-
-
     <section class="about-home">
-
-
-
         <h2>About Pratyaksha Ayurveda</h2>
-
-
-
         <p>Promoting Authentic Ayurveda Rooted in Tradition, Backed by Science. Restoring Balance, Not Just Symptoms.</p>
-
-
-
         <p>Founded by <strong>Dr. Ankit Chauhan (BAMS)</strong>, an Ayurveda Specialist, Pratyaksha Ayurveda is dedicated to bringing holistic healing with time-tested Ayurvedic practices.</p>
-
-
-
     </section>
-
-
-
-
-
-
 
     <!-- Our Specialisations Section -->
-
-
-
-<section class="specialisations-home" id="specialisations">
-
-
-
-    <h2>Our Specialisations</h2>
-
-
-
-    <div class="specialisation-container">
-
-
-
-        <div class="specialisation-card">
-
-
-
-            <img src="images/joint-disorders.jpg" alt="Joint Disorders">
-
-
-
-            <h3>Joint Disorders</h3>
-
-
-
-            <p>Ayurvedic solutions for arthritis, osteoporosis, and joint pain.</p>
-
-
-
+    <section class="specialisations-home" id="specialisations">
+        <h2>Our Specialisations</h2>
+        <div class="specialisation-container">
+            <div class="specialisation-card">
+                <img src="images/joint-disorders.jpg" alt="Joint Disorders">
+                <h3>Joint Disorders</h3>
+                <p>Ayurvedic solutions for arthritis, osteoporosis, and joint pain.</p>
+            </div>
+            <div class="specialisation-card">
+                <img src="images/digestive-disorders.jpg" alt="Digestive Disorders">
+                <h3>Digestive Disorders</h3>
+                <p>Treatments for acidity, IBS, and gut health.</p>
+            </div>
+            <div class="specialisation-card">
+                <img src="images/sinusitis.jpg" alt="Sinusitis & Rhinitis">
+                <h3>Sinusitis & Rhinitis</h3>
+                <p>Ayurvedic nasal therapies and immune-boosting techniques.</p>
+            </div>
+            <div class="specialisation-card">
+                <img src="images/migraine.jpg" alt="Headache & Migraine">
+                <h3>Headache & Migraine</h3>
+                <p>Shirodhara, herbal remedies, and dosha balancing.</p>
+            </div>
+            <div class="specialisation-card">
+                <img src="images/fever-management.jpg" alt="Fever Management">
+                <h3>Fever Management</h3>
+                <p>Natural detox and immunity-restoring remedies.</p>
+            </div>
+            <div class="specialisation-card">
+                <img src="images/thyroid.jpg" alt="Thyroid Disorders">
+                <h3>Thyroid Disorders</h3>
+                <p>Herbal treatments and lifestyle modifications.</p>
+            </div>
         </div>
-
-
-
-        <div class="specialisation-card">
-
-
-
-            <img src="images/digestive-disorders.jpg" alt="Digestive Disorders">
-
-
-
-            <h3>Digestive Disorders</h3>
-
-
-
-            <p>Treatments for acidity, IBS, and gut health.</p>
-
-
-
-        </div>
-
-
-
-        <div class="specialisation-card">
-
-
-
-            <img src="images/sinusitis.jpg" alt="Sinusitis & Rhinitis">
-
-
-
-            <h3>Sinusitis & Rhinitis</h3>
-
-
-
-            <p>Ayurvedic nasal therapies and immune-boosting techniques.</p>
-
-
-
-        </div>
-
-
-
-        <div class="specialisation-card">
-
-
-
-            <img src="images/migraine.jpg" alt="Headache & Migraine">
-
-
-
-            <h3>Headache & Migraine</h3>
-
-
-
-            <p>Shirodhara, herbal remedies, and dosha balancing.</p>
-
-
-
-        </div>
-
-
-
-        <div class="specialisation-card">
-
-
-
-            <img src="images/fever-management.jpg" alt="Fever Management">
-
-
-
-            <h3>Fever Management</h3>
-
-
-
-            <p>Natural detox and immunity-restoring remedies.</p>
-
-
-
-        </div>
-
-
-
-        <div class="specialisation-card">
-
-
-
-            <img src="images/thyroid.jpg" alt="Thyroid Disorders">
-
-
-
-            <h3>Thyroid Disorders</h3>
-
-
-
-            <p>Herbal treatments and lifestyle modifications.</p>
-
-
-
-        </div>
-
-
-
-    </div>
-
-
-
-    <a href="specialised.html" class="btn">Learn More</a>
-
-
-
-</section>
-
-
-
-
-
-
-
-<style>
-
-
-
-    .specialisation-container {
-
-
-
-        display: flex;
-
-
-
-        gap: 1rem;
-
-
-
-        overflow-x: auto;
-
-
-
-        padding: 1rem 0;
-
-
-
-        scrollbar-width: thin;
-
-
-
-        scrollbar-color: #D97E50 #F4E7D1;
-
-
-
-    }
-
-
-
-
-
-
-
-    .specialisation-card {
-
-
-
-        background: #FFF;
-
-
-
-        padding: 1rem;
-
-
-
-        border-radius: 10px;
-
-
-
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-
-
-
-        min-width: 250px;
-
-
-
-        max-width: 280px;
-
-
-
-        text-align: center;
-
-
-
-    }
-
-
-
-
-
-
-
-    .specialisation-card img {
-
-
-
-        width: 100%;
-
-
-
-        border-radius: 10px;
-
-
-
-        height: 150px;
-
-
-
-        object-fit: cover;
-
-
-
-    }
-
-
-
-
-
-
-
-    .specialisation-card h3 {
-
-
-
-        margin-top: 0.5rem;
-
-
-
-    }
-
-
-
-</style>
-
-
-
-
-
-
-
-    <!-- Patient Reviews Section -->
-
-
-
-    <section class="reviews-home">
-
-
-
-    	<!-- Admin Panel (Hidden by Default) -->
-
-
-
-<section id="admin-panel" style="display: none; padding: 5rem 2rem; text-align: center;">
-
-
-
-    <h2>Admin Panel - Review Management</h2>
-
-
-
-    <div id="pending-reviews">
-
-
-
-        <p>Loading pending reviews...</p>
-
-
-
-    </div>
-
-
-
-</section>
-
-
-
-    <h2>Patient Reviews</h2>
-
-
-
-    <div class="review-container" id="home-reviews">
-
-
-
-        <p>Loading reviews...</p>
-
-
-
-    </div>
-
-
-
-
-
-
-
-    <!-- Login  -->
-
-
-
-    <div id="email-login">
-
-
-
-    <input type="email" id="email-input" placeholder="Enter your email" required>
-
-
-
-    <button id="send-login-link-btn" class="btn">Send Login Link</button>
-
-
-
-</div>
-
-
-
-    <p id="user-info"></p>
-
-
-
-
-
-
-
-    <!-- Review Submission Form -->
-
-
-
-    <div id="review-form" style="display: none;">
-
-
-
-        <h3>Leave a Review</h3>
-
-
-
-        <input type="text" id="review-country" placeholder="Your Country">
-
-
-
-        <textarea id="review-text" placeholder="Write your review here..."></textarea>
-
-
-
-        <button id="submit-review-btn" class="btn">Submit Review</button>
-
-
-
-    </div>
-
-
-
-</section>
-
-
-
-
-
-
-
-    <!-- Contact Section -->
-
-
-
-    <section class="contact" id="contact">
-
-
-
-        <h2>Contact Us</h2>
-
-
-
-        <p>Email: <a href="mailto:pratyakshaayurveda@gmail.com">pratyakshaayurveda@gmail.com</a></p>
-
-
-
-        <p>WhatsApp: <a href="https://wa.me/918708880341">+91 8708880341</a></p>
-
-
-
-        <p>Instagram: <a href="https://instagram.com/ankitchauhan.xd">@ankitchauhan.xd</a></p>
-
-
-
+        <a href="specialised.html" class="btn">Learn More</a>
     </section>
 
-
-
-
-
-
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <h2>Contact Us</h2>
+        <p>Email: <a href="mailto:pratyakshaayurveda@gmail.com">pratyakshaayurveda@gmail.com</a></p>
+        <p>WhatsApp: <a href="https://wa.me/918708880341">+91 8708880341</a></p>
+        <p>Instagram: <a href="https://instagram.com/ankitchauhan.xd">@ankitchauhan.xd</a></p>
+    </section>
 
     <footer class="footer">
-
-
-
         <p>&copy; 2025 Pratyaksha Ayurveda. All rights reserved.</p>
-
-
-
     </footer>
-
-
-
-
-
-
-
-<script type="module">
-
-
-
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-app.js";
-
-
-
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-analytics.js";
-
-
-
-    import { getFirestore, collection, addDoc, getDocs, query, where, serverTimestamp, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-firestore.js";
-
-
-
-    import { getAuth, onAuthStateChanged, signInWithEmailLink, sendSignInLinkToEmail, isSignInWithEmailLink } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
-
-
-
-
-
-
-
-    // Firebase Configuration
-
-
-
-    const firebaseConfig = {
-
-
-
-        apiKey: "AIzaSyD9erR6d4qSSPo1UyfEuS-_G_FtvdxncBQ",
-
-
-
-        authDomain: "pratyaksha-ayurveda.firebaseapp.com",
-
-
-
-        projectId: "pratyaksha-ayurveda",
-
-
-
-        storageBucket: "pratyaksha-ayurveda.firebasestorage.app",
-
-
-
-        messagingSenderId: "757013845941",
-
-
-
-        appId: "1:757013845941:web:4edf0455611214d2c46bfc",
-
-
-
-        measurementId: "G-HBH8C5KGGB"
-
-
-
-    };
-
-
-
-
-
-
-
-    // Initialize Firebase
-
-
-
-    const app = initializeApp(firebaseConfig);
-
-
-
-    const analytics = getAnalytics(app);
-
-
-
-    const db = getFirestore(app);
-
-
-
-    const auth = getAuth(app);  // Fixed: Ensure authentication is initialized correctly
-
-
-
-
-
-
-
-    document.addEventListener("DOMContentLoaded", () => {
-
-
-
-        // Handle Login State and Show/Hide Elements
-
-
-
-       onAuthStateChanged(auth, async (user) => {
-
-
-
-    if (user) {
-
-
-
-        document.getElementById("email-login").style.display = "none";
-
-
-
-        document.getElementById("review-form").style.display = "block";
-
-
-
-
-
-
-
-        // Check if user has a display name
-
-
-
-        if (!user.displayName) {
-
-
-
-            const userName = prompt("Please enter your name:");
-
-
-
-            if (userName) {
-
-
-
-                try {
-
-
-
-                    await updateProfile(user, { displayName: userName }); // Set display name in Firebase Auth
-
-
-
-                    await user.reload(); // Reload user to reflect updated display name
-
-
-
-                    user = auth.currentUser; // Get updated user info
-
-
-
-                } catch (error) {
-
-
-
-                    console.error("Error updating profile:", error);
-
-
-
-                }
-
-
-
-            }
-
-
-
-        }
-
-
-
-
-
-
-
-        // Display updated name and email
-
-
-
-        document.getElementById("user-info").innerHTML = `Logged in as: <strong>${user.displayName || "User"} (${user.email})</strong>`;
-
-
-
-
-
-
-
-        // Show admin panel for admin users
-
-
-
-        if (user.email === "pratyakshaayurveda@gmail.com") {
-
-
-
-            document.getElementById("admin-panel").style.display = "block";
-
-
-
-            loadPendingReviews();
-
-
-
-        }
-
-
-
-    } else {
-
-
-
-        document.getElementById("email-login").style.display = "block";
-
-
-
-        document.getElementById("review-form").style.display = "none";
-
-
-
-        document.getElementById("admin-panel").style.display = "none";
-
-
-
-        document.getElementById("user-info").innerHTML = "";
-
-
-
-    }
-
-
-
-}); 
-
-
-
-
-
-
-
-        // Send Login Link
-
-
-
-        document.getElementById("send-login-link-btn").addEventListener("click", async () => {
-
-
-
-            const email = document.getElementById("email-input").value.trim();
-
-
-
-            if (!email) {
-
-
-
-                alert("Please enter your email.");
-
-
-
-                return;
-
-
-
-            }
-
-
-
-
-
-
-
-            const actionCodeSettings = {
-
-
-
-                url: window.location.href,  // Keep this if logging in on the same page
-
-
-
-                handleCodeInApp: true,
-
-
-
-            };
-
-
-
-
-
-
-
-            try {
-
-
-
-                await sendSignInLinkToEmail(auth, email, actionCodeSettings);
-
-
-
-                alert("A login link has been sent to your email.");
-
-
-
-                localStorage.setItem("emailForSignIn", email);
-
-
-
-            } catch (error) {
-
-
-
-                alert("Error sending login link: " + error.message);
-
-
-
-            }
-
-
-
-        });
-
-
-
-
-
-
-
-        // Handle Email Link Login
-
-
-
-        if (isSignInWithEmailLink(auth, window.location.href)) {
-
-
-
-            let email = localStorage.getItem("emailForSignIn");
-
-
-
-            if (!email) {
-
-
-
-                email = prompt("Please enter your email to complete sign-in:");
-
-
-
-                if (!email) {
-
-
-
-                    alert("Email is required for login.");
-
-
-
-                    return;
-
-
-
-                }
-
-
-
-            }
-
-
-
-
-
-
-
-            signInWithEmailLink(auth, email, window.location.href)
-
-
-
-                .then((result) => {
-
-
-
-                    localStorage.removeItem("emailForSignIn");
-
-
-
-                    document.getElementById("user-info").innerHTML = `Logged in as: <strong>${result.user.email}</strong>`;
-
-
-
-                    document.getElementById("review-form").style.display = "block";
-
-
-
-                })
-
-
-
-                .catch((error) => {
-
-
-
-                    alert("Error signing in: " + error.message);
-
-
-
-                });
-
-
-
-        }
-
-
-
-
-
-
-
-     // Function to Submit Review
-
-
-
-document.getElementById("submit-review-btn").addEventListener("click", async () => {
-
-
-
-    const reviewText = document.getElementById("review-text").value.trim();
-
-
-
-    const reviewCountry = document.getElementById("review-country").value.trim();
-
-
-
-    const user = auth.currentUser;
-
-
-
-
-
-
-
-    if (!user) {
-
-
-
-        alert("You need to log in to submit a review.");
-
-
-
-        return;
-
-
-
-    }
-
-
-
-
-
-
-
-    if (!reviewText || !reviewCountry) {
-
-
-
-        alert("Please fill in all fields.");
-
-
-
-        return;
-
-
-
-    }
-
-
-
-
-
-
-
-    // Use stored displayName or ask again if missing
-
-
-
-    let userName = user.displayName || prompt("Please enter your name:");
-
-
-
-    if (!userName) {
-
-
-
-        alert("Name is required to submit a review.");
-
-
-
-        return;
-
-
-
-    }
-
-
-
-
-
-
-
-    try {
-
-
-
-        await addDoc(collection(db, "reviews"), {
-
-
-
-            email: user.email,
-
-
-
-            name: userName,
-
-
-
-            country: reviewCountry,
-
-
-
-            review: reviewText,
-
-
-
-            status: "pending", // Default status
-
-
-
-            verified: false, // Initially not verified
-
-
-
-            timestamp: serverTimestamp()
-
-
-
-        });
-
-
-
-
-
-
-
-        alert("Your review has been submitted for approval.");
-
-
-
-        document.getElementById("review-text").value = "";
-
-
-
-        document.getElementById("review-country").value = "";
-
-
-
-
-
-
-
-    } catch (error) {
-
-
-
-        console.error("Error submitting review:", error);
-
-
-
-        alert("Error submitting review. Please try again.");
-
-
-
-    }
-
-
-
-});
-
-
-
-
-
-
-
-// Function to Load Pending Reviews (For Admin)
-
-
-
-async function loadPendingReviews() {
-
-    const pendingReviewsContainer = document.getElementById("pending-reviews");
-    try {
-
-        const q = query(collection(db, "reviews"), where("status", "==", "pending"));
-
-        const querySnapshot = await getDocs(q);
-
-        pendingReviewsContainer.innerHTML = querySnapshot.empty ? "<p>No pending reviews.</p>" : "";
-
-        querySnapshot.forEach(doc => {
-
-            const review = doc.data();
-
-            const reviewId = doc.id;
-
-            pendingReviewsContainer.innerHTML += `
-
-
-                <div class="review">
-
-                    <h3>${review.name} (${review.country}) ${review.verified ? "✔ Verified" : ""}</h3>
-
-                    <p>${review.review}</p>
-
-                    <button onclick="approveReview('${reviewId}')">Approve</button>
-
-                    <button onclick="rejectReview('${reviewId}')">Reject</button>
-
-                </div>`;
-
-        });
-
-    } catch (error) {
-
-        console.error("Error loading pending reviews:", error);
-
-        pendingReviewsContainer.innerHTML = "<p>Failed to load pending reviews.</p>";
-        
-    }
-
-}
-
-// Function to Load Approved Reviews on Home Page
-
-async function loadHomeReviews() {
-
-    const reviewsContainer = document.getElementById("home-reviews");
-
-    try {
-
-        const q = query(collection(db, "reviews"), where("status", "==", "approved"));
-
-        const querySnapshot = await getDocs(q);
-
-        reviewsContainer.innerHTML = querySnapshot.empty ? "<p>No reviews available.</p>" : "";
-
-        querySnapshot.forEach(doc => {
-
-            const review = doc.data();
-
-            reviewsContainer.innerHTML += `<div class="review">
-
-                <h3>${review.name} (${review.country}) ${review.verified ? "✔ Verified" : ""}</h3>
-
-                <p>${review.review}</p>
-
-            </div>`;
-
-        });
-
-    } catch (error) {
-
-        console.error("Error loading reviews:", error);
-
-        reviewsContainer.innerHTML = "<p>Failed to load reviews. Please try again later.</p>";
-
-    }
-
-}
-
-
-// Function to Approve a Review
-async function approveReview(reviewId) {
-
-    try {
-
-        await updateDoc(doc(db, "reviews", reviewId), {
-
-            status: "approved",
-
-            verified: true // Mark as verified
-
-        });
-
-        alert("Review approved successfully!");
-
-        loadPendingReviews(); // Refresh pending reviews
-
-        loadHomeReviews(); // Refresh homepage reviews
-
-    } catch (error) {
-        console.error("Error approving review:", error);
-        alert("Error approving review. Please try again.");
-
-    }
-
-}
-
-// Function to Reject a Review
-
-async function rejectReview(reviewId) {
-
-    try {
-
-        await deleteDoc(doc(db, "reviews", reviewId));
-
-        alert("Review rejected and deleted successfully!");
-
-        loadPendingReviews(); // Refresh pending reviews
-
-    } catch (error) {
-
-        console.error("Error rejecting review:", error);
-
-        alert("Error rejecting review. Please try again.");
-
-    }
-
-}
-
-// Make functions globally accessible
-
-window.approveReview = async function (reviewId) {
-
-    try {
-
-        await updateDoc(doc(db, "reviews", reviewId), {
-
-            status: "approved",
-
-            verified: true // Mark as verified
-
-        });
-
-        alert("Review approved successfully!");
-
-        loadPendingReviews(); // Refresh pending reviews
-
-        loadHomeReviews(); // Refresh homepage reviews
-
-    } catch (error) {
-
-        console.error("Error approving review:", error);
-
-        alert("Error approving review. Please try again.");
-
-    }
-
-};
-
-window.rejectReview = async function (reviewId) {
-
-    try {
-
-        await deleteDoc(doc(db, "reviews", reviewId));
-
-        alert("Review rejected and deleted successfully!");
-
-        loadPendingReviews(); // Refresh pending reviews
-
-    } catch (error) {
-
-        console.error("Error rejecting review:", error);
-
-        alert("Error rejecting review. Please try again.");
-
-    }
-
-};
-
-// Load approved reviews on page load
-
-loadHomeReviews();
-
-<script type="module">
-
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.3.1/firebase-auth.js";
-
-    const auth = getAuth();
-
-    onAuthStateChanged(auth, (user) => {
-
-        if (!user) {
-
-            window.location.href = "login.html"; // Redirect non-logged-in users
-
-        } else {
-
-            console.log("User logged in:", user.email);
-
-            // Restrict admin panel access
-
-            if (user.email !== "pratyakshaayurveda@gmail.com") {
-
-                alert("Access Denied: You are not authorized to manage reviews.");
-
-                window.location.href = "index.html"; // Redirect unauthorized users to home
-
-            }
-
-        }
-
-    });
-
-</script>
 </body>
 </html>
