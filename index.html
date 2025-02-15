@@ -228,21 +228,42 @@ body {
         }
     }
 
-    // Sign In with Google
-    async function signInWithGoogle() {
-        try {
-            const result = await signInWithPopup(auth, provider);
-            const user = result.user;
-            document.getElementById("user-info").innerHTML = `
-                <img src="${user.photoURL}" class="profile-pic">
-                <p>Welcome, ${user.displayName}</p>
-            `;
-            document.getElementById("review-form").style.display = "block";
-            detectCountry(); // Auto-fill country after login
-        } catch (error) {
-            console.error("Error during sign-in:", error);
+  // Sign In with Google
+async function signInWithGoogle() {
+    try {
+        // Ensure Firebase auth & provider are initialized
+        if (!auth || !provider) throw new Error("Firebase not initialized properly.");
+
+        const result = await signInWithPopup(auth, provider);
+        const user = result.user;
+
+        if (!user) throw new Error("No user detected after sign-in.");
+
+        // Update UI with user details
+        document.getElementById("user-info").innerHTML = `
+            <img src="${user.photoURL}" class="profile-pic">
+            <p>Welcome, ${user.displayName}</p>
+            <button onclick="logout()" class="btn">Logout</button>
+        `;
+
+        // Show the review form
+        document.getElementById("review-form").style.display = "block";
+        
+        // Auto-fill country after login
+        detectCountry();
+    } catch (error) {
+        console.error("Google Sign-In Error:", error);
+
+        // Handle specific Firebase Auth errors
+        if (error.code === "auth/popup-closed-by-user") {
+            alert("Sign-in popup closed. Please try again.");
+        } else if (error.code === "auth/unauthorized-domain") {
+            alert("Unauthorized domain. Add your site to Firebase Console > Authentication > Sign-in Methods.");
+        } else {
+            alert("Google Sign-In failed: " + error.message);
         }
     }
+}
 
   // Sign Out (Make it Global)
 window.logout = function() {
