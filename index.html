@@ -233,7 +233,7 @@ body {
         }
 
         const actionCodeSettings = {
-            url: window.location.href, // Redirects to the same page after login
+            url: window.location.origin, // Redirects to homepage correctly
             handleCodeInApp: true
         };
 
@@ -252,7 +252,10 @@ body {
         if (isSignInWithEmailLink(auth, window.location.href)) {
             let email = sessionStorage.getItem("emailForSignIn");
             if (!email) {
-                email = prompt("Please enter your email to confirm sign-in:");
+                email = window.prompt("Please enter your email to confirm sign-in:");
+                if (!email) {
+                	alert("Email is required to proceed.");
+                return; }
             }
 
             try {
@@ -276,7 +279,7 @@ body {
                 <button onclick="logout()" class="btn">Logout</button>
             `;
             document.getElementById("review-form").style.display = "block";
-            detectCountry(); // Auto-fill country when user logs in
+            detectCountry(); // Auto-fill country after login
         } else {
             document.getElementById("user-info").innerHTML = `
                 <input type="email" id="email" placeholder="Enter your email">
@@ -309,20 +312,21 @@ async function submitReview(event) {
     }
 
     const reviewText = document.getElementById("review").value;
-    const country = document.getElementById("country").value || "Unknown"; // Auto-filled country
+    const country = document.getElementById("country").value || "Unknown";
 
     try {
         await addDoc(collection(db, "reviews"), {
-            name: user.email,  // Use email as identifier
-            profilePic: "default-avatar.png",  // No profile picture from email auth
+            name: user.email,
             review: reviewText,
             country: country,
-            approved: false  // Admin must approve manually
+            approved: false // Admin must approve
         });
 
         alert("Review submitted for approval.");
+        document.getElementById("review").value = ""; // Clear input after submission
     } catch (error) {
         console.error("Error adding review:", error);
+        alert("Failed to submit review. Try again.");
     }
 }
 
@@ -336,13 +340,12 @@ async function loadReviews() {
 
     querySnapshot.forEach((doc) => {
         const data = doc.data();
-        const profilePic = "default-avatar.png"; // No Google profile pictures anymore
-        const verifiedBadge = '<img src="verified-badge.png" class="verified-badge" alt="Verified">'; // Blue tick
+        const verifiedBadge = '<span class="verified-badge">✔ Verified</span>'; // Update badge format
 
         const reviewCard = `
             <div class="review-card">
                 <div class="review-profile">
-                    <img src="${profilePic}" class="profile-pic" alt="Profile Picture">
+                    <img src="default-avatar.png" class="profile-pic" alt="Profile Picture">
                     <h4>${data.name} ${verifiedBadge}</h4>
                 </div>
                 <p><strong>Country:</strong> ${data.country || "Unknown"}</p>
