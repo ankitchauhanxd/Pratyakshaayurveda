@@ -196,7 +196,7 @@ body {
     } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-firestore.js";
 
     import { 
-        getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged 
+        getAuth, GoogleAuthProvider, signInWithRedirect, signOut, onAuthStateChanged 
     } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
 
     // Firebase Config
@@ -228,33 +228,18 @@ body {
         }
     }
 
-  // Sign In with Google
+  // Sign In with Google using Redirect (Recommended for GitHub Pages)
 async function signInWithGoogle() {
     try {
-        // Ensure Firebase auth & provider are initialized
         if (!auth || !provider) throw new Error("Firebase not initialized properly.");
 
-        const result = await signInWithPopup(auth, provider);
-        const user = result.user;
+        // Redirect user to Google Sign-In
+        await signInWithRedirect(auth, provider);
 
-        if (!user) throw new Error("No user detected after sign-in.");
-
-        // Update UI with user details
-        document.getElementById("user-info").innerHTML = `
-            <img src="${user.photoURL}" class="profile-pic">
-            <p>Welcome, ${user.displayName}</p>
-            <button onclick="logout()" class="btn">Logout</button>
-        `;
-
-        // Show the review form
-        document.getElementById("review-form").style.display = "block";
-        
-        // Auto-fill country after login
-        detectCountry();
+        // The result will be handled in `onAuthStateChanged`
     } catch (error) {
         console.error("Google Sign-In Error:", error);
 
-        // Handle specific Firebase Auth errors
         if (error.code === "auth/popup-closed-by-user") {
             alert("Sign-in popup closed. Please try again.");
         } else if (error.code === "auth/unauthorized-domain") {
@@ -265,7 +250,28 @@ async function signInWithGoogle() {
     }
 }
 
-  // Sign Out (Make it Global)
+// Handle sign-in state after redirect
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        document.getElementById("user-info").innerHTML = `
+            <img src="${user.photoURL}" class="profile-pic">
+            <p>Welcome, ${user.displayName}</p>
+            <button onclick="logout()" class="btn">Logout</button>
+        `;
+        document.getElementById("review-form").style.display = "block";
+        
+        // Auto-fill country after login
+        detectCountry();
+    } else {
+        // User is signed out, show login button
+        document.getElementById("user-info").innerHTML = `
+            <button onclick="signInWithGoogle()" class="btn">Sign in with Google</button>
+        `;
+        document.getElementById("review-form").style.display = "none";
+    }
+});
+
+// Sign Out (Make it Global)
 window.logout = function() {
     signOut(auth).then(() => {
         document.getElementById("user-info").innerHTML = `
