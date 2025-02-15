@@ -244,13 +244,17 @@ body {
         }
     }
 
-    // Sign Out
-    function logout() {
-        signOut(auth).then(() => {
-            document.getElementById("user-info").innerHTML = "";
-            document.getElementById("review-form").style.display = "none";
-        });
-    }
+  // Sign Out (Make it Global)
+window.logout = function() {
+    signOut(auth).then(() => {
+        document.getElementById("user-info").innerHTML = `
+            <button onclick="signInWithGoogle()" class="btn">Sign in with Google</button>
+        `;
+        document.getElementById("review-form").style.display = "none";
+    }).catch((error) => {
+        console.error("Error during logout:", error);
+    });
+};
 
     // Check Auth Status
     onAuthStateChanged(auth, (user) => {
