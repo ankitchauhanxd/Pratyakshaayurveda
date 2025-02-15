@@ -197,15 +197,15 @@ body {
     } from "https://www.gstatic.com/firebasejs/9.15.0/firebase-auth.js";
 
     // Firebase Config
-    const firebaseConfig = {
-        apiKey: "AIzaSyD9erR6d4qSSPo1UyfEuS-_G_FtvdxncBQ",
-        authDomain: "pratyaksha-ayurveda.firebaseapp.com",
-        projectId: "pratyaksha-ayurveda",
-        storageBucket: "pratyaksha-ayurveda.firebasestorage.app",
-        messagingSenderId: "757013845941",
-        appId: "1:757013845941:web:4edf0455611214d2c46bfc",
-        measurementId: "G-HBH8C5KGGB"
-    };
+const firebaseConfig = {
+  apiKey: "AIzaSyD3CsmjOe2HKD2fDUCtlNgMwTOBqHA8nJ8",
+  authDomain: "pratyaksha-ayurveda-d147f.firebaseapp.com",
+  projectId: "pratyaksha-ayurveda-d147f",
+  storageBucket: "pratyaksha-ayurveda-d147f.appspot.com", //
+  messagingSenderId: "547427847650",
+  appId: "1:547427847650:web:d8cbab4dc70223a7753dbb",
+  measurementId: "G-GGKB7EX8YR"
+};
 
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
@@ -269,6 +269,7 @@ body {
                 alert("Login failed. Please try again.");
             }
         }
+      await  loadReviews(); // Load reviews on page load
     };
 
     // Check Authentication Status
@@ -311,19 +312,44 @@ async function submitReview(event) {
         return;
     }
 
-    const reviewText = document.getElementById("review").value;
-    const country = document.getElementById("country").value || "Unknown";
+    const reviewText = document.getElementById("review").value.trim();
+    const countrySelect = document.getElementById("country");
+    const otherCountryInput = document.getElementById("otherCountry");
+
+    // Determine country selection
+    let country = countrySelect.value === "Other" ? otherCountryInput.value.trim() : countrySelect.value;
+
+    if (!reviewText) {
+        alert("Please enter your review.");
+        return;
+    }
+
+    if (!country) {
+        alert("Please select or enter your country.");
+        return;
+    }
+
+    const profilePic = user.photoURL || "default-avatar.png"; // Default profile pic
 
     try {
         await addDoc(collection(db, "reviews"), {
             name: user.email,
             review: reviewText,
             country: country,
-            approved: false // Admin must approve
+            approved: false, // Admin must approve before displaying
+            profilePic: profilePic,
+            timestamp: serverTimestamp() // Optional: Store submission time
         });
 
         alert("Review submitted for approval.");
-        document.getElementById("review").value = ""; // Clear input after submission
+        
+        // Reset form fields after submission
+        document.getElementById("review").value = "";
+        countrySelect.value = "";
+        otherCountryInput.value = "";
+        otherCountryInput.style.display = "none"; // Hide "Other" input
+       
+        loadReviews(); // Refresh displayed reviews
     } catch (error) {
         console.error("Error adding review:", error);
         alert("Failed to submit review. Try again.");
@@ -340,12 +366,12 @@ async function loadReviews() {
 
     querySnapshot.forEach((doc) => {
         const data = doc.data();
-        const verifiedBadge = '<span class="verified-badge">✔ Verified</span>'; // Update badge format
+        const verifiedBadge = '<span class="verified-badge">✔ Verified</span>'; // Verified badge
 
         const reviewCard = `
             <div class="review-card">
                 <div class="review-profile">
-                    <img src="default-avatar.png" class="profile-pic" alt="Profile Picture">
+                    <img src="${data.profilePic}" class="profile-pic" alt="Profile Picture">
                     <h4>${data.name} ${verifiedBadge}</h4>
                 </div>
                 <p><strong>Country:</strong> ${data.country || "Unknown"}</p>
@@ -436,7 +462,26 @@ document.addEventListener("DOMContentLoaded", loadReviews);
     <!-- Review Submission Form (Hidden Until Login) -->
     <form id="review-form" class="review-form" style="display: none;" onsubmit="submitReview(event)">
         <textarea id="review" placeholder="Your Review" required></textarea><br><br>
-        <input type="hidden" id="country"> <!-- Auto-filled with user's country -->
+        <label for="country">Select Your Country:</label>
+<select id="country" required>
+    <option value="" disabled selected>Select your country</option>
+    <option value="India">India</option>
+    <option value="United States">United States</option>
+    <option value="United Kingdom">United Kingdom</option>
+    <option value="Canada">Canada</option>
+    <option value="Australia">Australia</option>
+    <option value="Germany">Germany</option>
+    <option value="France">France</option>
+    <option value="China">China</option>
+    <option value="Japan">Japan</option>
+    <option value="Brazil">Brazil</option>
+    <option value="South Africa">South Africa</option>
+    <option value="Other">Other</option>
+</select>
+<!-- Hidden input for 'Other' option -->
+	<input type="text" id="other country"
+	placeholder="Enter your country"
+	style="display: none; margin-top: 10px;">
         <button class="btn" type="submit">Submit Review</button>
     </form>
 
