@@ -233,7 +233,7 @@ const firebaseConfig = {
         }
 
         const actionCodeSettings = {
-            url: window.location.origin, // Redirects to homepage correctly
+            url: "https://ankitchauhanxd.github.io/pratyakshaayurveda/review-login",
             handleCodeInApp: true
         };
 
@@ -249,26 +249,39 @@ const firebaseConfig = {
 
     // Handle Sign-In when User Clicks Email Link
     window.onload = async () => {
+    try {
+        // Check if user is signing in with email link
         if (isSignInWithEmailLink(auth, window.location.href)) {
             let email = sessionStorage.getItem("emailForSignIn");
+
             if (!email) {
                 email = window.prompt("Please enter your email to confirm sign-in:");
                 if (!email) {
-                	alert("Email is required to proceed.");
-                return; }
+                    alert("Email is required to proceed.");
+                    return;
+                }
             }
 
-            try {
-                const result = await signInWithEmailLink(auth, email, window.location.href);
-                sessionStorage.removeItem("emailForSignIn");
-                document.getElementById("user-info").innerHTML = `<p>Welcome, ${result.user.email}</p>`;
-                document.getElementById("review-form").style.display = "block";
-                detectCountry(); // Auto-fill country after login
-            } catch (error) {
-                console.error("Error signing in:", error);
-                alert("Login failed. Please try again.");
-            }
+            // Attempt to sign in with the email link
+            const result = await signInWithEmailLink(auth, email, window.location.href);
+            sessionStorage.removeItem("emailForSignIn");
+
+            // Display user info and review form upon successful login
+            document.getElementById("user-info").innerHTML = `<p>Welcome, ${result.user.email}</p>`;
+            document.getElementById("review-form").style.display = "block";
+
+            // Auto-detect and fill country
+            detectCountry();
         }
+
+        // Load reviews after authentication check
+        await loadReviews();
+
+    } catch (error) {
+        console.error("Error during authentication:", error);
+        alert("An error occurred during login. Please try again.");
+    }
+};
       await  loadReviews(); // Load reviews on page load
     };
 
@@ -479,7 +492,7 @@ document.addEventListener("DOMContentLoaded", loadReviews);
     <option value="Other">Other</option>
 </select>
 <!-- Hidden input for 'Other' option -->
-	<input type="text" id="other country"
+	<input type="text" id="othercountry"
 	placeholder="Enter your country"
 	style="display: none; margin-top: 10px;">
         <button class="btn" type="submit">Submit Review</button>
