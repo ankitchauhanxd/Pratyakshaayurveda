@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Reviews - Pratyaksha Ayurveda</title>
+    <style>
+        /* Previous styles remain unchanged */
+        
+        .reviews-page {
+            padding: 5rem 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .review-form {
+            background: #FFF;
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .review-card {
+            background: #FFF;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .review-form input,
+        .review-form textarea {
+            width: 100%;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .verified-badge {
+            background: #4CAF50;
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            margin-left: 0.5rem;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .country {
+            color: #666;
+            margin: 0.3rem 0;
+        }
+    </style>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Firebase configuration remains same
+
+        async function submitReview(event) {
+            event.preventDefault();
+            const user = auth.currentUser;
+            const name = document.getElementById("name").value;
+            const country = document.getElementById("country").value;
+            const reviewText = document.getElementById("review").value;
+            
+            if (!user || !name || !country || !reviewText) {
+                alert("Please fill all fields and ensure you're logged in");
+                return;
+            }
+
+            try {
+                await addDoc(collection(db, "reviews"), {
+                    name: name,
+                    country: country,
+                    review: reviewText,
+                    timestamp: new Date(),
+                    approved: false
+                });
+                alert("Review submitted for approval!");
+                document.getElementById("review-form").reset();
+            } catch (error) {
+                console.error("Error submitting review:", error);
+            }
+        }
+
+        async function loadReviews() {
+            const reviewsContainer = document.getElementById("reviews-container");
+            reviewsContainer.innerHTML = "Loading...";
+
+            const q = query(collection(db, "reviews"), where("approved", "==", true));
+            const snapshot = await getDocs(q);
+
+            reviewsContainer.innerHTML = "";
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                const reviewHTML = `
+                    <div class="review-card">
+                        <h4>${data.name} <span class="verified-badge">Verified ✓</span></h4>
+                        <p class="country">${data.country}</p>
+                        <p>${data.review}</p>
+                        <small>${new Date(data.timestamp?.toDate()).toLocaleDateString()}</small>
+                    </div>
+                `;
+                reviewsContainer.innerHTML += reviewHTML;
+            });
+        }
+
+        // Initialize and load reviews on page load
+        document.addEventListener("DOMContentLoaded", () => {
+            loadReviews();
+            // Auth state listener remains same
+        });
+    </script>
+</head>
+<body>
+    <header class="header">
+        <!-- Navigation remains same -->
+    </header>
+
+    <section class="reviews-page">
+        <h1>Patient Reviews</h1>
+        
+        <!-- Updated Review Form -->
+        <div class="review-form">
+            <h2>Share Your Experience</h2>
+            <form id="review-form" onsubmit="submitReview(event)">
+                <input type="text" id="name" placeholder="Your Name" required>
+                <input type="text" id="country" placeholder="Your Country" required>
+                <textarea id="review" placeholder="Write your review..." required></textarea>
+                <button type="submit" class="btn">Submit Review</button>
+            </form>
+        </div>
+
+        <!-- Reviews Container -->
+        <div id="reviews-container"></div>
+    </section>
+
+    <footer class="footer">
+        <p>&copy; 2025 Pratyaksha Ayurveda. All rights reserved.</p>
+    </footer>
+</body>
+</html>
