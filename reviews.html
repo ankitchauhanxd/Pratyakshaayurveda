@@ -10,16 +10,25 @@
 
     /* Header */
     .header { background: #2e4f2e; padding: 1rem; position: fixed; width: 100%; top: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; }
+    .nav { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; width: 100%; justify-content: space-between; }
+    .logo { color: #f4e7d1; font-size: 1.5rem; }
     .nav-links { display: flex; gap: 2rem; list-style: none; }
     .nav-links a { text-decoration: none; color: #f4e7d1; font-weight: 500; }
+    .nav-links a.active { color: #ffd700; }
     .auth-buttons { display: flex; gap: 10px; }
     .btn { padding: 8px 15px; background: #d97e50; color: white; border: none; cursor: pointer; border-radius: 5px; }
 
     /* Reviews Section */
     .reviews-page { padding: 6rem 2rem; max-width: 800px; margin: 0 auto; }
-    .review-form { background: #fff; padding: 2rem; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+    .review-form { background: #fff; padding: 2rem; border-radius: 10px; margin: 2rem 0; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+    .review-card { background: #fff; padding: 1.5rem; margin: 1rem 0; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+    .review-form input, .review-form textarea { width: 100%; padding: 1rem; margin: 0.5rem 0; border: 1px solid #ddd; border-radius: 5px; }
+    .success-message { background: #4caf50; color: white; padding: 1rem; border-radius: 5px; margin-top: 1rem; display: none; }
+    .success-message.show { display: block; }
+
+    /* Approved Reviews Section */
+    .reviews-container { margin-top: 3rem; }
     .review { background: #fff; padding: 1.5rem; margin: 1rem 0; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
-    .verified-badge { color: #4caf50; font-size: 1rem; margin-left: 5px; }
 
     /* Footer */
     .footer { background: #2e4f2e; color: #f4e7d1; text-align: center; padding: 1rem; position: relative; width: 100%; }
@@ -53,7 +62,7 @@
         <textarea id="review" placeholder="Write your review..." required rows="5"></textarea>
         <button type="submit" class="btn">Submit Review</button>
       </form>
-      <div id="success-message" class="success-message" style="display: none;">
+      <div id="success-message" class="success-message">
         Your review has been submitted for approval!
       </div>
     </div>
@@ -99,6 +108,7 @@
         alert(`A login link has been sent to ${email}.`);
         localStorage.setItem("emailForSignIn", email);
       } catch (error) {
+        console.error("Error:", error);
         alert("Login failed.");
       }
     };
@@ -106,8 +116,8 @@
     window.logoutUser = function () {
       signOut(auth).then(() => {
         alert("You have logged out.");
-      }).catch(() => {
-        alert("Logout failed.");
+      }).catch((error) => {
+        console.error("Logout failed:", error);
       });
     };
 
@@ -133,33 +143,12 @@
         });
 
         document.getElementById("review-form").reset();
-        document.getElementById("success-message").style.display = "block";
-        setTimeout(() => document.getElementById("success-message").style.display = "none", 3000);
-      } catch {
+        document.getElementById("success-message").classList.add("show");
+        setTimeout(() => document.getElementById("success-message").classList.remove("show"), 3000);
+      } catch (error) {
         alert("Submission failed.");
       }
     };
-
-    async function fetchApprovedReviews() {
-      const reviewsContainer = document.getElementById("approved-reviews");
-      reviewsContainer.innerHTML = "";
-
-      const q = query(collection(db, "reviews"), where("approved", "==", true));
-      const querySnapshot = await getDocs(q);
-
-      querySnapshot.forEach((doc) => {
-        const { name, country, review } = doc.data();
-        const reviewHtml = `
-          <div class="review">
-            <strong>${name} <span class="verified-badge">✔️</span></strong> from ${country}
-            <p>${review}</p>
-          </div>
-        `;
-        reviewsContainer.innerHTML += reviewHtml;
-      });
-    }
-
-    fetchApprovedReviews();
   </script>
 </body>
 </html>
