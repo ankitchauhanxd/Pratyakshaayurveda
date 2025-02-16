@@ -79,7 +79,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
     import { getFirestore, collection, addDoc, query, where, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
-    import { getAuth, signInWithEmailLink, isSignInWithEmailLink, sendSignInLinkToEmail, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    import { getAuth, signInWithEmailLink, isSignInWithEmailLink, sendSignInLinkToEmail, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyD3CsmjOe2HKD2fDUCtlNgMwTOBqHA8nJ8",
@@ -94,6 +94,27 @@
     const db = getFirestore(app);
     const auth = getAuth();
 
+    // Ensure persistent session
+    setPersistence(auth, browserLocalPersistence)
+      .catch((error) => {
+        console.error("Error setting persistence:", error);
+      });
+
+    // Check if the user is signing in via email link
+    if (isSignInWithEmailLink(auth, window.location.href)) {
+      const email = localStorage.getItem("emailForSignIn");
+      if (email) {
+        signInWithEmailLink(auth, email, window.location.href)
+          .then((result) => {
+            localStorage.removeItem("emailForSignIn");
+          })
+          .catch((error) => {
+            console.error("Error completing email sign-in:", error);
+          });
+      }
+    }
+
+    // Send sign-in link to user's email
     async function sendLoginLink() {
       const email = prompt("Enter your email to log in:");
       if (!email) return;
@@ -151,6 +172,16 @@
     }
 
     loadApprovedReviews();
+
+    // Log out the user
+    window.logoutUser = async () => {
+      try {
+        await signOut(auth);
+        alert("You have successfully logged out.");
+      } catch (error) {
+        console.error("Error logging out:", error);
+      }
+    };
   </script>
 </body>
 </html>
