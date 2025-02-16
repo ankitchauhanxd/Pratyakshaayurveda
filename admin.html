@@ -2,49 +2,112 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Admin Panel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Reviews</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #F4E7D1;
+            color: #5A3E2B;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        #login-form {
+            max-width: 350px;
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            background-color: #2E4F2E;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            background-color: #D97E50;
+        }
+
+        #reviews-panel {
+            display: none;
+            max-width: 600px;
+            width: 90%;
+        }
+
+        h2 {
+            text-align: center;
+            color: #2E4F2E;
+        }
+
         .review-item {
+            background: white;
             padding: 1rem;
             margin: 1rem 0;
-            border: 1px solid #ddd;
-            background: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-        button {
-            padding: 0.5rem 1rem;
-            margin-right: 0.5rem;
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .approve-btn {
+            background: #2E4F2E;
+            color: white;
+        }
+
+        .reject-btn {
+            background: #D97E50;
+            color: white;
+        }
+
+        .approve-btn, .reject-btn {
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
             cursor: pointer;
         }
-        #login-form {
-            max-width: 400px;
-            margin: 2rem auto;
-            padding: 2rem;
-            border: 1px solid #ddd;
+
+        .approve-btn:hover, .reject-btn:hover {
+            opacity: 0.8;
         }
     </style>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
         import { 
-            getFirestore, 
-            collection, 
-            query, 
-            where, 
-            getDocs, 
-            updateDoc, 
-            doc, 
-            deleteDoc 
+            getFirestore, collection, query, where, getDocs, updateDoc, doc, deleteDoc 
         } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
-        import { 
-            getAuth, 
-            signInWithEmailAndPassword 
-        } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js";
 
-        // Your Firebase configuration
+        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyD3CsmjOe2HKD2fDUCtlNgMwTOBqHA8nJ8",
             authDomain: "pratyaksha-ayurveda-d147f.firebaseapp.com",
             projectId: "pratyaksha-ayurveda-d147f",
-            storageBucket: "pratyaksha-ayurveda-d147f.firebasestorage.app",
+            storageBucket: "pratyaksha-ayurveda-d147f.appspot.com",
             messagingSenderId: "547427847650",
             appId: "1:547427847650:web:d8cbab4dc70223a7753dbb",
             measurementId: "G-GGKB7EX8YR"
@@ -55,7 +118,7 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        // Admin UID verification (replace with your actual admin UID)
+        // Admin UID
         const ADMIN_UID = "vWtDpYgjdMdjehcHVLrxWNOmdSS2";
 
         // Escape HTML to prevent XSS
@@ -70,8 +133,7 @@
 
         async function loadPendingReviews() {
             try {
-                const q = query(collection(db, "reviews"), 
-                    where("approved", "==", false));
+                const q = query(collection(db, "reviews"), where("approved", "==", false));
                 const snapshot = await getDocs(q);
                 
                 const container = document.getElementById("pending-reviews");
@@ -159,7 +221,7 @@
         <button id="login-btn">Login</button>
     </div>
 
-    <div id="reviews-panel" style="display: none;">
+    <div id="reviews-panel">
         <h2>Pending Reviews</h2>
         <div id="pending-reviews"></div>
     </div>
