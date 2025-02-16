@@ -50,8 +50,10 @@
       </div>
     </nav>
   </header>
+
   <section class="reviews-page">
     <h1>Patient Reviews</h1>
+
     <div class="review-form">
       <h2>Share Your Experience</h2>
       <form id="review-form" onsubmit="submitReview(event)">
@@ -68,6 +70,7 @@
     <h2>What Our Visitors Say</h2>
     <div class="reviews-container" id="approved-reviews"></div>
   </section>
+
   <footer class="footer">
     <p>&copy; 2025 Pratyaksha Ayurveda. All rights reserved.</p>
   </footer>
@@ -76,7 +79,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
     import { getFirestore, collection, addDoc, query, where, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
-    import { getAuth, signInWithEmailLink, isSignInWithEmailLink, sendSignInLinkToEmail, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    import { getAuth, sendSignInLinkToEmail, signOut, onAuthStateChanged, isSignInWithEmailLink, signInWithEmailLink } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyD3CsmjOe2HKD2fDUCtlNgMwTOBqHA8nJ8",
@@ -91,13 +94,13 @@
     const db = getFirestore(app);
     const auth = getAuth();
 
-    async function sendLoginLink() {
+    window.sendLoginLink = async function () {
       const email = prompt("Enter your email to log in:");
       if (!email) return;
 
-      const actionCodeSettings = {   
-        url: "https://ankitchauhanxd.github.io/pratyakshaayurveda/reviews.html",   
-        handleCodeInApp: true   
+      const actionCodeSettings = { 
+        url: "https://ankitchauhanxd.github.io/pratyakshaayurveda/reviews.html", 
+        handleCodeInApp: true 
       };
 
       try {
@@ -108,14 +111,22 @@
         console.error("Error:", error);
         alert("Login failed.");
       }
-    }
+    };
+
+    window.logoutUser = function () {
+      signOut(auth).then(() => {
+        alert("You have logged out.");
+      }).catch((error) => {
+        console.error("Logout failed:", error);
+      });
+    };
 
     onAuthStateChanged(auth, (user) => {
       document.getElementById("login-btn").style.display = user ? "none" : "inline-block";
       document.getElementById("logout-btn").style.display = user ? "inline-block" : "none";
     });
 
-    window.submitReview = async (event) => {
+    window.submitReview = async function (event) {
       event.preventDefault();
       if (!auth.currentUser) { alert("Log in first."); sendLoginLink(); return; }
 
@@ -126,9 +137,9 @@
       if (!name || !country || !review) return alert("All fields required.");
 
       try {
-        await addDoc(collection(db, "reviews"), {   
-          name, country, review, timestamp: serverTimestamp(),   
-          userEmail: auth.currentUser.email, approved: false   
+        await addDoc(collection(db, "reviews"), { 
+          name, country, review, timestamp: serverTimestamp(), 
+          userEmail: auth.currentUser.email, approved: false 
         });
 
         document.getElementById("review-form").reset();
@@ -139,15 +150,47 @@
       }
     };
 
-    async function loadApprovedReviews() {
+    // Fetch and display approved reviews
+    async function fetchApprovedReviews() {
       const q = query(collection(db, "reviews"), where("approved", "==", true));
       const querySnapshot = await getDocs(q);
-      document.getElementById("approved-reviews").innerHTML = querySnapshot.docs.map(doc =>   
-        `<div class="review"><h3>${doc.data().name} (${doc.data().country})</h3><p>${doc.data().review}</p></div>`  
-      ).join("");  
+      const reviewsContainer = document.getElementById("approved-reviews");
+      
+      querySnapshot.forEach(doc => {
+        const data = doc.data();
+        const reviewCard = document.createElement("div");
+        reviewCard.classList.add("review");
+        
+        reviewCard.innerHTML = `
+          <h3>${data.name}</h3>
+          <p><strong>Country:</strong> ${data.country}</p>
+          <p>${data.review}</p>
+        `;
+        
+        reviewsContainer.appendChild(reviewCard);
+      });
     }
 
-    loadApprovedReviews();
+    fetchApprovedReviews();
+
+    // New code for handling sign-in link completion
+    window.onload = function() {
+      // Check if the page was opened using the sign-in link
+      const emailForSignIn = localStorage.getItem("emailForSignIn");
+      if (emailForSignIn && isSignInWithEmailLink(auth, window.location.href)) {
+        // Complete sign-in using the link
+        signInWithEmailLink(auth, emailForSignIn, window.location.href)
+          .then((result) => {
+            // Clear the email from local storage
+            localStorage.removeItem("emailForSignIn");
+            alert("Successfully logged in!");
+          })
+          .catch((error) => {
+            console.error("Error signing in with link:", error);
+            alert("Sign-in failed.");
+          });
+      }
+    };
   </script>
 </body>
 </html>
