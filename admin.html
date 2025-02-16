@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel</title>
+    <style>
+        .review-item {
+            padding: 1rem;
+            margin: 1rem 0;
+            border: 1px solid #ddd;
+        }
+    </style>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
+        import { getFirestore, collection, query, where, getDocs, updateDoc, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js";
+
+        const firebaseConfig = { /* your config */ };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        async function loadPendingReviews() {
+            const q = query(collection(db, "reviews"), where("approved", "==", false));
+            const snapshot = await getDocs(q);
+            
+            const container = document.getElementById("pending-reviews");
+            container.innerHTML = "";
+            
+            snapshot.forEach(async (docSnapshot) => {
+                const data = docSnapshot.data();
+                const div = document.createElement("div");
+                div.className = "review-item";
+                div.innerHTML = `
+                    <h4>${data.name} (${data.country})</h4>
+                    <p>${data.review}</p>
+                    <button onclick="approveReview('${docSnapshot.id}')">Approve</button>
+                    <button onclick="deleteReview('${docSnapshot.id}')">Reject</button>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        window.approveReview = async (id) => {
+            await updateDoc(doc(db, "reviews", id), { approved: true });
+            loadPendingReviews();
+        };
+
+        window.deleteReview = async (id) => {
+            await deleteDoc(doc(db, "reviews", id));
+            loadPendingReviews();
+        };
+
+        // Admin login
+        document.getElementById("login-btn").addEventListener("click", async () => {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                document.getElementById("login-form").style.display = "none";
+                loadPendingReviews();
+                document.getElementById("reviews-panel").style.display = "block";
+            } catch (error) {
+                alert("Login failed: " + error.message);
+            }
+        });
+    </script>
+</head>
+<body>
+    <div id="login-form">
+        <h2>Admin Login</h2>
+        <input type="email" id="email" placeholder="Admin email">
+        <input type="password" id="password" placeholder="Password">
+        <button id="login-btn">Login</button>
+    </div>
+
+    <div id="reviews-panel" style="display: none;">
+        <h2>Pending Reviews</h2>
+        <div id="pending-reviews"></div>
+    </div>
+</body>
+</html>
