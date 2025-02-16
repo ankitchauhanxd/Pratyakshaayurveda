@@ -86,209 +86,194 @@
   </footer>
 
   <!-- Firebase Integration -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-    import { getFirestore, collection, addDoc, query, where, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
-    import { getAuth, signOut, onAuthStateChanged, RecaptchaVerifier, signInWithPhoneNumber } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-
-const auth = getAuth();
-let confirmationResult;
-
-// Initialize reCAPTCHA
-window.recaptchaVerifier = new RecaptchaVerifier( 'recaptcha-container', {
-  'size': 'invisible',
-  'callback': (response) => {
-    console.log("reCAPTCHA verified!");
-  }
-});
-
-// Function to start phone authentication UI
-window.startPhoneAuth = function () {
-  document.getElementById("phone-auth-container").style.display = "block";
-};
-
-// Function to send OTP
-window.sendOTP = function () {
-  const phoneNumber = document.getElementById("phone-number").value;
-  if (!phoneNumber) return alert("Enter a valid phone number!");
-
-  signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier)
-    .then((result) => {
-      confirmationResult = result;
-      alert("OTP Sent!");
-      document.getElementById("otp-code").style.display = "block";
-      document.getElementById("verify-btn").style.display = "block";
-    })
-    .catch((error) => {
-      console.error(error);
-      alert("Error sending OTP: " + error.message);
-    });
-};
-
-// Function to verify OTP
-window.verifyOTP = function () {
-  const otpCode = document.getElementById("otp-code").value;
-  if (!otpCode) return alert("Enter the OTP!");
-
-  confirmationResult.confirm(otpCode)
-    .then((result) => {
-      alert("Phone number verified!");
-      document.getElementById("phone-auth-container").style.display = "none";
-      
-      // Show logout button and hide login button
-      document.getElementById("login-btn").style.display = "none";
-      document.getElementById("logout-btn").style.display = "inline-block";
-    })
-    .catch((error) => {
-      console.error(error);
-      alert("OTP Verification failed: " + error.message);
-    });
-};
-
-// Logout Function
-window.logoutUser = function () {
-  signOut(auth).then(() => {
-    alert("You have logged out.");
-    
-    // Show login button again
-    document.getElementById("login-btn").style.display = "inline-block";
-    document.getElementById("logout-btn").style.display = "none";
-  }).catch((error) => {
-    console.error("Logout failed:", error);
-  });
-};
-
-// Update UI based on authentication state
-onAuthStateChanged(auth, (user) => {
-  document.getElementById("login-btn").style.display = user ? "none" : "inline-block";
-  document.getElementById("logout-btn").style.display = user ? "inline-block" : "none";
-});
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyD3CsmjOe2HKD2fDUCtlNgMwTOBqHA8nJ8",
-      authDomain: "pratyaksha-ayurveda-d147f.firebaseapp.com",
-      projectId: "pratyaksha-ayurveda-d147f",
-      storageBucket: "pratyaksha-ayurveda-d147f.appspot.com",
-      messagingSenderId: "547427847650",
-      appId: "1:547427847650:web:d8cbab4dc70223a7753dbb"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const auth = getAuth();
-
-    window.sendLoginLink = async function () {
-      const email = prompt("Enter your email to log in:");
-      if (!email) return;
-
-      const actionCodeSettings = { 
-        url: "https://ankitchauhanxd.github.io/pratyakshaayurveda/reviews.html", 
-        handleCodeInApp: true 
-      };
-
-      try {
-        await sendSignInLinkToEmail(auth, email, actionCodeSettings);
-        alert(`A login link has been sent to ${email}. Check your inbox!`);
-        localStorage.setItem("emailForSignIn", email);
-      } catch (error) {
-        console.error("Error:", error);
-        alert(`Login failed: ${error.message}`);
-      }
-    };
-
-    window.logoutUser = function () {
-      signOut(auth).then(() => {
+<script type="module">
+  import { 
+    initializeApp 
+  } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+  
+  import { 
+    getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp 
+  } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+  
+  import { 
+    getAuth, signOut, onAuthStateChanged, RecaptchaVerifier, signInWithPhoneNumber 
+  } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+  
+  // Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyD3CsmjOe2HKD2fDUCtlNgMwTOBqHA8nJ8",
+    authDomain: "pratyaksha-ayurveda-d147f.firebaseapp.com",
+    projectId: "pratyaksha-ayurveda-d147f",
+    storageBucket: "pratyaksha-ayurveda-d147f.appspot.com",
+    messagingSenderId: "547427847650",
+    appId: "1:547427847650:web:d8cbab4dc70223a7753dbb"
+  };
+  
+  // Initialize Firebase, Firestore, and Auth
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const auth = getAuth(app);
+  
+  // Initialize reCAPTCHA
+  window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
+    size: 'invisible',
+    callback: (response) => {
+      console.log("reCAPTCHA verified!");
+    }
+  }, auth);
+  
+  // --- Phone Authentication Functions ---
+  
+  // Display the phone auth UI
+  window.startPhoneAuth = function () {
+    document.getElementById("phone-auth-container").style.display = "block";
+  };
+  
+  let confirmationResult;
+  
+  // Send OTP to the provided phone number
+  window.sendOTP = function () {
+    const phoneNumber = document.getElementById("phone-number").value;
+    if (!phoneNumber) {
+      alert("Enter a valid phone number!");
+      return;
+    }
+  
+    signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier)
+      .then((result) => {
+        confirmationResult = result;
+        alert("OTP Sent!");
+        document.getElementById("otp-code").style.display = "block";
+        document.getElementById("verify-btn").style.display = "block";
+      })
+      .catch((error) => {
+        console.error(error);
+        alert("Error sending OTP: " + error.message);
+      });
+  };
+  
+  // Verify the OTP entered by the user
+  window.verifyOTP = function () {
+    const otpCode = document.getElementById("otp-code").value;
+    if (!otpCode) {
+      alert("Enter the OTP!");
+      return;
+    }
+  
+    confirmationResult.confirm(otpCode)
+      .then((result) => {
+        alert("Phone number verified!");
+        document.getElementById("phone-auth-container").style.display = "none";
+        // Update UI for authenticated user
+        document.getElementById("login-btn").style.display = "none";
+        document.getElementById("logout-btn").style.display = "inline-block";
+      })
+      .catch((error) => {
+        console.error(error);
+        alert("OTP Verification failed: " + error.message);
+      });
+  };
+  
+  // Logout function
+  window.logoutUser = function () {
+    signOut(auth)
+      .then(() => {
         alert("You have logged out.");
-      }).catch((error) => {
+        document.getElementById("login-btn").style.display = "inline-block";
+        document.getElementById("logout-btn").style.display = "none";
+      })
+      .catch((error) => {
         console.error("Logout failed:", error);
       });
-    };
-
-    onAuthStateChanged(auth, (user) => {
-      document.getElementById("login-btn").style.display = user ? "none" : "inline-block";
-      document.getElementById("logout-btn").style.display = user ? "inline-block" : "none";
-    });
-
-    window.submitReview = async function (event) {
-  event.preventDefault();
+  };
   
-  if (!auth.currentUser) { 
-    alert("Verify your phone number first!"); 
-    startPhoneAuth();
-    return;
-  }
-
-  const name = document.getElementById("name").value.trim();
-  const country = document.getElementById("country").value.trim();
-  const review = document.getElementById("review").value.trim();
-
-  if (!name || !country || !review) return alert("All fields are required!");
-
-  try {
-    await addDoc(collection(db, "reviews"), { 
-      name, 
-      country, 
-      review, 
-      timestamp: serverTimestamp(), 
-      userPhone: auth.currentUser.phoneNumber, // Store authenticated phone number
-      approved: false 
-    });
-
-    document.getElementById("review-form").reset();
-    document.getElementById("success-message").classList.add("show");
-    setTimeout(() => document.getElementById("success-message").classList.remove("show"), 3000);
-  } catch (error) {
-    alert("Submission failed.");
-  }
-};
-
-    // Fetch and display approved reviews
-    async function fetchApprovedReviews() {
-  const q = query(collection(db, "reviews"), where("approved", "==", true));
-  const querySnapshot = await getDocs(q);
-  const reviewsContainer = document.getElementById("approved-reviews");
-  reviewsContainer.innerHTML = ""; // Clear existing reviews before appending new ones
-  
-  querySnapshot.forEach(doc => {
-    const data = doc.data();
-    const reviewCard = document.createElement("div");
-    reviewCard.classList.add("review");
-    
-    reviewCard.innerHTML = `
-      <h3>${data.name} <span style="color: green;">✔️</span></h3>
-      <p><strong>Country:</strong> ${data.country}</p>
-      <p>${data.review}</p>
-      <p><small>Verified user: ${data.userPhone}</small></p>
-    `;
-    
-    reviewsContainer.appendChild(reviewCard);
+  // Update UI based on authentication state
+  onAuthStateChanged(auth, (user) => {
+    document.getElementById("login-btn").style.display = user ? "none" : "inline-block";
+    document.getElementById("logout-btn").style.display = user ? "inline-block" : "none";
   });
-}
-
-fetchApprovedReviews();
-
-    // Handle email link sign-in
-    window.onload = async function() {
-      if (isSignInWithEmailLink(auth, window.location.href)) {
-        let email = localStorage.getItem("emailForSignIn");
-        
-        // If missing email, prompt user for it
-        if (!email) {
-          email = prompt("Please enter your email address to complete login:");
-          if (!email) return;
-        }
-
-        try {
-          await signInWithEmailLink(auth, email, window.location.href);
-          localStorage.removeItem("emailForSignIn");
-          alert("Successfully logged in!");
-          window.location.replace("/reviews.html"); // Clean URL after login
-        } catch (error) {
-          console.error("Sign-in error:", error);
-          alert(`Login failed: ${error.message}`);
-        }
+  
+  // --- Review Submission ---
+  
+  // Submits a review (requires phone verification)
+  window.submitReview = async function (event) {
+    event.preventDefault();
+  
+    if (!auth.currentUser) {
+      alert("Verify your phone number first!");
+      startPhoneAuth();
+      return;
+    }
+  
+    const name = document.getElementById("name").value.trim();
+    const country = document.getElementById("country").value.trim();
+    const review = document.getElementById("review").value.trim();
+  
+    if (!name || !country || !review) {
+      alert("All fields are required!");
+      return;
+    }
+  
+    try {
+      // Note: 'approved' is set to false by default. Only reviews with approved === true will display.
+      await addDoc(collection(db, "reviews"), {
+        name,
+        country,
+        review,
+        timestamp: serverTimestamp(),
+        userPhone: auth.currentUser.phoneNumber,
+        approved: false
+      });
+  
+      document.getElementById("review-form").reset();
+      document.getElementById("success-message").classList.add("show");
+      setTimeout(() => {
+        document.getElementById("success-message").classList.remove("show");
+      }, 3000);
+    } catch (error) {
+      alert("Submission failed: " + error.message);
+    }
+  };
+  
+  // --- Real‑time Listener for Approved Reviews ---
+  
+  function listenApprovedReviews() {
+    const reviewsContainer = document.getElementById("approved-reviews");
+    if (!reviewsContainer) {
+      console.error("Element with ID 'approved-reviews' not found in the DOM.");
+      return;
+    }
+  
+    const q = query(collection(db, "reviews"), where("approved", "==", true));
+    onSnapshot(q, (snapshot) => {
+      reviewsContainer.innerHTML = ""; // Clear existing reviews
+      
+      if (snapshot.empty) {
+        reviewsContainer.innerHTML = "<p>No approved reviews yet.</p>";
+        return;
       }
-    };
-  </script>
+  
+      snapshot.forEach((doc) => {
+        const data = doc.data();
+        const reviewCard = document.createElement("div");
+        reviewCard.classList.add("review");
+        reviewCard.innerHTML = `
+          <h3>${data.name} <span style="color: green;">✔️</span></h3>
+          <p><strong>Country:</strong> ${data.country}</p>
+          <p>${data.review}</p>
+          <p><small>Verified user: ${data.userPhone}</small></p>
+        `;
+        reviewsContainer.appendChild(reviewCard);
+      });
+    }, (error) => {
+      console.error("Error fetching approved reviews:", error);
+    });
+  }
+  
+  // Set up the listener once the DOM is loaded
+  document.addEventListener("DOMContentLoaded", () => {
+    listenApprovedReviews();
+  });
+</script>
 </body>
 </html>
