@@ -108,7 +108,6 @@
         alert(`A login link has been sent to ${email}.`);
         localStorage.setItem("emailForSignIn", email);
       } catch (error) {
-        console.error("Error:", error);
         alert("Login failed.");
       }
     };
@@ -116,8 +115,8 @@
     window.logoutUser = function () {
       signOut(auth).then(() => {
         alert("You have logged out.");
-      }).catch((error) => {
-        console.error("Logout failed:", error);
+      }).catch(() => {
+        alert("Logout failed.");
       });
     };
 
@@ -130,25 +129,26 @@
       event.preventDefault();
       if (!auth.currentUser) { alert("Log in first."); sendLoginLink(); return; }
 
-      const name = document.getElementById("name").value.trim();
-      const country = document.getElementById("country").value.trim();
-      const review = document.getElementById("review").value.trim();
+      await addDoc(collection(db, "reviews"), { 
+        name: document.getElementById("name").value, 
+        country: document.getElementById("country").value, 
+        review: document.getElementById("review").value, 
+        timestamp: serverTimestamp(), approved: false 
+      });
 
-      if (!name || !country || !review) return alert("All fields required.");
-
-      try {
-        await addDoc(collection(db, "reviews"), { 
-          name, country, review, timestamp: serverTimestamp(), 
-          userEmail: auth.currentUser.email, approved: false 
-        });
-
-        document.getElementById("review-form").reset();
-        document.getElementById("success-message").classList.add("show");
-        setTimeout(() => document.getElementById("success-message").classList.remove("show"), 3000);
-      } catch (error) {
-        alert("Submission failed.");
-      }
+      document.getElementById("success-message").classList.add("show");
+      setTimeout(() => document.getElementById("success-message").classList.remove("show"), 3000);
     };
+
+    async function loadApprovedReviews() {
+      const q = query(collection(db, "reviews"), where("approved", "==", true));
+      const querySnapshot = await getDocs(q);
+      document.getElementById("approved-reviews").innerHTML = querySnapshot.docs.map(doc => `
+        <div class="review"><h3>${doc.data().name}</h3><p><strong>Country:</strong> ${doc.data().country}</p><p>${doc.data().review}</p></div>
+      `).join("");
+    }
+
+    window.addEventListener("load", loadApprovedReviews);
   </script>
 </body>
 </html>
