@@ -79,7 +79,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
     import { getFirestore, collection, addDoc, query, where, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
-    import { getAuth, sendSignInLinkToEmail, signOut, onAuthStateChanged, isSignInWithEmailLink, signInWithEmailLink } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    import { getAuth, signInWithEmailLink, isSignInWithEmailLink, sendSignInLinkToEmail, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyD3CsmjOe2HKD2fDUCtlNgMwTOBqHA8nJ8",
@@ -94,8 +94,7 @@
     const db = getFirestore(app);
     const auth = getAuth();
 
-    // Send login link to the email
-    window.sendLoginLink = async function () {
+    async function sendLoginLink() {
       const email = prompt("Enter your email to log in:");
       if (!email) return;
 
@@ -109,78 +108,49 @@
         alert(`A login link has been sent to ${email}.`);
         localStorage.setItem("emailForSignIn", email);
       } catch (error) {
+        console.error("Error:", error);
         alert("Login failed.");
       }
-    };
+    }
 
-    // Handle user logout
-    window.logoutUser = function () {
-      signOut(auth).then(() => {
-        alert("You have logged out.");
-      }).catch(() => {
-        alert("Logout failed.");
-      });
-    };
-
-    // Check if the user is logged in
     onAuthStateChanged(auth, (user) => {
       document.getElementById("login-btn").style.display = user ? "none" : "inline-block";
       document.getElementById("logout-btn").style.display = user ? "inline-block" : "none";
     });
 
-    // Handle sign-in after clicking the login link
-    window.addEventListener("load", async () => {
-      const email = localStorage.getItem("emailForSignIn");
-      if (isSignInWithEmailLink(auth, window.location.href)) {
-        try {
-          // Complete sign-in process after the user clicks the link
-          const user = await signInWithEmailLink(auth, email, window.location.href);
-          localStorage.removeItem("emailForSignIn");
-
-          // Handle the signed-in user details
-          alert("Login successful!");
-        } catch (error) {
-          console.error("Error during login", error);
-          alert("Login failed.");
-        }
-      }
-    });
-
-    // Submit review form
-    window.submitReview = async function (event) {
+    window.submitReview = async (event) => {
       event.preventDefault();
-      if (!auth.currentUser) { 
-        alert("Log in first.");
-        sendLoginLink(); 
-        return; 
+      if (!auth.currentUser) { alert("Log in first."); sendLoginLink(); return; }
+
+      const name = document.getElementById("name").value.trim();
+      const country = document.getElementById("country").value.trim();
+      const review = document.getElementById("review").value.trim();
+
+      if (!name || !country || !review) return alert("All fields required.");
+
+      try {
+        await addDoc(collection(db, "reviews"), { 
+          name, country, review, timestamp: serverTimestamp(), 
+          userEmail: auth.currentUser.email, approved: false 
+        });
+
+        document.getElementById("review-form").reset();
+        document.getElementById("success-message").classList.add("show");
+        setTimeout(() => document.getElementById("success-message").classList.remove("show"), 3000);
+      } catch (error) {
+        alert("Submission failed.");
       }
-
-      await addDoc(collection(db, "reviews"), { 
-        name: document.getElementById("name").value, 
-        country: document.getElementById("country").value, 
-        review: document.getElementById("review").value, 
-        timestamp: serverTimestamp(), approved: false 
-      });
-
-      document.getElementById("success-message").classList.add("show");
-      setTimeout(() => document.getElementById("success-message").classList.remove("show"), 3000);
     };
 
-    // Load approved reviews
     async function loadApprovedReviews() {
       const q = query(collection(db, "reviews"), where("approved", "==", true));
       const querySnapshot = await getDocs(q);
-      document.getElementById("approved-reviews").innerHTML = querySnapshot.docs.map(doc => `
-        <div class="review">
-          <h3>${doc.data().name}</h3>
-          <p><strong>Country:</strong> ${doc.data().country}</p>
-          <p>${doc.data().review}</p>
-        </div>
-      `).join("");
+      document.getElementById("approved-reviews").innerHTML = querySnapshot.docs.map(doc => 
+        `<div class="review"><h3>${doc.data().name} (${doc.data().country})</h3><p>${doc.data().review}</p></div>`
+      ).join("");
     }
 
-    // Load reviews when the page is loaded
-    window.addEventListener("load", loadApprovedReviews);
-</script>
+    loadApprovedReviews();
+  </script>
 </body>
 </html>
