@@ -8,70 +8,154 @@
             padding: 1rem;
             margin: 1rem 0;
             border: 1px solid #ddd;
+            background: #f9f9f9;
+        }
+        button {
+            padding: 0.5rem 1rem;
+            margin-right: 0.5rem;
+            cursor: pointer;
+        }
+        #login-form {
+            max-width: 400px;
+            margin: 2rem auto;
+            padding: 2rem;
+            border: 1px solid #ddd;
         }
     </style>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js";
-        import { getFirestore, collection, query, where, getDocs, updateDoc, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
-        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js";
+        import { 
+            getFirestore, 
+            collection, 
+            query, 
+            where, 
+            getDocs, 
+            updateDoc, 
+            doc, 
+            deleteDoc 
+        } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore.js";
+        import { 
+            getAuth, 
+            signInWithEmailAndPassword 
+        } from "https://www.gstatic.com/firebasejs/9.0.0/firebase-auth.js";
 
-        const firebaseConfig = { /* your config */ };
+        // Your Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD3CsmjOe2HKD2fDUCtlNgMwTOBqHA8nJ8",
+            authDomain: "pratyaksha-ayurveda-d147f.firebaseapp.com",
+            projectId: "pratyaksha-ayurveda-d147f",
+            storageBucket: "pratyaksha-ayurveda-d147f.firebasestorage.app",
+            messagingSenderId: "547427847650",
+            appId: "1:547427847650:web:d8cbab4dc70223a7753dbb",
+            measurementId: "G-GGKB7EX8YR"
+        };
+
+        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        async function loadPendingReviews() {
-            const q = query(collection(db, "reviews"), where("approved", "==", false));
-            const snapshot = await getDocs(q);
-            
-            const container = document.getElementById("pending-reviews");
-            container.innerHTML = "";
-            
-            snapshot.forEach(async (docSnapshot) => {
-                const data = docSnapshot.data();
-                const div = document.createElement("div");
-                div.className = "review-item";
-                div.innerHTML = `
-                    <h4>${data.name} (${data.country})</h4>
-                    <p>${data.review}</p>
-                    <button onclick="approveReview('${docSnapshot.id}')">Approve</button>
-                    <button onclick="deleteReview('${docSnapshot.id}')">Reject</button>
-                `;
-                container.appendChild(div);
-            });
+        // Admin UID verification (replace with your actual admin UID)
+        const ADMIN_UID = "vWtDpYgjdMdjehcHVLrxWNOmdSS2";
+
+        // Escape HTML to prevent XSS
+        function escapeHtml(unsafe) {
+            return unsafe?.toString()
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;") || '';
         }
 
-        window.approveReview = async (id) => {
-            await updateDoc(doc(db, "reviews", id), { approved: true });
-            loadPendingReviews();
-        };
-
-        window.deleteReview = async (id) => {
-            await deleteDoc(doc(db, "reviews", id));
-            loadPendingReviews();
-        };
-
-        // Admin login
-        document.getElementById("login-btn").addEventListener("click", async () => {
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
-            
+        async function loadPendingReviews() {
             try {
-                await signInWithEmailAndPassword(auth, email, password);
-                document.getElementById("login-form").style.display = "none";
-                loadPendingReviews();
-                document.getElementById("reviews-panel").style.display = "block";
+                const q = query(collection(db, "reviews"), 
+                    where("approved", "==", false));
+                const snapshot = await getDocs(q);
+                
+                const container = document.getElementById("pending-reviews");
+                container.innerHTML = snapshot.docs.length ? "" : "<p>No pending reviews</p>";
+                
+                snapshot.forEach((docSnapshot) => {
+                    const data = docSnapshot.data();
+                    const div = document.createElement("div");
+                    div.className = "review-item";
+                    div.innerHTML = `
+                        <h4>${escapeHtml(data.name)} (${escapeHtml(data.country)})</h4>
+                        <p>${escapeHtml(data.review)}</p>
+                        <div class="actions">
+                            <button class="approve-btn" data-id="${docSnapshot.id}">Approve</button>
+                            <button class="reject-btn" data-id="${docSnapshot.id}">Reject</button>
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+
+                // Add event listeners
+                container.querySelectorAll('.approve-btn').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        try {
+                            await updateDoc(doc(db, "reviews", btn.dataset.id), { 
+                                approved: true 
+                            });
+                            btn.parentElement.parentElement.remove();
+                        } catch (error) {
+                            alert("Approval failed: " + error.message);
+                        }
+                    });
+                });
+
+                container.querySelectorAll('.reject-btn').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        if(confirm("Are you sure you want to reject this review?")) {
+                            try {
+                                await deleteDoc(doc(db, "reviews", btn.dataset.id));
+                                btn.parentElement.parentElement.remove();
+                            } catch (error) {
+                                alert("Deletion failed: " + error.message);
+                            }
+                        }
+                    });
+                });
             } catch (error) {
-                alert("Login failed: " + error.message);
+                alert("Error loading reviews: " + error.message);
             }
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('login-btn').addEventListener('click', async (e) => {
+                e.preventDefault();
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+
+                try {
+                    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                    
+                    // Verify admin status
+                    if(userCredential.user.uid !== ADMIN_UID) {
+                        alert("Access denied. You are not an admin.");
+                        await auth.signOut();
+                        return;
+                    }
+
+                    // Show admin panel
+                    document.getElementById('login-form').style.display = 'none';
+                    document.getElementById('reviews-panel').style.display = 'block';
+                    loadPendingReviews();
+                } catch (error) {
+                    alert("Login failed: " + error.message);
+                }
+            });
         });
     </script>
 </head>
 <body>
     <div id="login-form">
         <h2>Admin Login</h2>
-        <input type="email" id="email" placeholder="Admin email">
-        <input type="password" id="password" placeholder="Password">
+        <input type="email" id="email" placeholder="Admin email" required>
+        <input type="password" id="password" placeholder="Password" required>
         <button id="login-btn">Login</button>
     </div>
 
