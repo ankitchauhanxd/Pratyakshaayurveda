@@ -105,11 +105,11 @@
 
       try {
         await sendSignInLinkToEmail(auth, email, actionCodeSettings);
-        alert(`A login link has been sent to ${email}.`);
+        alert(`A login link has been sent to ${email}. Check your inbox!`);
         localStorage.setItem("emailForSignIn", email);
       } catch (error) {
         console.error("Error:", error);
-        alert("Login failed.");
+        alert(`Login failed: ${error.message}`);
       }
     };
 
@@ -173,22 +173,26 @@
 
     fetchApprovedReviews();
 
-    // New code for handling sign-in link completion
-    window.onload = function() {
-      // Check if the page was opened using the sign-in link
-      const emailForSignIn = localStorage.getItem("emailForSignIn");
-      if (emailForSignIn && isSignInWithEmailLink(auth, window.location.href)) {
-        // Complete sign-in using the link
-        signInWithEmailLink(auth, emailForSignIn, window.location.href)
-          .then((result) => {
-            // Clear the email from local storage
-            localStorage.removeItem("emailForSignIn");
-            alert("Successfully logged in!");
-          })
-          .catch((error) => {
-            console.error("Error signing in with link:", error);
-            alert("Sign-in failed.");
-          });
+    // Handle email link sign-in
+    window.onload = async function() {
+      if (isSignInWithEmailLink(auth, window.location.href)) {
+        let email = localStorage.getItem("emailForSignIn");
+        
+        // If missing email, prompt user for it
+        if (!email) {
+          email = prompt("Please enter your email address to complete login:");
+          if (!email) return;
+        }
+
+        try {
+          await signInWithEmailLink(auth, email, window.location.href);
+          localStorage.removeItem("emailForSignIn");
+          alert("Successfully logged in!");
+          window.location.replace("/reviews.html"); // Clean URL after login
+        } catch (error) {
+          console.error("Sign-in error:", error);
+          alert(`Login failed: ${error.message}`);
+        }
       }
     };
   </script>
