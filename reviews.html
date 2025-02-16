@@ -50,10 +50,8 @@
       </div>
     </nav>
   </header>
-
   <section class="reviews-page">
     <h1>Patient Reviews</h1>
-
     <div class="review-form">
       <h2>Share Your Experience</h2>
       <form id="review-form" onsubmit="submitReview(event)">
@@ -70,7 +68,6 @@
     <h2>What Our Visitors Say</h2>
     <div class="reviews-container" id="approved-reviews"></div>
   </section>
-
   <footer class="footer">
     <p>&copy; 2025 Pratyaksha Ayurveda. All rights reserved.</p>
   </footer>
@@ -79,7 +76,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
     import { getFirestore, collection, addDoc, query, where, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
-    import { getAuth, signInWithEmailLink, isSignInWithEmailLink, sendSignInLinkToEmail, signOut, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    import { getAuth, signInWithEmailLink, isSignInWithEmailLink, sendSignInLinkToEmail, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyD3CsmjOe2HKD2fDUCtlNgMwTOBqHA8nJ8",
@@ -94,34 +91,13 @@
     const db = getFirestore(app);
     const auth = getAuth();
 
-    // Ensure persistent session
-    setPersistence(auth, browserLocalPersistence)
-      .catch((error) => {
-        console.error("Error setting persistence:", error);
-      });
-
-    // Check if the user is signing in via email link
-    if (isSignInWithEmailLink(auth, window.location.href)) {
-      const email = localStorage.getItem("emailForSignIn");
-      if (email) {
-        signInWithEmailLink(auth, email, window.location.href)
-          .then((result) => {
-            localStorage.removeItem("emailForSignIn");
-          })
-          .catch((error) => {
-            console.error("Error completing email sign-in:", error);
-          });
-      }
-    }
-
-    // Send sign-in link to user's email
     async function sendLoginLink() {
       const email = prompt("Enter your email to log in:");
       if (!email) return;
 
-      const actionCodeSettings = { 
-        url: "https://ankitchauhanxd.github.io/pratyakshaayurveda/reviews.html", 
-        handleCodeInApp: true 
+      const actionCodeSettings = {   
+        url: "https://ankitchauhanxd.github.io/pratyakshaayurveda/reviews.html",   
+        handleCodeInApp: true   
       };
 
       try {
@@ -150,9 +126,9 @@
       if (!name || !country || !review) return alert("All fields required.");
 
       try {
-        await addDoc(collection(db, "reviews"), { 
-          name, country, review, timestamp: serverTimestamp(), 
-          userEmail: auth.currentUser.email, approved: false 
+        await addDoc(collection(db, "reviews"), {   
+          name, country, review, timestamp: serverTimestamp(),   
+          userEmail: auth.currentUser.email, approved: false   
         });
 
         document.getElementById("review-form").reset();
@@ -166,22 +142,12 @@
     async function loadApprovedReviews() {
       const q = query(collection(db, "reviews"), where("approved", "==", true));
       const querySnapshot = await getDocs(q);
-      document.getElementById("approved-reviews").innerHTML = querySnapshot.docs.map(doc => 
-        `<div class="review"><h3>${doc.data().name} (${doc.data().country})</h3><p>${doc.data().review}</p></div>`
-      ).join("");
+      document.getElementById("approved-reviews").innerHTML = querySnapshot.docs.map(doc =>   
+        `<div class="review"><h3>${doc.data().name} (${doc.data().country})</h3><p>${doc.data().review}</p></div>`  
+      ).join("");  
     }
 
     loadApprovedReviews();
-
-    // Log out the user
-    window.logoutUser = async () => {
-      try {
-        await signOut(auth);
-        alert("You have successfully logged out.");
-      } catch (error) {
-        console.error("Error logging out:", error);
-      }
-    };
   </script>
 </body>
 </html>
