@@ -29,7 +29,6 @@
     /* Approved Reviews Section */
     .reviews-container { margin-top: 3rem; }
     .review { background: #fff; padding: 1.5rem; margin: 1rem 0; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
-    .verified-badge { width: 20px; height: 20px; margin-left: 5px; vertical-align: middle; }
 
     /* Footer */
     .footer { background: #2e4f2e; color: #f4e7d1; text-align: center; padding: 1rem; position: relative; width: 100%; }
@@ -109,14 +108,9 @@
         alert(`A login link has been sent to ${email}.`);
         localStorage.setItem("emailForSignIn", email);
       } catch (error) {
+        console.error("Error:", error);
         alert("Login failed.");
       }
-    }
-
-    async function logoutUser() {
-      await signOut(auth);
-      alert("Logged out successfully!");
-      window.location.reload();
     }
 
     onAuthStateChanged(auth, (user) => {
@@ -124,7 +118,7 @@
       document.getElementById("logout-btn").style.display = user ? "inline-block" : "none";
     });
 
-    async function submitReview(event) {
+    window.submitReview = async (event) => {
       event.preventDefault();
       if (!auth.currentUser) { alert("Log in first."); sendLoginLink(); return; }
 
@@ -134,18 +128,25 @@
 
       if (!name || !country || !review) return alert("All fields required.");
 
-      await addDoc(collection(db, "reviews"), { name, country, review, timestamp: serverTimestamp(), userEmail: auth.currentUser.email, approved: false });
+      try {
+        await addDoc(collection(db, "reviews"), { 
+          name, country, review, timestamp: serverTimestamp(), 
+          userEmail: auth.currentUser.email, approved: false 
+        });
 
-      document.getElementById("review-form").reset();
-      document.getElementById("success-message").classList.add("show");
-      setTimeout(() => document.getElementById("success-message").classList.remove("show"), 3000);
-    }
+        document.getElementById("review-form").reset();
+        document.getElementById("success-message").classList.add("show");
+        setTimeout(() => document.getElementById("success-message").classList.remove("show"), 3000);
+      } catch (error) {
+        alert("Submission failed.");
+      }
+    };
 
     async function loadApprovedReviews() {
       const q = query(collection(db, "reviews"), where("approved", "==", true));
       const querySnapshot = await getDocs(q);
-      document.getElementById("approved-reviews").innerHTML = querySnapshot.docs.map(doc =>
-        `<div class="review"><h3>${doc.data().name} (${doc.data().country}) <img src="verified-badge.png" alt="Verified" class="verified-badge"></h3><p>${doc.data().review}</p></div>`
+      document.getElementById("approved-reviews").innerHTML = querySnapshot.docs.map(doc => 
+        `<div class="review"><h3>${doc.data().name} (${doc.data().country})</h3><p>${doc.data().review}</p></div>`
       ).join("");
     }
 
