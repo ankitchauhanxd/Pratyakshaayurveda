@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Pratyaksha Ayurveda</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial', sans-serif; }
+    body { background: #f4e7d1; color: #5a3e2b; display: flex; justify-content: center; align-items: center; height: 100vh; }
+    
+    .container {
+      background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 350px; text-align: center; transition: all 0.3s ease-in-out;
+    }
+    
+    h2 { margin-bottom: 1rem; }
+    input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; }
+    .btn { width: 100%; padding: 10px; background: #d97e50; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    .btn:hover { background: #b96540; }
+    
+    .remember-me { display: flex; align-items: center; justify-content: space-between; font-size: 14px; }
+    .remember-me input { width: auto; margin-right: 5px; }
+    
+    .links { margin-top: 10px; font-size: 14px; }
+    .links a { color: #2e4f2e; text-decoration: none; cursor: pointer; }
+    .links a:hover { text-decoration: underline; }
+
+    .hidden { display: none; }
+  </style>
+</head>
+<body>
+
+<div class="container" id="login-container">
+  <h2 id="form-title">Login to Pratyaksha Ayurveda</h2>
+  
+  <div id="login-form">
+    <input type="email" id="login-email" placeholder="Enter your email" required>
+    <input type="password" id="login-password" placeholder="Enter your password" required>
+    
+    <div class="remember-me">
+      <label><input type="checkbox" id="rememberMe"> Remember Me</label>
+      <a onclick="resetPassword()">Forgot Password?</a>
+    </div>
+
+    <button class="btn" onclick="loginUser()">Login</button>
+    <div class="links">
+      <p>Don't have an account? <a onclick="toggleForm()">Sign Up</a></p>
+    </div>
+  </div>
+
+  <div id="signup-form" class="hidden">
+    <input type="email" id="signup-email" placeholder="Enter your email" required>
+    <input type="password" id="signup-password" placeholder="Enter your password" required>
+    <input type="password" id="confirm-password" placeholder="Confirm your password" required>
+
+    <button class="btn" onclick="registerUser()">Sign Up</button>
+    <div class="links">
+      <p>Already have an account? <a onclick="toggleForm()">Login</a></p>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, sendPasswordResetEmail, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyD3CsmjOe2HKD2fDUCtlNgMwTOBqHA8nJ8",
+    authDomain: "pratyaksha-ayurveda-d147f.firebaseapp.com",
+    projectId: "pratyaksha-ayurveda-d147f",
+    storageBucket: "pratyaksha-ayurveda-d147f.appspot.com",
+    messagingSenderId: "547427847650",
+    appId: "1:547427847650:web:d8cbab4dc70223a7753dbb"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  window.toggleForm = function () {
+    document.getElementById("login-form").classList.toggle("hidden");
+    document.getElementById("signup-form").classList.toggle("hidden");
+    document.getElementById("form-title").textContent = 
+      document.getElementById("login-form").classList.contains("hidden") ? "Sign Up for Pratyaksha Ayurveda" : "Login to Pratyaksha Ayurveda";
+  };
+
+  window.registerUser = function () {
+    const email = document.getElementById("signup-email").value.trim();
+    const password = document.getElementById("signup-password").value.trim();
+    const confirmPassword = document.getElementById("confirm-password").value.trim();
+
+    if (!email || !password || !confirmPassword) return alert("All fields are required.");
+    if (password !== confirmPassword) return alert("Passwords do not match.");
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        alert("Signup successful! You can now log in.");
+        toggleForm();
+      })
+      .catch((error) => {
+        alert("Error: " + error.message);
+      });
+  };
+
+  window.loginUser = function () {
+    const email = document.getElementById("login-email").value.trim();
+    const password = document.getElementById("login-password").value.trim();
+    const rememberMe = document.getElementById("rememberMe").checked;
+
+    if (!email || !password) return alert("Please enter your email and password.");
+
+    setPersistence(auth, rememberMe ? browserLocalPersistence : "session")
+      .then(() => {
+        return signInWithEmailAndPassword(auth, email, password);
+      })
+      .then(() => {
+        alert("Login successful!");
+        window.location.href = "reviews.html";
+      })
+      .catch((error) => {
+        alert("Invalid email or password.");
+      });
+  };
+
+  window.resetPassword = function () {
+    const email = document.getElementById("login-email").value.trim();
+    if (!email) return alert("Enter your email to reset password.");
+    
+    sendPasswordResetEmail(auth, email)
+      .then(() => {
+        alert("Password reset link sent to your email.");
+      })
+      .catch((error) => {
+        alert("Error: " + error.message);
+      });
+  };
+</script>
+
+</body>
+</html>
