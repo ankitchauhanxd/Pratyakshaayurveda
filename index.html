@@ -1,142 +1,246 @@
-<!DOCTYPE html>  
-<html lang="en">  
-<head>  
-    <meta charset="UTF-8">  
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-    <title>Pratyaksha Ayurveda - Traditional Healing & Wellness</title>  
-    <style>  
-        * {  
-            margin: 0;  
-            padding: 0;  
-            box-sizing: border-box;  
-            font-family: 'Arial', sans-serif;  
-        }  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pratyaksha Ayurveda - Traditional Healing & Wellness</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
 
-        body {  
-            line-height: 1.6;  
-            color: #5A3E2B;  
-            background: #F4E7D1;  
-        }  
+        body {
+            line-height: 1.6;
+            color: #5A3E2B;
+            background: #F4E7D1;
+        }
 
-        /* Header */  
-        .header {  
-            background: #2E4F2E;  
-            padding: 1rem;  
-            position: fixed;  
-            width: 100%;  
-            top: 0;  
-            z-index: 1000;  
-        }  
+        /* Header */
+        .header {
+            background: #2E4F2E;
+            padding: 1rem;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-        .nav-container {  
-            max-width: 1200px;  
-            margin: 0 auto;  
-            display: flex;  
-            justify-content: space-between;  
-            align-items: center;  
-        }  
+        .logo {
+            width: 200px;
+        }
 
-        .logo {  
-            width: 200px;  
-        }  
+        /* Hamburger Menu */
+        .hamburger {
+            display: none;
+            font-size: 2rem;
+            color: #F4E7D1;
+            cursor: pointer;
+        }
 
-        .nav-links {  
-            display: flex;  
-            gap: 2rem;  
-        }  
+        /* Navigation Menu */
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
 
-        .nav-links a {  
-            text-decoration: none;  
-            color: #F4E7D1;  
-            font-weight: 500;  
-        }  
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
 
-        /* Hero Section */  
-        .hero {  
-            background: linear-gradient(rgba(46, 79, 46, 0.8), rgba(46, 79, 46, 0.8)), url('hero-bg.jpg') center/cover;  
-            height: 80vh;  
-            display: flex;  
-            align-items: center;  
-            justify-content: center;  
-            text-align: center;  
-            color: #F4E7D1;  
-            margin-top: 70px;  
-        }  
+        .nav-links a {
+            text-decoration: none;
+            color: #F4E7D1;
+            font-weight: 500;
+        }
 
-        /* Buttons */  
-        .btn {  
-            background: #D97E50;  
-            color: #FFF;  
-            padding: 1rem 2rem;  
-            border: none;  
-            border-radius: 5px;  
-            cursor: pointer;  
-        }  
+        /* Mobile Navigation Panel */
+        .mobile-nav {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 250px;
+            height: 100%;
+            background: #2E4F2E;
+            box-shadow: -5px 0 10px rgba(0, 0, 0, 0.3);
+            padding-top: 60px;
+            transition: right 0.3s ease-in-out;
+        }
 
-        /* Sections */  
-        .about-home, .specialisations-home, .contact {  
-            padding: 5rem 2rem;  
-            text-align: center;  
-        }  
+        .mobile-nav a {
+            display: block;
+            padding: 15px;
+            color: #F4E7D1;
+            text-decoration: none;
+            font-size: 1.2rem;
+            text-align: center;
+        }
 
-        /* Specialisations (Scrollable Cards) */  
-        .specialisation-container {  
-            max-width: 800px;  
-            margin: auto;  
-            display: flex;  
-            gap: 1rem;  
-            overflow-x: auto;  
-            padding: 1rem 0;  
-            scrollbar-width: thin;  
-            scrollbar-color: #D97E50 #F4E7D1;  
-        }  
+        .mobile-nav a:hover {
+            background: #D97E50;
+        }
 
-        .specialisation-card {  
-            background: #FFF;  
-            padding: 1rem;  
-            border-radius: 10px;  
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);  
-            min-width: 250px;  
-            max-width: 280px;  
-            text-align: center;  
-        }  
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2rem;
+            color: #F4E7D1;
+            cursor: pointer;
+        }
 
-        .specialisation-card img {  
-            width: 100%;  
-            border-radius: 10px;  
-            height: 150px;  
-            object-fit: cover;  
-        }  
+        @media screen and (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
 
-        .specialisation-card h3 {  
-            margin-top: 0.5rem;  
-        }  
+            .hamburger {
+                display: block;
+            }
+        }
 
-        /* Footer */  
-        .footer {  
-            background: #2E4F2E;  
-            color: #F4E7D1;  
-            padding: 3rem 2rem;  
-            text-align: center;  
-        }  
-    </style>  
-</head>  
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(46, 79, 46, 0.8), rgba(46, 79, 46, 0.8)), url('hero-bg.jpg') center/cover;
+            height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #F4E7D1;
+            margin-top: 70px;
+        }
 
-<body>  
-    <header class="header">  
-        <nav class="nav-container">  
-            <img src="logo.png" alt="Pratyaksha Ayurveda" class="logo">  
-            <div class="nav-links">  
-                <a href="#home">Home</a>  
-                <a href="#specialisations">Our Specialisations</a>  
+        /* Buttons */
+        .btn {
+            background: #D97E50;
+            color: #FFF;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Sections */
+        .about-home, .specialisations-home, .contact {
+            padding: 5rem 2rem;
+            text-align: center;
+        }
+
+        /* Specialisations (Scrollable Cards) */
+        .specialisation-container {
+            max-width: 800px;
+            margin: auto;
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding: 1rem 0;
+            scrollbar-width: thin;
+            scrollbar-color: #D97E50 #F4E7D1;
+        }
+
+        .specialisation-card {
+            background: #FFF;
+            padding: 1rem;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            min-width: 250px;
+            max-width: 280px;
+            text-align: center;
+        }
+
+        .specialisation-card img {
+            width: 100%;
+            border-radius: 10px;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .specialisation-card h3 {
+            margin-top: 0.5rem;
+        }
+
+        /* Footer */
+        .footer {
+            background: #2E4F2E;
+            color: #F4E7D1;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <nav class="nav-container">
+            <img src="logo.png" alt="Pratyaksha Ayurveda" class="logo">
+            
+            <!-- Desktop Navigation -->
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#specialisations">Our Specialisations</a>
                 <a href="about.html">About</a>
                 <a href="reviews.html">Reviews</a>
-                <a href="#contact">Contact</a>  
-                <!-- Hidden admin link -->
-<a href="admin.html" style="display: none;">Admin</a>
-            </div>  
-        </nav>  
-    </header>  
+                <a href="login.html">Login</a>  <!-- Added Login link -->
+                <a href="#contact">Contact</a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <span class="hamburger" onclick="openNav()">&#9776;</span>
+        </nav>
+    </header>
+
+    <!-- Mobile Navigation Panel -->
+    <div id="mobileNav" class="mobile-nav">
+        <span class="close-btn" onclick="closeNav()">&times;</span>
+        <a href="#home">Home</a>
+        <a href="#specialisations">Our Specialisations</a>
+        <a href="about.html">About</a>
+        <a href="reviews.html">Reviews</a>
+        <a href="login.html">Login</a>  <!-- Added Login link -->
+        <a href="#contact">Contact</a>
+    </div>
+ 
+ <script>
+    function toggleNav() {
+        let mobileNav = document.getElementById("mobileNav");
+        let isOpen = mobileNav.style.right === "0px";
+
+        if (isOpen) {
+            closeNav();
+        } else {
+            openNav();
+        }
+    }
+
+    function openNav() {
+        document.getElementById("mobileNav").style.right = "0";
+    }
+
+    function closeNav() {
+        document.getElementById("mobileNav").style.right = "-100%";
+    }
+
+    // Close menu when clicking outside
+    document.addEventListener("click", function(event) {
+        let mobileNav = document.getElementById("mobileNav");
+        let hamburger = document.querySelector(".hamburger");
+
+        if (!mobileNav.contains(event.target) && !hamburger.contains(event.target)) {
+            closeNav();
+        }
+    });
+</script>
 
     <section class="hero" id="home">  
         <div class="hero-content">  
