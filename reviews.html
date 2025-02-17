@@ -1,279 +1,159 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Patient Reviews - Pratyaksha Ayurveda</title>
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial', sans-serif; }
-    body { line-height: 1.6; color: #5a3e2b; background: #f4e7d1; }
-
-    /* Header */
-    .header { background: #2e4f2e; padding: 1rem; position: fixed; width: 100%; top: 0; z-index: 1000; display: flex; justify-content: space-between; align-items: center; }
-    .nav { max-width: 1200px; margin: 0 auto; display: flex; align-items: center; width: 100%; justify-content: space-between; }
-    .logo { color: #f4e7d1; font-size: 1.5rem; }
-    .nav-links { display: flex; gap: 2rem; list-style: none; }
-    .nav-links a { text-decoration: none; color: #f4e7d1; font-weight: 500; }
-    .nav-links a.active { color: #ffd700; }
-    .auth-buttons { display: flex; gap: 10px; }
-    .btn { padding: 8px 15px; background: #d97e50; color: white; border: none; cursor: pointer; border-radius: 5px; }
-
-    /* Reviews Section */
-    .reviews-page { padding: 6rem 2rem; max-width: 800px; margin: 0 auto; }
-    .review-form { background: #fff; padding: 2rem; border-radius: 10px; margin: 2rem 0; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
-    .review-card { background: #fff; padding: 1.5rem; margin: 1rem 0; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
-    .review-form input, .review-form textarea { width: 100%; padding: 1rem; margin: 0.5rem 0; border: 1px solid #ddd; border-radius: 5px; }
-    .success-message { background: #4caf50; color: white; padding: 1rem; border-radius: 5px; margin-top: 1rem; display: none; }
-    .success-message.show { display: block; }
-
-    /* Approved Reviews Section */
-    .reviews-container { margin-top: 3rem; }
-    .review { background: #fff; padding: 1.5rem; margin: 1rem 0; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
-
-    /* Footer */
-    .footer { background: #2e4f2e; color: #f4e7d1; text-align: center; padding: 1rem; position: relative; width: 100%; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reviews - Pratyaksha Ayurveda</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="header">
-    <nav class="nav">
-      <div class="logo">Pratyaksha Ayurveda</div>
-      <ul class="nav-links">
-        <li><a href="/">Home</a></li>
-        <li><a href="/services.html">Services</a></li>
-        <li><a href="/reviews.html" class="active">Reviews</a></li>
-        <li><a href="/contact.html">Contact</a></li>
-      </ul>
-      <div class="auth-buttons">
-  <button onclick="startPhoneAuth()" class="btn" id="login-btn">Verify Phone</button>
-  <button onclick="logoutUser()" class="btn" id="logout-btn" style="display: none;">Logout</button>
-</div>
 
-<!-- Phone Authentication UI -->
-<div id="phone-auth-container" style="display:none; margin-top: 1rem;">
-  <input type="text" id="phone-number" placeholder="Enter your phone number (+91...)" style="width: 100%; padding: 8px; margin-bottom: 8px;" />
-  <button onclick="sendOTP()" class="btn">Send OTP</button>
-  <div id="recaptcha-container"></div>
-
-  <input type="text" id="otp-code" placeholder="Enter OTP" style="display:none; width: 100%; padding: 8px; margin-top: 8px;" />
-  <button onclick="verifyOTP()" class="btn" id="verify-btn" style="display:none;">Verify OTP</button>
-</div>
-    </nav>
-  </header>
-
-  <section class="reviews-page">
-    <h1>Patient Reviews</h1>
-
-    <div class="review-form">
-      <h2>Share Your Experience</h2>
-      <form id="review-form" onsubmit="submitReview(event)">
-        <input type="text" id="name" placeholder="Your Name" required />
-        <input type="text" id="country" placeholder="Your Country" required />
-        <textarea id="review" placeholder="Write your review..." required rows="5"></textarea>
-        <button type="submit" class="btn">Submit Review</button>
-      </form>
-      <div id="success-message" class="success-message">
-        Your review has been submitted for approval!
-      </div>
+<!-- 🔹 Navbar with Hamburger Menu -->
+<header>
+    <div class="logo">
+        <img src="your-logo.png" alt="Pratyaksha Ayurveda Logo">
     </div>
+    <button id="hamburger-btn">☰</button>
+</header>
 
+<!-- 🔹 Side Navigation Menu -->
+<nav id="side-menu" class="hidden">
+    <button id="close-menu">✖</button>
+    <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="reviews.html">Reviews</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="contact.html">Contact</a></li>
+    </ul>
+</nav>
+
+<!-- 🔹 Submit Review Section -->
+<section class="submit-review">
+    <h2>Submit Your Review</h2>
+    <form id="review-form" onsubmit="submitReview(event)">
+        <input type="text" id="name" placeholder="Your Name" required>
+        <input type="text" id="country" placeholder="Country" required>
+        <textarea id="review" placeholder="Write your review..." required></textarea>
+        <button type="submit">Submit Review</button>
+    </form>
+    <div id="success-message" class="hidden">Review submitted! Awaiting approval.</div>
+</section>
+
+<!-- 🔹 Reviews Section (Moved Below) -->
+<section class="review-section">
     <h2>What Our Visitors Say</h2>
-    <div class="reviews-container" id="approved-reviews"></div>
-  </section>
+    <div class="logo-center">
+        <img src="your-logo.png" alt="Pratyaksha Ayurveda Logo" class="review-logo">
+    </div>
+    <div id="approved-reviews"></div>
+</section>
 
-  <footer class="footer">
-    <p>&copy; 2025 Pratyaksha Ayurveda. All rights reserved.</p>
-  </footer>
-
-  <!-- Firebase Integration -->
+<!-- 🔹 Firebase & JavaScript -->
 <script type="module">
-  import { 
-    initializeApp 
-  } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-  
-  import { 
-    getFirestore, collection, addDoc, query, where, onSnapshot, serverTimestamp 
-  } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
-  
-  import { 
-    getAuth, signOut, onAuthStateChanged, RecaptchaVerifier, signInWithPhoneNumber 
-  } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-  
-  // Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyD3CsmjOe2HKD2fDUCtlNgMwTOBqHA8nJ8",
-    authDomain: "pratyaksha-ayurveda-d147f.firebaseapp.com",
-    projectId: "pratyaksha-ayurveda-d147f",
-    storageBucket: "pratyaksha-ayurveda-d147f.appspot.com",
-    messagingSenderId: "547427847650",
-    appId: "1:547427847650:web:d8cbab4dc70223a7753dbb"
-  };
-  
-  // Initialize Firebase, Firestore, and Auth
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-  const auth = getAuth(app);
-  
-  // Initialize reCAPTCHA
-  window.recaptchaVerifier = new RecaptchaVerifier('recaptcha-container', {
-    size: 'invisible',
-    callback: (response) => {
-      console.log("reCAPTCHA verified!");
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+
+    // Firebase Config
+    const firebaseConfig = {
+        apiKey: "AIzaSyD3CsmjOe2HKD2fDUCtlNgMwTOBqHA8nJ8",
+        authDomain: "pratyaksha-ayurveda-d147f.firebaseapp.com",
+        projectId: "pratyaksha-ayurveda-d147f",
+        storageBucket: "pratyaksha-ayurveda-d147f.appspot.com",
+        messagingSenderId: "547427847650",
+        appId: "1:547427847650:web:d8cbab4dc70223a7753dbb",
+        measurementId: "G-GGKB7EX8YR"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth();
+
+    // Load Approved Reviews
+    async function loadApprovedReviews() {
+        const reviewsContainer = document.getElementById("approved-reviews");
+        reviewsContainer.innerHTML = "";
+
+        const q = query(collection(db, "reviews"), where("approved", "==", true));
+        const querySnapshot = await getDocs(q);
+
+        querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            reviewsContainer.innerHTML += `
+                <div class="review-card">
+                    <div class="profile-pic"></div>
+                    <div class="review-content">
+                        <h3>${data.name} <span class="verified-badge">✔</span></h3>
+                        <p><strong>${data.country}</strong></p>
+                        <p>${data.review}</p>
+                    </div>
+                </div>`;
+        });
     }
-  }, auth);
-  
-  // --- Phone Authentication Functions ---
-  
-  // Display the phone auth UI
-  window.startPhoneAuth = function () {
-    document.getElementById("phone-auth-container").style.display = "block";
-  };
-  
-  let confirmationResult;
-  
-  // Send OTP to the provided phone number
-  window.sendOTP = function () {
-    const phoneNumber = document.getElementById("phone-number").value;
-    if (!phoneNumber) {
-      alert("Enter a valid phone number!");
-      return;
-    }
-  
-    signInWithPhoneNumber(auth, phoneNumber, window.recaptchaVerifier)
-      .then((result) => {
-        confirmationResult = result;
-        alert("OTP Sent!");
-        document.getElementById("otp-code").style.display = "block";
-        document.getElementById("verify-btn").style.display = "block";
-      })
-      .catch((error) => {
-        console.error(error);
-        alert("Error sending OTP: " + error.message);
-      });
-  };
-  
-  // Verify the OTP entered by the user
-  window.verifyOTP = function () {
-    const otpCode = document.getElementById("otp-code").value;
-    if (!otpCode) {
-      alert("Enter the OTP!");
-      return;
-    }
-  
-    confirmationResult.confirm(otpCode)
-      .then((result) => {
-        alert("Phone number verified!");
-        document.getElementById("phone-auth-container").style.display = "none";
-        // Update UI for authenticated user
-        document.getElementById("login-btn").style.display = "none";
-        document.getElementById("logout-btn").style.display = "inline-block";
-      })
-      .catch((error) => {
-        console.error(error);
-        alert("OTP Verification failed: " + error.message);
-      });
-  };
-  
-  // Logout function
-  window.logoutUser = function () {
-    signOut(auth)
-      .then(() => {
-        alert("You have logged out.");
-        document.getElementById("login-btn").style.display = "inline-block";
-        document.getElementById("logout-btn").style.display = "none";
-      })
-      .catch((error) => {
-        console.error("Logout failed:", error);
-      });
-  };
-  
-  // Update UI based on authentication state
-  onAuthStateChanged(auth, (user) => {
-    document.getElementById("login-btn").style.display = user ? "none" : "inline-block";
-    document.getElementById("logout-btn").style.display = user ? "inline-block" : "none";
-  });
-  
-  // --- Review Submission ---
-  
-  // Submits a review (requires phone verification)
-  window.submitReview = async function (event) {
-    event.preventDefault();
-  
-    if (!auth.currentUser) {
-      alert("Verify your phone number first!");
-      startPhoneAuth();
-      return;
-    }
-  
-    const name = document.getElementById("name").value.trim();
-    const country = document.getElementById("country").value.trim();
-    const review = document.getElementById("review").value.trim();
-  
-    if (!name || !country || !review) {
-      alert("All fields are required!");
-      return;
-    }
-  
-    try {
-      // Note: 'approved' is set to false by default. Only reviews with approved === true will display.
-      await addDoc(collection(db, "reviews"), {
-        name,
-        country,
-        review,
-        timestamp: serverTimestamp(),
-        userPhone: auth.currentUser.phoneNumber,
-        approved: false
-      });
-  
-      document.getElementById("review-form").reset();
-      document.getElementById("success-message").classList.add("show");
-      setTimeout(() => {
-        document.getElementById("success-message").classList.remove("show");
-      }, 3000);
-    } catch (error) {
-      alert("Submission failed: " + error.message);
-    }
-  };
-  
-  // --- Real‑time Listener for Approved Reviews ---
-  
-  function listenApprovedReviews() {
-    const reviewsContainer = document.getElementById("approved-reviews");
-    if (!reviewsContainer) {
-      console.error("Element with ID 'approved-reviews' not found in the DOM.");
-      return;
-    }
-  
-    const q = query(collection(db, "reviews"), where("approved", "==", true));
-    onSnapshot(q, (snapshot) => {
-      reviewsContainer.innerHTML = ""; // Clear existing reviews
-      
-      if (snapshot.empty) {
-        reviewsContainer.innerHTML = "<p>No approved reviews yet.</p>";
-        return;
-      }
-  
-      snapshot.forEach((doc) => {
-        const data = doc.data();
-        const reviewCard = document.createElement("div");
-        reviewCard.classList.add("review");
-        reviewCard.innerHTML = `
-          <h3>${data.name} <span style="color: green;">✔️</span></h3>
-          <p><strong>Country:</strong> ${data.country}</p>
-          <p>${data.review}</p>
-          <p><small>Verified user: ${data.userPhone}</small></p>
-        `;
-        reviewsContainer.appendChild(reviewCard);
-      });
-    }, (error) => {
-      console.error("Error fetching approved reviews:", error);
+
+    // Submit Review
+    window.submitReview = async function (event) {
+        event.preventDefault();
+        if (!auth.currentUser) { alert("Please log in first."); location.href = 'login.html'; return; }
+
+        const name = document.getElementById("name").value.trim();
+        const country = document.getElementById("country").value.trim();
+        const review = document.getElementById("review").value.trim();
+        const successMessage = document.getElementById("success-message");
+
+        if (!name || !country || !review) return alert("All fields are required.");
+
+        try {
+            await addDoc(collection(db, "reviews"), { 
+                name, country, review, timestamp: serverTimestamp(), 
+                userEmail: auth.currentUser.email, approved: false 
+            });
+
+            document.getElementById("review-form").reset();
+            successMessage.classList.remove("hidden");
+            setTimeout(() => successMessage.classList.add("hidden"), 3000);
+        } catch (error) {
+            alert("Submission failed.");
+        }
+    };
+
+    // Hamburger Menu Toggle
+    document.getElementById("hamburger-btn").addEventListener("click", () => {
+        document.getElementById("side-menu").classList.remove("hidden");
     });
-  }
-  
-  // Set up the listener once the DOM is loaded
-  document.addEventListener("DOMContentLoaded", () => {
-    listenApprovedReviews();
-  });
+
+    document.getElementById("close-menu").addEventListener("click", () => {
+        document.getElementById("side-menu").classList.add("hidden");
+    });
+
+    loadApprovedReviews();
 </script>
+
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById("nav-menu");
+            menu.classList.toggle("active");
+        }
+    </script>
+
+    <style>
+    	.hidden {display:none; }
+        body { font-family: Arial, sans-serif; background-color: #F4E7D1; }
+        .nav-container { display: flex; justify-content: space-between; padding: 10px; background: #2E4F2E; color: white; }
+        .hamburger, .close-menu { cursor: pointer; font-size: 24px; }
+        nav { position: fixed; top: 0; right: -250px; width: 250px; height: 100vh; background: #5A3E2B; transition: 0.3s; }
+        nav.active { right: 0; }
+        .review-logo { text-align: center; margin: 20px; }
+        .review-logo img { width: 150px; }
+        .review-section { padding: 20px; }
+        .review-card { background: white; padding: 15px; margin: 10px 0; border-radius: 8px; box-shadow: 2px 2px 10px rgba(0,0,0,0.1); }
+        .profile-pic { width: 40px; height: 40px; background: gray; border-radius: 50%; display: inline-block; margin-right: 10px; }
+        .verified-badge { color: green; font-size: 14px; }
+        .submit-review { padding: 20px; background: #D97E50; color: white; text-align: center; }
+        input, textarea { width: 100%; margin: 5px 0; padding: 10px; }
+        button { padding: 10px; background: #2E4F2E; color: white; border: none; cursor: pointer; }
+    </style>
+
 </body>
 </html>
