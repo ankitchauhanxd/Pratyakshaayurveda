@@ -74,9 +74,11 @@
     }
 
     .verified-badge {
-        color: green;
-        font-size: 14px;
-    }
+    width: 20px;           /* Adjust the width as needed */
+    height: 20px;          /* Adjust the height as needed */
+    vertical-align: middle; /* Aligns the badge vertically with the text */
+    margin-left: 5px;      /* Space between the name and the badge */
+}
 </style>
 
 <!-- 🔹 Firebase & JavaScript -->
@@ -115,7 +117,7 @@
                 <div class="review-card">
                     <div class="profile-pic"></div>
                     <div class="review-content">
-                        <h3>${data.name} <span class="verified-badge">✔</span></h3>
+                        <h3>${data.name} <img src="images/verified-badge.png" alt="Verified" class="verified-badge"></h3>
                         <p><strong>${data.country}</strong></p>
                         <p>${data.review}</p>
                     </div>
