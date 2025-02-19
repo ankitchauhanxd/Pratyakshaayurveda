@@ -1,5 +1,4 @@
-
-<!DOCTYPE html>
+   <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -32,18 +31,19 @@
             align-items: center;
             transition: 0.3s;
         }
+
         /* Logo */
         .logo {
-        	max-height: 50px;
-        margin-left: 1rem;
-       }
+            max-height: 50px;
+            margin-left: 1rem;
+        }
 
         /* Navigation */
         .nav-container {
-        	display: flex;
-        align-items: centre;
-        justify-content: space-between;
-        width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
         }
         
         .nav-links {
@@ -63,10 +63,10 @@
         .nav-links a:hover {
             color: #D97E50;
         }
-       
+
         /* Mobile Navigation */
         .mobile-nav {
-        	position: fixed;
+            position: fixed;
             top: 0;
             right: -100%;
             width: 250px;
@@ -76,75 +76,116 @@
             transition: 0.3s;
             display: flex;
             flex-direction: column;
-            }
-            
-            .mobile-nav a {
+        }
+
+        .mobile-nav a {
             color: #F4E7D1;
             text-decoration: none;
-            font-size: 1,2rem;
+            font-size: 1.2rem;
             margin: 10px 0;
             transition: color 0.3s;
-            }
-            
-            .mobile-nav a:hover {
-            	color: #D97E50;
-            }
-            
-            .close-btn {
+        }
+
+        .mobile-nav a:hover {
+            color: #D97E50;
+        }
+
+        .close-btn {
             font-size: 2rem;
             cursor: pointer;
             color: #F4E7D1;
             align-self: flex-end;
-            }
-            
-            .hamburger {
+        }
+
+        .hamburger {
             font-size: 2rem;
             color: #F4E7D1;
             cursor: pointer;
             display: none;
-            }
-            
-            @media (max-width: 768px) {
-            	.nav-links { display: none; }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
             .hamburger { display: block; }
-           }
+        }
 
         /* Hero Section with Sunrise Gradient */
-        .hero {
-            background: linear-gradient(to bottom, #ffcf7f, #F4E7D1);
-            height: 80vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            position: relative;
-        }
+      .hero {
+    background: linear-gradient(to bottom, #ffcf7f, #F4E7D1);
+    height: auto; /* Remove fixed height to allow flexibility */
+    min-height: 85vh; /* Ensures it doesn't shrink too much */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 5rem 2rem 3rem; /* Increased padding */
+}
 
-        .hero h1 {
-            font-size: 2.5rem;
-            color: #2E4F2E;
-        }
+.clinic-name {
+    font-size: 2.5rem; /* Reduced further */
+    font-weight: bold;
+    color: #2E4F2E;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 10px;
+    line-height: 1.2;
+    max-width: 100%;
+    white-space: normal; /* Allow wrapping instead of truncation */
+    text-align: center;
+}
 
-        .hero p {
-            font-size: 1.2rem;
-            margin: 10px 0;
-        }
+.main-slogan {
+    font-size: 2.5rem; /* Adjusted for balance */
+    font-weight: bold;
+    color: #5A3E2B;
+    margin-bottom: 15px;
+}
 
-        .btn {
-            background: #D97E50;
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 25px;
-            border: none;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
+.tagline {
+    font-size: 1.2rem;
+    color: #5A3E2B;
+    margin-top: 10px;
+}
 
-        .btn:hover {
-            background: #b35e35;
-        }
+.btn {
+    background: #D97E50;
+    color: white;
+    padding: 0.8rem 1.8rem;
+    border-radius: 25px;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 20px; /* Extra spacing for balance */
+}
+
+.btn:hover {
+    background: #b35e35;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .clinic-name {
+        font-size: 2rem; /* Further reduced for mobile */
+        letter-spacing: 1px;
+    }
+
+    .hero {
+        padding-top: 6rem; /* Adjust padding for mobile */
+    }
+}
+
+    .main-slogan {
+        font-size: 2rem;
+    }
+
+    .hero {
+        height: 75vh; /* Adjusted height for mobile */
+        padding-top: 5rem;
+    }
+} 
+
 
         /* Curved Divider */
         .wave {
@@ -188,6 +229,166 @@
             border-radius: 10px;
             height: 150px;
         }
+        
+/* What Our Visitors Say - Section */
+.reviews-home {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: #F4E7D1; /* Muted Beige */
+    position: relative; /* For positioning scroll buttons */
+}
+
+/* Section Title */
+.reviews-home h2 {
+    font-size: 2rem;
+    color: #5A3E2B; /* Deep Brown */
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+}
+
+/* Scrollable Container Wrapper */
+.reviews-scroll-container {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 1rem;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Review Cards Container */
+.reviews-container {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1rem;
+    scrollbar-width: none; /* Hide scrollbar */
+    white-space: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+/* Hide Scrollbar for WebKit Browsers */
+.reviews-container::-webkit-scrollbar {
+    display: none;
+}
+
+/* Individual Review Card */
+.review-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+    min-width: 320px;
+    max-width: 350px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    scroll-snap-align: start;
+    display: inline-block;
+    position: relative;
+    text-align: left;
+}
+
+/* Hover Effect */
+.review-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Review Header - Profile Pic & Name */
+.review-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+/* Reviewer Name */
+.reviewer-name {
+    font-weight: bold;
+    color: #2E4F2E; /* Dark Green */
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Verified Badge */
+.verified-badge {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background: url('images/verified-badge.png') no-repeat center center;
+    background-size: contain;
+    margin-left: 5px;
+}
+
+/* Review Text */
+.review-text {
+    font-size: 1rem;
+    color: #5A3E2B; /* Deep Brown */
+    line-height: 1.5;
+    max-height: 120px; /* Limits height to keep reviews inside the box */
+    overflow-y: auto; /* Enables scrolling for long reviews */
+    word-wrap: break-word; /* Ensures long words don’t break layout */
+    white-space: pre-wrap; /* Allows proper text wrapping */
+    padding-right: 5px;
+}
+
+/* Country */
+.review-country {
+    font-size: 0.9rem;
+    color: #2E4F2E; /* Dark Green */
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+/* Navigation Buttons */
+.scroll-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #2E4F2E; /* Dark Green */
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.2);
+    transition: 0.3s;
+    z-index: 10;
+}
+
+/* Hover Effect for Buttons */
+.scroll-btn:hover {
+    background: #D97E50; /* Earthy Orange */
+}
+
+/* Left Button */
+.scroll-left {
+    left: 5px;
+}
+
+/* Right Button */
+.scroll-right {
+    right: 5px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .review-card {
+        min-width: 280px;
+        max-width: 300px;
+    }
+
+    .scroll-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 1.2rem;
+    }
+}
 
         /* Footer */
         .footer {
@@ -199,140 +400,350 @@
         }
 
         .footer::before {
-            content: "☀️ Ayurveda | Nature | Healing";
+            content: "☀️ Ayurveda | 🌱 Nature | 🧘‍♂️ Healing";
             display: block;
             font-size: 0.9rem;
             margin-bottom: 10px;
             opacity: 0.8;
         }
+        
     </style>
 </head>
 <body>
     <header class="header">
+
         <nav class="nav-container">
+
             <img src="logo.png" alt="Pratyaksha Ayurveda" class="logo">
+
             
+
             <!-- Desktop Navigation -->
+
             <div class="nav-links">
+
                 <a href="#home">Home</a>
-                <a href="#specialisations">Our Specialisations</a>
+
+                <a href="specialised.html">Our Specialisations</a>
+
                 <a href="about.html">About</a>
+
                 <a href="reviews.html">Reviews</a>
+
                 <a href="login.html">Login</a>  <!-- Added Login link -->
+
                 <a href="#contact">Contact</a>
+
             </div>
 
+
+
             <!-- Mobile Menu Button -->
+
             <span class="hamburger" onclick="openNav()">&#9776;</span>
+
         </nav>
+
     </header>
 
+
+
     <!-- Mobile Navigation Panel -->
+
     <div id="mobileNav" class="mobile-nav">
+
         <span class="close-btn" onclick="closeNav()">&times;</span>
+
         <a href="#home">Home</a>
+
         <a href="#specialisations">Our Specialisations</a>
+
         <a href="about.html">About</a>
+
         <a href="reviews.html">Reviews</a>
+
         <a href="login.html">Login</a>  <!-- Added Login link -->
+
         <a href="#contact">Contact</a>
+
     </div>
+
  
+
  <script>
+
     function toggleNav() {
+
         let mobileNav = document.getElementById("mobileNav");
+
         let isOpen = mobileNav.style.right === "0px";
 
+
+
         if (isOpen) {
+
             closeNav();
+
         } else {
+
             openNav();
+
         }
+
     }
+
+
 
     function openNav() {
+
         document.getElementById("mobileNav").style.right = "0";
+
     }
+
+
 
     function closeNav() {
+
         document.getElementById("mobileNav").style.right = "-100%";
+
     }
 
+
+
     // Close menu when clicking outside
+
     document.addEventListener("click", function(event) {
+
         let mobileNav = document.getElementById("mobileNav");
+
         let hamburger = document.querySelector(".hamburger");
 
+
+
         if (!mobileNav.contains(event.target) && !hamburger.contains(event.target)) {
+
             closeNav();
+
+        }
+
+    });
+
+</script>
+
+
+
+    <section class="hero" id="home">  
+    <div class="hero-content">  
+        <h1 class="clinic-name">Pratyaksha Ayurveda</h1>
+<div class="divider"></div>
+        <h2 class="main-slogan">Experience Authentic Ayurveda</h2>  
+        <p class="tagline"><strong>Find Your Balance with Pratyaksha Ayurveda</strong></p>  
+
+        <button class="btn" onclick="window.open('https://wa.me/918708880341')">Book your Online Consultation</button>  
+    </div>  
+</section>
+
+
+    <!-- About Section -->  
+
+    <section class="about-home">  
+
+        <h2>About Pratyaksha Ayurveda</h2>  
+
+        <p>Promoting Authentic Ayurveda Rooted in Tradition, Backed by Science. Restoring Balance, Not Just Symptoms.</p>  
+
+        <p>Founded by <strong>Dr. Ankit Chauhan (BAMS)</strong>, an Ayurveda Specialist, Pratyaksha Ayurveda is dedicated to bringing holistic healing with time-tested Ayurvedic practices.</p>  
+
+    </section>  
+
+
+
+    <!-- Our Specialisations Section -->  
+
+    <section class="specialisations-home" id="specialisations">  
+
+        <h2>Our Specialisations</h2>  
+
+        <div class="specialisation-container">  
+
+            <div class="specialisation-card">  
+
+                <img src="images/joint-disorders.jpg" alt="Joint Disorders">  
+
+                <h3>Joint Disorders</h3>  
+
+                <p>Ayurvedic solutions for arthritis, osteoporosis, and joint pain.</p>  
+
+            </div>  
+
+            <div class="specialisation-card">  
+
+                <img src="images/digestive-disorders.jpg" alt="Digestive Disorders">  
+
+                <h3>Digestive Disorders</h3>  
+
+                <p>Treatments for acidity, IBS, and gut health.</p>  
+
+            </div>  
+
+            <div class="specialisation-card">  
+
+                <img src="images/sinusitis.jpg" alt="Sinusitis & Rhinitis">  
+
+                <h3>Sinusitis & Rhinitis</h3>  
+
+                <p>Ayurvedic nasal therapies and immune-boosting techniques.</p>  
+
+            </div>  
+
+            <div class="specialisation-card">  
+
+                <img src="images/migraine.jpg" alt="Headache & Migraine">  
+
+                <h3>Headache & Migraine</h3>  
+
+                <p>Shirodhara, herbal remedies, and dosha balancing.</p>  
+
+            </div>  
+
+            <div class="specialisation-card">  
+
+                <img src="images/fever-management.jpg" alt="Fever Management">  
+
+                <h3>Fever Management</h3>  
+
+                <p>Natural detox and immunity-restoring remedies.</p>  
+
+            </div>  
+
+            <div class="specialisation-card">  
+
+                <img src="images/thyroid.jpg" alt="Thyroid Disorders">  
+
+                <h3>Thyroid Disorders</h3>  
+
+                <p>Herbal treatments and lifestyle modifications.</p>  
+
+            </div>  
+
+        </div>  
+
+        <a href="specialised.html" class="btn">Learn More</a>  
+
+    </section>  
+
+ <!-- What Our Visitors Say Section -->
+<section class="reviews-home" id="reviews">
+    <h2>What Our Visitors Say</h2>
+
+    <!-- Scroll Buttons -->
+    <button class="scroll-btn scroll-left">←</button>
+
+    <div class="reviews-scroll-container">
+        <div class="reviews-container">
+            <!-- Approved reviews will be displayed here -->
+        </div>
+    </div>
+
+    <button class="scroll-btn scroll-right">→</button>
+</section>
+
+
+    <!-- Contact Section -->  
+
+    <section class="contact" id="contact">  
+
+        <h2>Contact Us</h2>  
+
+        <p>Email: <a href="mailto:pratyakshaayurveda@gmail.com">pratyakshaayurveda@gmail.com</a></p>  
+
+        <p>WhatsApp: <a href="https://wa.me/918708880341">+91 8708880341</a></p>  
+
+        <p>Instagram: <a href="https://instagram.com/ankitchauhan.xd">@ankitchauhan.xd</a></p>  
+
+    </section>  
+
+
+
+    <footer class="footer">  
+
+    	<p><strong>Find Your Balance with Pratyaksha Ayurveda</strong></p>
+        <p>&copy; 2025 Pratyaksha Ayurveda. All rights reserved.</p>  
+
+    </footer>  
+    <script type="module">
+    // Firebase Imports
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+    // Firebase Config
+    const firebaseConfig = {
+        apiKey: "AIzaSyD3CsmjOe2HKD2fDUCtlNgMwTOBqHA8nJ8",
+        authDomain: "pratyaksha-ayurveda-d147f.firebaseapp.com",
+        projectId: "pratyaksha-ayurveda-d147f",
+        storageBucket: "pratyaksha-ayurveda-d147f.appspot.com",
+        messagingSenderId: "547427847650",
+        appId: "1:547427847650:web:d8cbab4dc70223a7753dbb",
+        measurementId: "G-GGKB7EX8YR"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    document.addEventListener("DOMContentLoaded", async function () {
+        const reviewsContainer = document.querySelector(".reviews-container");
+
+        try {
+            // Fetch only approved reviews from Firestore
+            const reviewsQuery = query(collection(db, "reviews"), where("approved", "==", true));
+            const querySnapshot = await getDocs(reviewsQuery);
+
+            // Clear previous content
+            reviewsContainer.innerHTML = "";
+
+            if (querySnapshot.empty) {
+                reviewsContainer.innerHTML = "<p>No reviews yet. Be the first to share your experience!</p>";
+                return;
+            }
+
+            querySnapshot.forEach((doc) => {
+                const review = doc.data();
+                const reviewCard = `
+                    <div class="review-card">
+                        <div class="review-header">
+                            <span class="reviewer-name">${review.name}
+                                <span class="verified-badge"></span>
+                            </span>
+                        </div>
+                        <p class="review-text">"${review.review}"</p>
+                        <p class="review-country">${review.country || "Unknown Country"}</p>
+                    </div>
+                `;
+                reviewsContainer.innerHTML += reviewCard;
+            });
+        } catch (error) {
+            console.error("Error fetching reviews: ", error);
+            reviewsContainer.innerHTML = "<p>Unable to load reviews. Please try again later.</p>";
         }
     });
 </script>
 
-    <section class="hero" id="home">  
-        <div class="hero-content">  
-            <h1>Experience Authentic Ayurveda</h1>  
-            <p><strong>Find your Balance with Pratyaksha Ayurveda</strong></p>  
-            <button class="btn" onclick="window.open('https://wa.me/918708880341')">Book your Online Consultation</button>  
-        </div>  
-    </section>  
+<!-- Review Scroll Functionality -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const reviewsContainer = document.querySelector(".reviews-container");
+        const scrollLeftBtn = document.querySelector(".scroll-left");
+        const scrollRightBtn = document.querySelector(".scroll-right");
 
-    <!-- About Section -->  
-    <section class="about-home">  
-        <h2>About Pratyaksha Ayurveda</h2>  
-        <p>Promoting Authentic Ayurveda Rooted in Tradition, Backed by Science. Restoring Balance, Not Just Symptoms.</p>  
-        <p>Founded by <strong>Dr. Ankit Chauhan (BAMS)</strong>, an Ayurveda Specialist, Pratyaksha Ayurveda is dedicated to bringing holistic healing with time-tested Ayurvedic practices.</p>  
-    </section>  
+        scrollLeftBtn.addEventListener("click", () => {
+            reviewsContainer.scrollBy({ left: -350, behavior: "smooth" });
+        });
 
-    <!-- Our Specialisations Section -->  
-    <section class="specialisations-home" id="specialisations">  
-        <h2>Our Specialisations</h2>  
-        <div class="specialisation-container">  
-            <div class="specialisation-card">  
-                <img src="images/joint-disorders.jpg" alt="Joint Disorders">  
-                <h3>Joint Disorders</h3>  
-                <p>Ayurvedic solutions for arthritis, osteoporosis, and joint pain.</p>  
-            </div>  
-            <div class="specialisation-card">  
-                <img src="images/digestive-disorders.jpg" alt="Digestive Disorders">  
-                <h3>Digestive Disorders</h3>  
-                <p>Treatments for acidity, IBS, and gut health.</p>  
-            </div>  
-            <div class="specialisation-card">  
-                <img src="images/sinusitis.jpg" alt="Sinusitis & Rhinitis">  
-                <h3>Sinusitis & Rhinitis</h3>  
-                <p>Ayurvedic nasal therapies and immune-boosting techniques.</p>  
-            </div>  
-            <div class="specialisation-card">  
-                <img src="images/migraine.jpg" alt="Headache & Migraine">  
-                <h3>Headache & Migraine</h3>  
-                <p>Shirodhara, herbal remedies, and dosha balancing.</p>  
-            </div>  
-            <div class="specialisation-card">  
-                <img src="images/fever-management.jpg" alt="Fever Management">  
-                <h3>Fever Management</h3>  
-                <p>Natural detox and immunity-restoring remedies.</p>  
-            </div>  
-            <div class="specialisation-card">  
-                <img src="images/thyroid.jpg" alt="Thyroid Disorders">  
-                <h3>Thyroid Disorders</h3>  
-                <p>Herbal treatments and lifestyle modifications.</p>  
-            </div>  
-        </div>  
-        <a href="specialised.html" class="btn">Learn More</a>  
-    </section>  
-
-    <!-- Contact Section -->  
-    <section class="contact" id="contact">  
-        <h2>Contact Us</h2>  
-        <p>Email: <a href="mailto:pratyakshaayurveda@gmail.com">pratyakshaayurveda@gmail.com</a></p>  
-        <p>WhatsApp: <a href="https://wa.me/918708880341">+91 8708880341</a></p>  
-        <p>Instagram: <a href="https://instagram.com/ankitchauhan.xd">@ankitchauhan.xd</a></p>  
-    </section>  
-
-    <footer class="footer">  
-    	<p><strong>Find Your Balance with Pratyaksha Ayurveda</strong></p>
-        <p>&copy; 2025 Pratyaksha Ayurveda. All rights reserved.</p>  
-    </footer>  
-</body>  
+        scrollRightBtn.addEventListener("click", () => {
+            reviewsContainer.scrollBy({ left: 350, behavior: "smooth" });
+        });
+    });
+</script>
+</body>
 </html>
