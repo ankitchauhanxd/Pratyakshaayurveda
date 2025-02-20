@@ -9,13 +9,13 @@
 <body>
 
 <!-- 🔹 Navbar with Hamburger Menu -->
-<header>
-    <button id="hamburger-btn">☰</button>
+<header class="nav-container">
+    <button id="hamburger-btn" class="hamburger">☰</button>
 </header>
 
 <!-- 🔹 Side Navigation Menu -->
-<nav id="side-menu" class="hidden">
-    <button id="close-menu">✖</button>
+<nav id="side-menu">
+    <button id="close-menu" class="close-menu">✖</button>
     <ul>
         <li><a href="index.html">Home</a></li>
         <li><a href="reviews.html">Reviews</a></li>
@@ -27,13 +27,15 @@
 <!-- 🔹 Submit Review Section -->
 <section class="submit-review">
     <h2>Submit Your Review</h2>
-    <form id="review-form" onsubmit="submitReview(event)">
-        <input type="text" id="name" placeholder="Your Name" required>
-        <input type="text" id="country" placeholder="Country" required>
-        <textarea id="review" placeholder="Write your review..." required></textarea>
-        <button type="submit">Submit Review</button>
-    </form>
-    <div id="success-message" class="hidden">Review submitted! Awaiting approval.</div>
+    <div class="review-form-container">
+        <form id="review-form" onsubmit="submitReview(event)">
+            <input type="text" id="name" placeholder="Your Name" required>
+            <input type="text" id="country" placeholder="Country" required>
+            <textarea id="review" placeholder="Write your review..." required></textarea>
+            <button type="submit">Submit Review</button>
+        </form>
+        <div id="success-message" class="hidden">Review submitted! Awaiting approval.</div>
+    </div>
 </section>
 
 <!-- 🔹 Reviews Section -->
@@ -41,45 +43,6 @@
     <h2>What Our Visitors Say</h2>
     <div id="approved-reviews" class="scrollable-reviews"></div>
 </section>
-
-<style>
-    .review-section {
-        padding: 20px;
-    }
-
-    .scrollable-reviews {
-        max-height: 500px; /* Adjust based on your design preference */
-        overflow-y: scroll;
-        padding: 10px;
-        background-color: #F4E7D1;
-        border-radius: 8px;
-        box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
-    }
-
-    .review-card {
-        background: white;
-        padding: 15px;
-        margin: 10px 0;
-        border-radius: 8px;
-        box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
-    }
-
-    .profile-pic {
-        width: 40px;
-        height: 40px;
-        background: gray;
-        border-radius: 50%;
-        display: inline-block;
-        margin-right: 10px;
-    }
-
-    .verified-badge {
-    width: 20px;           /* Adjust the width as needed */
-    height: 20px;          /* Adjust the height as needed */
-    vertical-align: middle; /* Aligns the badge vertically with the text */
-    margin-left: 5px;      /* Space between the name and the badge */
-}
-</style>
 
 <!-- 🔹 Firebase & JavaScript -->
 <script type="module">
@@ -151,42 +114,113 @@
         }
     };
 
-    // Hamburger Menu Toggle
-    document.getElementById("hamburger-btn").addEventListener("click", () => {
-        document.getElementById("side-menu").classList.remove("hidden");
-    });
-
-    document.getElementById("close-menu").addEventListener("click", () => {
-        document.getElementById("side-menu").classList.add("hidden");
-    });
-
     loadApprovedReviews();
 </script>
 
-    <script>
-        function toggleMenu() {
-            const menu = document.getElementById("nav-menu");
-            menu.classList.toggle("active");
-        }
-    </script>
+<script>
+    // 🔹 Hamburger Menu Toggle
+    document.getElementById("hamburger-btn").addEventListener("click", function() {
+        document.getElementById("side-menu").classList.add("active");
+    });
 
-    <style>
-    	.hidden {display:none; }
-        body { font-family: Arial, sans-serif; background-color: #F4E7D1; }
-        .nav-container { display: flex; justify-content: space-between; padding: 10px; background: #2E4F2E; color: white; }
-        .hamburger, .close-menu { cursor: pointer; font-size: 24px; }
-        nav { position: fixed; top: 0; right: -250px; width: 250px; height: 100vh; background: #5A3E2B; transition: 0.3s; }
-        nav.active { right: 0; }
-        .review-logo { text-align: center; margin: 20px; }
-        .review-logo img { max-width: 150px; height: auto; /* Maintain aspect ratio */ }
-        .review-section { padding: 20px; }
-        .review-card { background: white; padding: 15px; margin: 10px 0; border-radius: 8px; box-shadow: 2px 2px 10px rgba(0,0,0,0.1); }
-        .profile-pic { width: 40px; height: 40px; background: gray; border-radius: 50%; display: inline-block; margin-right: 10px; }
-        .verified-badge { color: green; font-size: 14px; }
-        .submit-review { padding: 20px; background: #D97E50; color: white; text-align: center; }
-        input, textarea { width: 100%; margin: 5px 0; padding: 10px; }
-        button { padding: 10px; background: #2E4F2E; color: white; border: none; cursor: pointer; }
-    </style>
+    document.getElementById("close-menu").addEventListener("click", function() {
+        document.getElementById("side-menu").classList.remove("active");
+    });
+</script>
+
+<!-- 🔹 Styles -->
+<style>
+    body { font-family: Arial, sans-serif; background-color: #F4E7D1; }
+    .hidden { display: none; }
+
+    /* 🔹 Navbar */
+    .nav-container { padding: 10px; background: #2E4F2E; color: white; text-align: left; }
+    .hamburger { font-size: 24px; cursor: pointer; background: none; border: none; color: white; }
+    .close-menu { font-size: 24px; cursor: pointer; background: none; border: none; color: white; }
+
+    /* 🔹 Side Menu */
+    #side-menu {
+        position: fixed; top: 0; left: -250px;
+        width: 250px; height: 100vh;
+        background: #5A3E2B; transition: 0.3s;
+        padding-top: 20px; text-align: center;
+    }
+    #side-menu.active { left: 0; }
+    #side-menu ul { list-style: none; padding: 0; }
+    #side-menu li { margin: 20px 0; }
+    #side-menu a { color: white; text-decoration: none; font-size: 18px; }
+
+    /* 🔹 Review Section */
+    .review-section { padding: 20px; }
+    .scrollable-reviews { max-height: 500px; overflow-y: scroll; background-color: #F4E7D1; border-radius: 8px; box-shadow: 2px 2px 10px rgba(0,0,0,0.1); padding: 10px; }
+    .review-card { background: white; padding: 15px; margin: 10px 0; border-radius: 8px; box-shadow: 2px 2px 10px rgba(0,0,0,0.1); }
+
+    /* 🔹 Verified Badge */
+    .verified-badge { width: 20px; height: 20px; vertical-align: middle; margin-left: 5px; }
+
+
+    /* 🔹 Submit Review Section - Improved */
+    .submit-review {
+        padding: 40px 20px;
+        background: #D97E50;
+        color: white;
+        text-align: center;
+    }
+
+    .review-form-container {
+        background: #F4E7D1;
+        padding: 25px;
+        border-radius: 10px;
+        max-width: 450px;
+        margin: 0 auto;
+        box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .submit-review h2 {
+        margin-bottom: 15px;
+        color: white;
+        font-size: 24px;
+    }
+
+    .review-form-container input,
+    .review-form-container textarea {
+        width: 100%;
+        margin: 10px 0;
+        padding: 12px;
+        border: 2px solid #5A3E2B;
+        border-radius: 6px;
+        font-size: 16px;
+        background: white;
+    }
+
+    .review-form-container textarea {
+        height: 100px;
+        resize: none;
+    }
+
+    .review-form-container button {
+        width: 100%;
+        padding: 12px;
+        background: #2E4F2E;
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: 0.3s ease-in-out;
+    }
+
+    .review-form-container button:hover {
+        background: #215E21;
+    }
+
+    #success-message {
+        color: #2E4F2E;
+        font-weight: bold;
+        margin-top: 15px;
+    }
+</style>
 
 </body>
 </html>
