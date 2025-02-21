@@ -125,20 +125,25 @@
             color: #5A3E2B;
             margin-top: 10px;
         }
-        .btn {
-            background: #D97E50;
-            color: white;
-            padding: 0.8rem 1.8rem;
-            border-radius: 25px;
-            border: none;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background 0.3s;
-            margin-top: 20px;
-        }
-        .btn:hover {
-            background: #b35e35;
-        }
+ 
+/*CTA Button */
+.cta-button {
+    display: inline-block;
+    background: #D97E50;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    padding: 14px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background 0.3s ease-in-out, transform 0.2s;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.cta-button:hover {
+    background: #B96238;
+    transform: scale(1.05);
+}
         @media (max-width: 768px) {
             .clinic-name {
                 font-size: 2rem;
@@ -368,8 +373,36 @@
         transform: translateY(0);
     }
 }
+/* Floating WhatsApp Button */
+.whatsapp-chat {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s ease-in-out;
+}
+
+.whatsapp-chat img {
+    width: 40px;
+    height: 40px;
+}
+
+.whatsapp-chat:hover {
+    transform: scale(1.1);
+}
     </style>
 </head>
+<!-- WhatsApp Floating Chat -->
+<a href="https://wa.me/918708880341" class="whatsapp-chat" target="_blank">
+    <img src="images/whatsapp-icon.png" alt="Chat with us">
+</a>
 <body>
     <header class="header">
         <nav class="nav-container">
@@ -424,7 +457,7 @@
             <div class="divider"></div>
             <h2 class="main-slogan">Experience Authentic Ayurveda</h2>
             <p class="tagline"><strong>Find Your Balance with Pratyaksha Ayurveda</strong></p>
-            <button class="btn" onclick="window.open('https://wa.me/918708880341')">Book your Online Consultation</button>
+            <a href="https://wa.me/918708880341" class="cta-button">Book Your Online Consultation</a>
         </div>
     </section>
 <!-- About Us Section -->
