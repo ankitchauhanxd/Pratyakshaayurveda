@@ -8,24 +8,23 @@
 </head>
 <body>
 
-<!-- 🔹 Navbar with Hamburger Menu -->
+<!--  Navbar with Hamburger Menu -->
 <header class="nav-container">
-    <button id="hamburger-btn" class="hamburger">☰</button>
+    <button id="hamburger-btn" class="hamburger"></button>
 </header>
 
-<!-- 🔹 Side Navigation Menu -->
+<!--  Side Navigation Menu -->
 <nav id="side-menu">
-    <button id="close-menu" class="close-menu">✖</button>
+    <button id="close-menu" class="close-menu"></button>
     <ul>
         <li><a href="index.html">Home</a></li>
         <li><a href="reviews.html">Reviews</a></li>
-        <a href="login.html">Login</a>
         <li><a href="about.html">About Us</a></li>
         <li><a href="contact.html">Contact</a></li>
     </ul>
 </nav>
 
-<!-- 🔹 Submit Review Section -->
+<!--  Submit Review Section -->
 <section class="submit-review">
     <h2>Submit Your Review</h2>
     <div class="review-form-container">
@@ -39,13 +38,13 @@
     </div>
 </section>
 
-<!-- 🔹 Reviews Section -->
+<!--  Reviews Section -->
 <section class="review-section">
     <h2>What Our Visitors Say</h2>
     <div id="approved-reviews" class="scrollable-reviews"></div>
 </section>
 
-<!-- 🔹 Firebase & JavaScript -->
+<!--  Firebase & JavaScript -->
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
@@ -119,7 +118,7 @@
 </script>
 
 <script>
-    // 🔹 Hamburger Menu Toggle
+    //  Hamburger Menu Toggle
     document.getElementById("hamburger-btn").addEventListener("click", function() {
         document.getElementById("side-menu").classList.add("active");
     });
@@ -129,98 +128,207 @@
     });
 </script>
 
-<!-- 🔹 Styles -->
+<!--  Styles -->
 <style>
-    body { font-family: Arial, sans-serif; background-color: #F4E7D1; }
-    .hidden { display: none; }
+body {
+    font-family: Arial, sans-serif;
+    background-image: url('images/ayurveda-bg.jpg'); /* Ensure correct path */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-color: #F4E7D1; /* Fallback color */
+    color: #5A3E2B;
+    margin: 0;
+    padding: 0;
+}
 
-    /* 🔹 Navbar */
-    .nav-container { padding: 10px; background: #2E4F2E; color: white; text-align: left; }
-    .hamburger { font-size: 24px; cursor: pointer; background: none; border: none; color: white; }
-    .close-menu { font-size: 24px; cursor: pointer; background: none; border: none; color: white; }
+/*  Navbar */
+.nav-container {
+    padding: 12px 20px;
+    background: #2E4F2E;
+    color: white;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 
-    /* 🔹 Side Menu */
-    #side-menu {
-        position: fixed; top: 0; left: -250px;
-        width: 250px; height: 100vh;
-        background: #5A3E2B; transition: 0.3s;
-        padding-top: 20px; text-align: center;
+.hamburger, .close-menu {
+    font-size: 26px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: white;
+    transition: transform 0.2s ease-in-out;
+}
+
+.hamburger:hover, .close-menu:hover {
+    transform: scale(1.1);
+}
+
+/*  Side Menu */
+#side-menu {
+    position: fixed;
+    top: 0;
+    left: -280px; /* Increased for better spacing */
+    width: 280px;
+    height: 100vh;
+    background: #5A3E2B;
+    transition: 0.3s ease-in-out;
+    padding-top: 20px;
+    text-align: center;
+    box-shadow: 3px 0 10px rgba(0, 0, 0, 0.3);
+}
+
+#side-menu.active {
+    left: 0;
+}
+
+#side-menu ul {
+    list-style: none;
+    padding: 0;
+}
+
+#side-menu li {
+    margin: 18px 0;
+}
+
+#side-menu a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    transition: color 0.2s ease-in-out;
+}
+
+#side-menu a:hover {
+    color: #D97E50;
+}
+
+/*  Review Section */
+.review-section {
+    padding: 30px;
+    text-align: center;
+}
+
+.scrollable-reviews {
+    max-height: 500px;
+    overflow-y: auto;
+    background-color: #F4E7D1;
+    border-radius: 10px;
+    box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.15);
+    padding: 15px;
+}
+
+.review-card {
+    background: white;
+    padding: 18px;
+    margin: 12px 0;
+    border-radius: 8px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/*  Verified Badge */
+.verified-badge {
+    width: 22px;
+    height: 22px;
+    vertical-align: middle;
+    margin-left: 6px;
+}
+
+/*  Submit Review Section */
+.submit-review {
+    padding: 50px 20px;
+    background: #D97E50;
+    color: white;
+    text-align: center;
+}
+
+.review-form-container {
+    background: #F4E7D1;
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 500px;
+    margin: 0 auto;
+    box-shadow: 4px 4px 18px rgba(0, 0, 0, 0.2);
+}
+
+.submit-review h2 {
+    margin-bottom: 20px;
+    color: white;
+    font-size: 26px;
+}
+
+/*  Input Fields */
+.review-form-container input,
+.review-form-container textarea {
+    width: 100%;
+    margin: 12px 0;
+    padding: 14px;
+    border: 2px solid #5A3E2B;
+    border-radius: 8px;
+    font-size: 16px;
+    background: white;
+    transition: border-color 0.3s ease-in-out;
+}
+
+.review-form-container input:focus,
+.review-form-container textarea:focus {
+    border-color: #2E4F2E;
+    outline: none;
+}
+
+/*  Textarea */
+.review-form-container textarea {
+    height: 120px;
+    resize: none;
+}
+
+/*  Submit Button */
+.review-form-container button {
+    width: 100%;
+    padding: 14px;
+    background: #2E4F2E;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out, transform 0.2s;
+}
+
+.review-form-container button:hover {
+    background: #215E21;
+    transform: scale(1.03);
+}
+
+/*  Success Message */
+#success-message {
+    color: #2E4F2E;
+    font-weight: bold;
+    margin-top: 18px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .nav-container {
+        padding: 10px;
     }
-    #side-menu.active { left: 0; }
-    #side-menu ul { list-style: none; padding: 0; }
-    #side-menu li { margin: 20px 0; }
-    #side-menu a { color: white; text-decoration: none; font-size: 18px; }
-
-    /* 🔹 Review Section */
-    .review-section { padding: 20px; }
-    .scrollable-reviews { max-height: 500px; overflow-y: scroll; background-color: #F4E7D1; border-radius: 8px; box-shadow: 2px 2px 10px rgba(0,0,0,0.1); padding: 10px; }
-    .review-card { background: white; padding: 15px; margin: 10px 0; border-radius: 8px; box-shadow: 2px 2px 10px rgba(0,0,0,0.1); }
-
-    /* 🔹 Verified Badge */
-    .verified-badge { width: 20px; height: 20px; vertical-align: middle; margin-left: 5px; }
-
-
-    /* 🔹 Submit Review Section - Improved */
-    .submit-review {
-        padding: 40px 20px;
-        background: #D97E50;
-        color: white;
-        text-align: center;
+    
+    #side-menu {
+        width: 250px;
+        left: -250px;
     }
 
     .review-form-container {
-        background: #F4E7D1;
-        padding: 25px;
-        border-radius: 10px;
-        max-width: 450px;
-        margin: 0 auto;
-        box-shadow: 3px 3px 15px rgba(0, 0, 0, 0.2);
+        max-width: 90%;
     }
 
-    .submit-review h2 {
-        margin-bottom: 15px;
-        color: white;
-        font-size: 24px;
+    .scrollable-reviews {
+        max-height: 400px;
     }
-
-    .review-form-container input,
-    .review-form-container textarea {
-        width: 100%;
-        margin: 10px 0;
-        padding: 12px;
-        border: 2px solid #5A3E2B;
-        border-radius: 6px;
-        font-size: 16px;
-        background: white;
-    }
-
-    .review-form-container textarea {
-        height: 100px;
-        resize: none;
-    }
-
-    .review-form-container button {
-        width: 100%;
-        padding: 12px;
-        background: #2E4F2E;
-        color: white;
-        font-size: 18px;
-        font-weight: bold;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        transition: 0.3s ease-in-out;
-    }
-
-    .review-form-container button:hover {
-        background: #215E21;
-    }
-
-    #success-message {
-        color: #2E4F2E;
-        font-weight: bold;
-        margin-top: 15px;
-    }
+}
 </style>
 
 </body>
