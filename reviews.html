@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reviews - Pratyaksha Ayurveda</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!--  Navbar with Hamburger Menu -->
+<header class="nav-container">
+    <button id="hamburger-btn" class="hamburger"></button>
+</header>
+
+<!--  Side Navigation Menu -->
+<nav id="side-menu">
+    <button id="close-menu" class="close-menu"></button>
+    <ul>
+        <li><a href="index.html">Home</a></li>
+        <li><a href="reviews.html">Reviews</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li><a href="contact.html">Contact</a></li>
+    </ul>
+</nav>
+
+<!--  Submit Review Section -->
+<section class="submit-review">
+    <h2>Submit Your Review</h2>
+    <div class="review-form-container">
+        <form id="review-form" onsubmit="submitReview(event)">
+            <input type="text" id="name" placeholder="Your Name" required>
+            <input type="text" id="country" placeholder="Country" required>
+            <textarea id="review" placeholder="Write your review..." required></textarea>
+            <button type="submit">Submit Review</button>
+        </form>
+        <div id="success-message" class="hidden">Review submitted! Awaiting approval.</div>
+    </div>
+</section>
+
+<!--  Reviews Section -->
+<section class="review-section">
+    <h2>What Our Visitors Say</h2>
+    <div id="approved-reviews" class="scrollable-reviews"></div>
+</section>
+
+<!--  Firebase & JavaScript -->
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, query, where, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+
+    // Firebase Config
+    const firebaseConfig = {
+        apiKey: "AIzaSyD3CsmjOe2HKD2fDUCtlNgMwTOBqHA8nJ8",
+        authDomain: "pratyaksha-ayurveda-d147f.firebaseapp.com",
+        projectId: "pratyaksha-ayurveda-d147f",
+        storageBucket: "pratyaksha-ayurveda-d147f.appspot.com",
+        messagingSenderId: "547427847650",
+        appId: "1:547427847650:web:d8cbab4dc70223a7753dbb",
+        measurementId: "G-GGKB7EX8YR"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth();
+
+    // Load Approved Reviews
+    async function loadApprovedReviews() {
+        const reviewsContainer = document.getElementById("approved-reviews");
+        reviewsContainer.innerHTML = "";
+
+        const q = query(collection(db, "reviews"), where("approved", "==", true));
+        const querySnapshot = await getDocs(q);
+
+        querySnapshot.forEach((doc) => {
+            const data = doc.data();
+            reviewsContainer.innerHTML += `
+                <div class="review-card">
+                    <div class="profile-pic"></div>
+                    <div class="review-content">
+                        <h3>${data.name} <img src="images/verified-badge.png" alt="Verified" class="verified-badge"></h3>
+                        <p><strong>${data.country}</strong></p>
+                        <p>${data.review}</p>
+                    </div>
+                </div>`;
+        });
+    }
+
+    // Submit Review
+    window.submitReview = async function (event) {
+        event.preventDefault();
+        if (!auth.currentUser) { alert("Please log in first."); location.href = 'login.html'; return; }
+
+        const name = document.getElementById("name").value.trim();
+        const country = document.getElementById("country").value.trim();
+        const review = document.getElementById("review").value.trim();
+        const successMessage = document.getElementById("success-message");
+
+        if (!name || !country || !review) return alert("All fields are required.");
+
+        try {
+            await addDoc(collection(db, "reviews"), { 
+                name, country, review, timestamp: serverTimestamp(), 
+                userEmail: auth.currentUser.email, approved: false 
+            });
+
+            document.getElementById("review-form").reset();
+            successMessage.classList.remove("hidden");
+            setTimeout(() => successMessage.classList.add("hidden"), 3000);
+        } catch (error) {
+            alert("Submission failed.");
+        }
+    };
+
+    loadApprovedReviews();
+</script>
+
+<script>
+    //  Hamburger Menu Toggle
+    document.getElementById("hamburger-btn").addEventListener("click", function() {
+        document.getElementById("side-menu").classList.add("active");
+    });
+
+    document.getElementById("close-menu").addEventListener("click", function() {
+        document.getElementById("side-menu").classList.remove("active");
+    });
+</script>
+
+<!--  Styles -->
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-image: url('images/ayurveda-bg.jpg'); /* Ensure correct path */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-color: #F4E7D1; /* Fallback color */
+    color: #5A3E2B;
+    margin: 0;
+    padding: 0;
+}
+
+/*  Navbar */
+.nav-container {
+    padding: 12px 20px;
+    background: #2E4F2E;
+    color: white;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.hamburger, .close-menu {
+    font-size: 26px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: white;
+    transition: transform 0.2s ease-in-out;
+}
+
+.hamburger:hover, .close-menu:hover {
+    transform: scale(1.1);
+}
+
+/*  Side Menu */
+#side-menu {
+    position: fixed;
+    top: 0;
+    left: -280px; /* Increased for better spacing */
+    width: 280px;
+    height: 100vh;
+    background: #5A3E2B;
+    transition: 0.3s ease-in-out;
+    padding-top: 20px;
+    text-align: center;
+    box-shadow: 3px 0 10px rgba(0, 0, 0, 0.3);
+}
+
+#side-menu.active {
+    left: 0;
+}
+
+#side-menu ul {
+    list-style: none;
+    padding: 0;
+}
+
+#side-menu li {
+    margin: 18px 0;
+}
+
+#side-menu a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    transition: color 0.2s ease-in-out;
+}
+
+#side-menu a:hover {
+    color: #D97E50;
+}
+
+/*  Review Section */
+.review-section {
+    padding: 30px;
+    text-align: center;
+}
+
+.scrollable-reviews {
+    max-height: 500px;
+    overflow-y: auto;
+    background-color: #F4E7D1;
+    border-radius: 10px;
+    box-shadow: 3px 3px 12px rgba(0, 0, 0, 0.15);
+    padding: 15px;
+}
+
+.review-card {
+    background: white;
+    padding: 18px;
+    margin: 12px 0;
+    border-radius: 8px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/*  Verified Badge */
+.verified-badge {
+    width: 22px;
+    height: 22px;
+    vertical-align: middle;
+    margin-left: 6px;
+}
+
+/*  Submit Review Section */
+.submit-review {
+    padding: 50px 20px;
+    background: #D97E50;
+    color: white;
+    text-align: center;
+}
+
+.review-form-container {
+    background: #F4E7D1;
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 500px;
+    margin: 0 auto;
+    box-shadow: 4px 4px 18px rgba(0, 0, 0, 0.2);
+}
+
+.submit-review h2 {
+    margin-bottom: 20px;
+    color: white;
+    font-size: 26px;
+}
+
+/*  Input Fields */
+.review-form-container input,
+.review-form-container textarea {
+    width: 100%;
+    margin: 12px 0;
+    padding: 14px;
+    border: 2px solid #5A3E2B;
+    border-radius: 8px;
+    font-size: 16px;
+    background: white;
+    transition: border-color 0.3s ease-in-out;
+}
+
+.review-form-container input:focus,
+.review-form-container textarea:focus {
+    border-color: #2E4F2E;
+    outline: none;
+}
+
+/*  Textarea */
+.review-form-container textarea {
+    height: 120px;
+    resize: none;
+}
+
+/*  Submit Button */
+.review-form-container button {
+    width: 100%;
+    padding: 14px;
+    background: #2E4F2E;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out, transform 0.2s;
+}
+
+.review-form-container button:hover {
+    background: #215E21;
+    transform: scale(1.03);
+}
+
+/*  Success Message */
+#success-message {
+    color: #2E4F2E;
+    font-weight: bold;
+    margin-top: 18px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .nav-container {
+        padding: 10px;
+    }
+    
+    #side-menu {
+        width: 250px;
+        left: -250px;
+    }
+
+    .review-form-container {
+        max-width: 90%;
+    }
+
+    .scrollable-reviews {
+        max-height: 400px;
+    }
+}
+</style>
+
+</body>
+</html>
