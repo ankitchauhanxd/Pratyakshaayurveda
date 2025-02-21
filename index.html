@@ -334,6 +334,40 @@
             height: 20px;
             margin-right: 8px;
         }
+        .shloka-highlight {
+    text-align: center;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    margin: 40px auto 10px;
+    width: 80%;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 1.5s ease-in-out;
+}
+
+.shloka {
+    font-size: 24px;
+    color: #5A3E2B;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.meaning {
+    font-size: 18px;
+    color: #2E4F2E;
+    font-style: italic;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
     </style>
 </head>
 <body>
@@ -393,12 +427,23 @@
             <button class="btn" onclick="window.open('https://wa.me/918708880341')">Book your Online Consultation</button>
         </div>
     </section>
-    <section class="about-home">
-        <h2>About Pratyaksha Ayurveda</h2>
-        <p>Promoting Authentic Ayurveda Rooted in Tradition, Backed by Science. Restoring Balance, Not Just Symptoms.</p>
-        <p>Founded by <strong>Dr. Ankit Chauhan (BAMS)</strong>, an Ayurveda Specialist, Pratyaksha Ayurveda is dedicated to bringing holistic healing with time-tested Ayurvedic practices.</p>
-    </section>
-    <section class="specialisations-home" id="specialisations">
+<!-- About Us Section -->
+<div class="shloka-highlight">
+    <p class="shloka">स्वस्थस्य स्वास्थ्य रक्षणं, आतुरस्य विकार प्रशमनं॥</p>
+    <p class="meaning">"The goal of Ayurveda is to maintain the health of the healthy and to cure the disease of the diseased."</p>
+</div>
+<section class="about-home">
+    <h2>About Pratyaksha Ayurveda</h2>
+    <p>Promoting Authentic Ayurveda Rooted in Tradition, Backed by Science. Restoring Balance, Not Just Symptoms.</p>
+    <p>Founded by <strong>Dr. Ankit Chauhan (BAMS)</strong>, an Ayurveda Specialist, Pratyaksha Ayurveda is dedicated to bringing holistic healing with time-tested Ayurvedic practices.</p>
+</section>
+
+<!-- Our Specialisations Section -->
+<div class="shloka-highlight">
+    <p class="shloka">रोगा: सर्वेऽपि मन्दाग्नौ॥</p>
+    <p class="meaning">"All diseases arise due to weak digestion (Mandagni)."</p>
+</div>
+<section class="specialisations-home" id="specialisations">
         <h2>Our Specialisations</h2>
         <div class="specialisation-container">
             <div class="specialisation-card">
@@ -434,31 +479,43 @@
         </div>
         <a href="specialised.html" class="btn">Learn More</a>
     </section>
-    <section class="reviews-home" id="reviews">
-        <h2 class="section-title">What Our Visitors Say</h2>
-        <div class="reviews-scroll-container">
-            <!-- Approved reviews will be displayed here -->
-        </div>
-    </section>
-    <section class="contact-section" id="contact">
-        <h2 class="contact-title">Contact Us</h2>
-        <div class="contact-details">
-            <p>For consultations and inquiries, reach out to us:</p>
-            <a href="mailto:pratyakshaayurveda@gmail.com">
-                <img src="images/email-icon.png" alt="Email" class="contact-icon"> pratyakshaayurveda@gmail.com
-            </a>
-            <a href="https://wa.me/918708880341">
-                <img src="images/whatsapp-icon.png" alt="WhatsApp" class="contact-icon"> +91 8708880341
-            </a>
-            <a href="https://instagram.com/ankitchauhan.xd">
-                <img src="images/instagram-icon.png" alt="Instagram" class="contact-icon"> @ankitchauhan.xd
-            </a>
-        </div>
-    </section>
-    <footer class="footer">
-        <p><strong>Find Your Balance with Pratyaksha Ayurveda</strong></p>
-        <p>&copy; 2025 Pratyaksha Ayurveda. All rights reserved.</p>
-    </footer>
+
+<!-- Reviews Section -->
+<div class="shloka-highlight">
+    <p class="shloka">वृक्षाः समूलास्तु सुखं वसन्ति, स्वस्थे शरीरं सुखमल्पमेतत्॥</p>
+    <p class="meaning">"Just as a tree flourishes when its roots are strong, health flourishes when the body is in balance."</p>
+</div>
+<section class="reviews-home" id="reviews">
+    <h2 class="section-title">What Our Visitors Say</h2>
+    <div class="reviews-scroll-container">
+        <!-- Approved reviews will be displayed here -->
+    </div>
+</section>
+
+<!-- Contact Section -->
+<div class="shloka-highlight">
+    <p class="shloka">आयुर्वेदोऽमृतानां वेदः॥</p>
+    <p class="meaning">"Ayurveda is the knowledge of eternal life, like nectar."</p>
+</div>
+<section class="contact-section" id="contact">
+    <h2 class="contact-title">Contact Us</h2>
+    <div class="contact-details">
+        <p>For consultations and inquiries, reach out to us:</p>
+        <a href="mailto:pratyakshaayurveda@gmail.com">
+            <img src="images/email-icon.png" alt="Email" class="contact-icon"> pratyakshaayurveda@gmail.com
+        </a>
+    </div>
+</section>
+
+<!-- Footer Section -->
+<div class="shloka-highlight">
+    <p class="shloka">शरीरमाद्यं खलु धर्मसाधनम्॥</p>
+    <p class="meaning">"The body is the foremost instrument for the practice of Dharma."</p>
+</div>
+<footer class="footer">
+    <p><strong>Find Your Balance with Pratyaksha Ayurveda</strong></p>
+    <p>&copy; 2025 Pratyaksha Ayurveda. All rights reserved.</p>
+</footer>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
         import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
